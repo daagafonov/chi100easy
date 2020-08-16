@@ -1,5 +1,5 @@
 const Telegraf = require('telegraf');
-const app = new Telegraf(process.env.BOT_TOKEN);
+const app = new Telegraf('1295128406:AAF7L0eXnImoPjIturGK0Fv8HMWxdtvaPyE');
 
 app.hears('hi', ctx => {
  return ctx.reply('Hey!');
