@@ -1,0 +1,10 @@
+version: '3'
+services:
+  bot:
+    build: ./chi100easybot
+    depends_on:
+      - api
+  api:
+    build: ./chi100easyapi
+    expose:
+      - "9000"
