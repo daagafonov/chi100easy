@@ -19,7 +19,6 @@
     </properties>
 
     <modules>
-        <module>chi100easybot</module>
         <module>chi100easyapi</module>
     </modules>
 

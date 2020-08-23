@@ -4,9 +4,7 @@
   "description": "chi100easybot",
   "main": "index.js",
   "scripts": {
-    "serve": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "java -version"
+    "start": "node index.js"
   },
   "author": "",
   "license": "ISC",
