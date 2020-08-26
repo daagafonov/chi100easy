@@ -1,10 +1,27 @@
 version: '2'
+volumes:
+  mongo-data5:
 services:
+  mongo:
+    build: ./chi100easymongo
+    restart: always
+    volumes:
+      - 'mongo-data5:/data/db'
+    expose:
+      - "27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: mongoadmin
+      MONGO_INITDB_ROOT_PASSWORD: secret
+
   bot:
     build: ./chi100easybot
+    restart: always
     depends_on:
       - api
   api:
     build: ./chi100easyapi
+    restart: always
     expose:
       - "9000"
+    depends_on:
+      - mongo
