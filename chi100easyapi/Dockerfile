@@ -4,8 +4,12 @@ RUN apt update -y && apt install openjdk-8-jdk -y
 
 WORKDIR /usr/src/app
 
-COPY package.json package.json
-COPY target/api-0.0.1-SNAPSHOT.jar api-0.0.1-SNAPSHOT.jar
+ARG JAR_FILE="chi100easyapi-0.0.1-SNAPSHOT.jar"
+
+ADD package.json package.json
+
+
+ADD target/$JAR_FILE application.jar
 
 # This install npm dependencies on the balena build server,
 # making sure to clean up the artifacts it creates in order to reduce the image size.
