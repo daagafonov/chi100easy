@@ -1,2 +1,2 @@
 FROM mongo:latest
-COPY mongo-init.js /docker-entrypoint-initdb.d/mongo-init.js
+COPY ./chi100easymongo/mongo-init.js /docker-entrypoint-initdb.d/mongo-init.js
