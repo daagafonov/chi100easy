@@ -1,3 +1,5 @@
 FROM mongo:latest
 WORKDIR /
-COPY ./mongo-init.js /docker-entrypoint-initdb.d/mongo-init.js
+RUN ls -la
+RUN echo $PWD
+COPY mongo-init.js /docker-entrypoint-initdb.d/mongo-init.js
