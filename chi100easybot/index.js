@@ -1,14 +1,55 @@
 const axios = require('axios');
+const fs = require('fs');
+const path = require('path');
+const http = require('http');
+const https = require('https');
+const express = require('express');
+
+const botServer = express();
 
 const session = require("telegraf/session");
 const Stage = require('telegraf/stage');
 const Scene = require('telegraf/scenes/base');
 
-const { leave } = Stage;
+require('custom-env').env(true);
+console.log("node env ", process.env.NODE_ENV);
+
+const {leave} = Stage;
 const stage = new Stage();
 
 const Telegraf = require('telegraf');
-const app = new Telegraf('1295128406:AAF7L0eXnImoPjIturGK0Fv8HMWxdtvaPyE');
+
+let app;
+if (process.env.NODE_ENV === 'docker') {
+    app = new Telegraf(process.env.BOT_TOKEN);
+
+    // botServer.use(app.webhookCallback(`/${process.env.BOT_TOKEN}`));
+    //
+    // const webhook = `https://${process.env.EXTERNAL_SERVER_API}:8443/${process.env.BOT_TOKEN}`;
+    // console.log(`telegram bot listens on ${webhook}`);
+    //
+    // app.telegram.setWebhook(webhook);
+    //
+    // botServer.get('/', (req, res) => {
+    //     res.json({
+    //         message: 'success',
+    //     })
+    // })
+    //
+    // https.createServer({
+    //     key: fs.readFileSync('./ssl/apache-selfsigned.key'),
+    //     cert: fs.readFileSync('./ssl/apache-selfsigned.crt'),
+    // }, botServer).listen(process.env.EXTERNAL_SERVER_HTTPS_PORT, () => {
+    //     console.log(`Example app listening on port ${process.env.EXTERNAL_SERVER_HTTPS_PORT}!`);
+    // })
+
+} else {
+    app = new Telegraf(process.env.BOT_TOKEN);
+    // http.createServer(botServer).listen(process.env.EXTERNAL_SERVER_HTTP_PORT, () => {
+    //     console.log('Example app listening on port 8080!')
+    // });
+}
+
 
 const scanQR = new Scene('scanQR');
 stage.register(scanQR);
@@ -27,7 +68,7 @@ app.help((ctx) => ctx.reply('Send me a sticker'));
 
 app.command('health', async (ctx) => {
 
-    axios.get('http://api:9000/chi100easy/api/actuator/health').then((response) => {
+    axios.get(`http://${process.env.API_HOST}:${process.env.API_PORT}${process.env.API_CONTEXT_PATH}/actuator/health`).then((response) => {
 
         console.log('%o', response.data);
 
@@ -46,7 +87,7 @@ app.hears('Твой личный идентификатор', async (ctx) => {
 
     axios.get(`http://api.qrserver.com/v1/create-qr-code/?data=${encodeURI(ctx.message.from.id)}&size=300x300`)
         .then(async (response) => {
-            await ctx.replyWithPhoto(`http://api.qrserver.com/v1/create-qr-code/?data=${encodeURI(ctx.message.from.id)}&size=300x300`, { caption: 'Generated via @chi100easybot' });
+            await ctx.replyWithPhoto(`http://api.qrserver.com/v1/create-qr-code/?data=${encodeURI(ctx.message.from.id)}&size=300x300`, {caption: 'Generated via @chi100easybot'});
             //ctx.reply('You can send me another text or tap "⬅️ Back"');
 
             // updateStat('generating')
@@ -66,6 +107,15 @@ app.catch((err, ctx) => {
     console.log(`Ooops, encountered an error for ${ctx.updateType}`, err);
 });
 
+//botServer().use(bodyParser.json());
+
+botServer.listen(process.env.PORT);
+
+botServer.post('/' + process.env.BOT_TOKEN, (req, res) => {
+    app.processUpdate(req.body);
+    res.sendStatus(200);
+});
+
 // generate.enter((ctx) => {
 //     ctx.reply(
 //         'I`m ready. Send me text!',
@@ -83,9 +133,13 @@ app.catch((err, ctx) => {
 //
 // })
 
-app.on("contact", ctx => {
+app.on("contact", async (ctx) => {
     console.log(ctx.message.contact);
-    axios.put(`http://api:9000/chi100easy/api/users/${ctx.message.from.id}`, {
+    const userPayload = await axios.get(`http://${process.env.API_HOST}:${process.env.API_PORT}${process.env.API_CONTEXT_PATH}/users/byTelegramUserId/${ctx.message.from.id}`);
+
+    console.log('incoming user', userPayload.data);
+
+    axios.put(`http://${process.env.API_HOST}:${process.env.API_PORT}${process.env.API_CONTEXT_PATH}/users/${userPayload.data._id}/phoneNumber`, {
         phoneNumber: ctx.message.contact.phone_number,
     }).then((response) => {
         console.log(response.data);
@@ -94,11 +148,12 @@ app.on("contact", ctx => {
     });
 });
 
-app.on("location", ctx => {
+app.on("location", async (ctx) => {
 
     console.log(ctx.message.location);
 
-    axios.put(`http://api:9000/chi100easy/api/users/${ctx.message.from.id}`, {
+    const userPayload = await axios.get(`http://${process.env.API_HOST}:${process.env.API_PORT}${process.env.API_CONTEXT_PATH}/users/byTelegramUserId/${ctx.message.from.id}`);
+    axios.put(`http://${process.env.API_HOST}:${process.env.API_PORT}${process.env.API_CONTEXT_PATH}/users/${userPayload.data._id}/location`, {
         longitude: ctx.message.location.longitude,
         latitude: ctx.message.location.latitude,
     }).then((response) => {
@@ -110,36 +165,45 @@ app.on("location", ctx => {
 
 app.launch();
 
-function starter (ctx) {
+function starter(ctx) {
 
-    axios.post("http://api:9000/chi100easy/api/users/create", {
-        firstName: ctx.message.from.first_name,
-        lastName: ctx.message.from.last_name,
-        username: ctx.message.from.username,
-        telegramUserId: ctx.message.from.id,
-    }).then((response) => {
+    axios.get(`http://${process.env.API_HOST}:${process.env.API_PORT}${process.env.API_CONTEXT_PATH}/users/byTelegramUserId/${ctx.message.from.id}`).then((response) => {
 
-        console.log(response.data);
-
-        ctx.replyWithMarkdown(
-            'Привет! Выбери что бы ты хотел получить!',
-            {
-                reply_markup: {
-                    keyboard: [[{
-                        text: 'Твой личный идентификатор',
-                    }, {
-                        text: 'Поделиться своим номером',
-                        request_contact: true,
-                    }], [{
-                        text: 'Поделиться своим местоположением',
-                        request_location: true,
-                    }]],
-                    resize_keyboard: true,
-                }
-            }
-        );
+        buildStarterButtons(ctx);
 
     }).catch((err) => {
-        console.error(err);
+        axios.post(`http://${process.env.API_HOST}:${process.env.API_PORT}${process.env.API_CONTEXT_PATH}/users`, {
+            firstName: ctx.message.from.first_name,
+            lastName: ctx.message.from.last_name,
+            username: ctx.message.from.username,
+            telegramUserId: ctx.message.from.id,
+        }).then((response) => {
+
+            buildStarterButtons(ctx);
+
+        }).catch((err) => {
+            console.error(err);
+        });
     });
+}
+
+function buildStarterButtons(ctx) {
+    ctx.replyWithMarkdown(
+        'Привет! Выбери что бы ты хотел получить!',
+        {
+            reply_markup: {
+                keyboard: [[{
+                    text: 'Твой личный идентификатор',
+                }, {
+                    text: 'Поделиться своим номером',
+                    request_contact: true,
+                }], [{
+                    text: 'Поделиться своим местоположением',
+                    request_location: true,
+                }]],
+                resize_keyboard: true,
+            }
+        }
+    );
+
 }

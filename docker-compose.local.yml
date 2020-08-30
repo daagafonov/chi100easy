@@ -19,7 +19,6 @@ services:
 
   mongo-express:
     image: mongo-express
-    container_name: express
     restart: always
     ports:
       - 8081:8081
@@ -34,14 +33,21 @@ services:
   bot:
     build: ./chi100easybot
     restart: always
-    container_name: bot
     depends_on:
       - api
+      - express
+
+  express:
+    build: ./chi100easyexpress
+    restart: always
+    ports:
+      - 4242:4242
+    depends_on:
+      - mongo
 
   api:
     build: ./chi100easyapi
     restart: always
-    container_name: api
     ports:
       - 9001:9000
     expose:
