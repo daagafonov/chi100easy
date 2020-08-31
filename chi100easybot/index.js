@@ -20,7 +20,7 @@ const stage = new Stage();
 const Telegraf = require('telegraf');
 
 let app;
-if (process.env.NODE_ENV === 'docker') {
+// if (process.env.NODE_ENV === 'docker') {
     app = new Telegraf(process.env.BOT_TOKEN);
 
     // botServer.use(app.webhookCallback(`/${process.env.BOT_TOKEN}`));
@@ -37,18 +37,21 @@ if (process.env.NODE_ENV === 'docker') {
     // })
     //
     // https.createServer({
-    //     key: fs.readFileSync('./ssl/apache-selfsigned.key'),
-    //     cert: fs.readFileSync('./ssl/apache-selfsigned.crt'),
-    // }, botServer).listen(process.env.EXTERNAL_SERVER_HTTPS_PORT, () => {
-    //     console.log(`Example app listening on port ${process.env.EXTERNAL_SERVER_HTTPS_PORT}!`);
+    //     key: fs.readFileSync('./ssl/key.pem'),
+    //     cert: fs.readFileSync('./ssl/sert.pem'),
+    // }, botServer).listen(8000, () => {
+    //     console.log(`Example app listening on port 8000!`);
     // })
 
-} else {
-    app = new Telegraf(process.env.BOT_TOKEN);
-    // http.createServer(botServer).listen(process.env.EXTERNAL_SERVER_HTTP_PORT, () => {
-    //     console.log('Example app listening on port 8080!')
-    // });
-}
+// } else {
+//     app = new Telegraf(process.env.BOT_TOKEN);
+//     // http.createServer(botServer).listen(process.env.EXTERNAL_SERVER_HTTP_PORT, () => {
+//     //     console.log('Example app listening on port 8080!')
+//     // });
+// }
+
+
+
 
 
 const scanQR = new Scene('scanQR');
@@ -107,14 +110,24 @@ app.catch((err, ctx) => {
     console.log(`Ooops, encountered an error for ${ctx.updateType}`, err);
 });
 
-//botServer().use(bodyParser.json());
+// botServer().use(bodyParser.json());
 
 botServer.listen(process.env.PORT);
 
-botServer.post('/' + process.env.BOT_TOKEN, (req, res) => {
-    app.processUpdate(req.body);
-    res.sendStatus(200);
-});
+// botServer.post('/' + process.env.BOT_TOKEN, (req, res) => {
+//
+//     console.log(req);
+//
+//     app.processUpdate(req.body);
+//     res.sendStatus(200);
+// });
+//
+// https.createServer({
+//     key: fs.readFileSync('./ssl/my-key.pem'),
+//     cert: fs.readFileSync('./ssl/my-cert.pem'),
+// }, botServer).listen(8443, () => {
+//     console.log(`Example app listening on port 8443!`);
+// })
 
 // generate.enter((ctx) => {
 //     ctx.reply(
@@ -169,6 +182,8 @@ function starter(ctx) {
 
     axios.get(`http://${process.env.API_HOST}:${process.env.API_PORT}${process.env.API_CONTEXT_PATH}/users/byTelegramUserId/${ctx.message.from.id}`).then((response) => {
 
+        console.log(response.data);
+
         buildStarterButtons(ctx);
 
     }).catch((err) => {
@@ -178,6 +193,8 @@ function starter(ctx) {
             username: ctx.message.from.username,
             telegramUserId: ctx.message.from.id,
         }).then((response) => {
+
+            console.log('created user ', response.data);
 
             buildStarterButtons(ctx);
 

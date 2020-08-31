@@ -55,3 +55,14 @@ services:
     depends_on:
       - mongo
 
+  gui:
+    build: ./chi100easygui
+    restart: always
+    ports:
+      - 8080:8080
+    volumes:
+      - ./chi100easygui/docker/update.sh:/docker-entrypoint.d/update.sh
+    environment:
+      - "NODE_ENV=production"
+    depends_on:
+      - express

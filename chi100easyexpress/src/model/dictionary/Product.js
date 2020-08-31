@@ -14,6 +14,12 @@ const productSchema = new mongoose.Schema({
         type: Number,
         required: true,
         default: 0.0,
+    },
+    currency: {
+        type: String,
+        enum: ['UAH', 'USD', 'EUR'],
+        default: 'UAH',
+        required: true,
     }
 });
 
