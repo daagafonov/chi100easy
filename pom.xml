@@ -23,6 +23,7 @@
         <module>chi100easybot</module>
         <module>chi100easyexpress</module>
         <module>chi100easygui</module>
+        <module>chi100easybot-nginx</module>
     </modules>
 
 <!--    <profiles>-->

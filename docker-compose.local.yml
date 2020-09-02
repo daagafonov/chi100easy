@@ -6,6 +6,7 @@ services:
   mongo:
     image: mongo:latest
     restart: always
+    container_name: mongo
     ports:
       - 27017:27017
     volumes:
@@ -20,6 +21,7 @@ services:
   mongo-express:
     image: mongo-express
     restart: always
+    container_name: mongo-express
     ports:
       - 8081:8081
     environment:
@@ -33,31 +35,33 @@ services:
   bot:
     build: ./chi100easybot
     restart: always
+    container_name: bot
     depends_on:
-      - api
       - express
 
   express:
     build: ./chi100easyexpress
     restart: always
+    container_name: express
     ports:
       - 4242:4242
     depends_on:
       - mongo
 
-  api:
-    build: ./chi100easyapi
-    restart: always
-    ports:
-      - 9001:9000
-    expose:
-      - "9000"
-    depends_on:
-      - mongo
+#  api:
+#    build: ./chi100easyapi
+#    restart: always
+#    ports:
+#      - 9001:9000
+#    expose:
+#      - "9000"
+#    depends_on:
+#      - mongo
 
   gui:
     build: ./chi100easygui
     restart: always
+    container_name: gui
     ports:
       - 8080:8080
     volumes:
@@ -66,3 +70,10 @@ services:
       - "NODE_ENV=production"
     depends_on:
       - express
+
+  nginx:
+    build: ./chi100easybot-nginx
+    restart: always
+    container_name: botnginx
+    ports:
+      - "18080:80"
