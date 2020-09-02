@@ -1,4 +1,3 @@
 module.exports = {
-  publicPath: '/chi100easy',
-  outputDir: 'build'
+  publicPath: '/chi100easy'
 }

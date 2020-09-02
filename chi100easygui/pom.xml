@@ -35,21 +35,7 @@
                         </configuration>
                     </execution>
                     <execution>
-                        <id>clean</id>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <phase>clean</phase>
-                        <configuration>
-                            <executable>rm</executable>
-                            <arguments>
-                                <argument>-rf</argument>
-                                <argument>${project.basedir}/build</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>package</id>
+                        <id>build</id>
                         <goals>
                             <goal>exec</goal>
                         </goals>
