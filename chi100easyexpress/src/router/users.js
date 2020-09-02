@@ -104,6 +104,24 @@ router.put('/:id/location', async(req, res, next) => {
     }
 });
 
+router.put('/:id', async(req, res, next) => {
+    try {
+        const updated = await db.actions.user.updateOne2(req.params.id, {
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
+            username: req.body.username,
+            telegramUserId: req.body.telegramUserId,
+        });
+        console.log("updated location", updated);
+        res.json(updated);
+
+    } catch (error) {
+        res.json({
+            message: JSON.stringify(error),
+        });
+    }
+});
+
 router.delete('/:id', async(req, res, next) => {
     res.json({
         message: "Method is not supported"

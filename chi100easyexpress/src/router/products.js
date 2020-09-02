@@ -1,5 +1,6 @@
 const express = require("express");
-const uuidv4 = require('uuid').v4();
+const uuidv4 = require('uuid/v4');
+
 const router = express.Router();
 
 const db = require('../model');
@@ -19,8 +20,9 @@ router.post('/', async(req, res) => {
 
     const product = {
         name: req.body.name,
-        productIdentifier: uuidv4().toString(),
         price: req.body.price,
+        currency: req.body.currency,
+        productIdentifier: uuidv4(),
     };
 
     try {
@@ -34,5 +36,29 @@ router.post('/', async(req, res) => {
         });
     }
 });
+
+router.put('/:id', async(req, res) => {
+
+    console.log('product to update', req.body);
+
+    const product = {
+        name: req.body.name,
+        price: req.body.price,
+        currency: req.body.currency,
+    };
+
+    try {
+        const saved = await db.actions.products.updateOne2(req.params.id, product);
+        console.log('updated product', saved);
+        res.json(saved);
+
+    } catch (error) {
+        console.log(error);
+        res.json({
+            message: error
+        });
+    }
+});
+
 
 module.exports = router;

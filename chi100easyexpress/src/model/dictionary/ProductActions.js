@@ -16,9 +16,22 @@ const findAll = function() {
     return Product.find();
 }
 
+const updateOne = function(spec) {
+    return Product.updateOne(spec);
+}
+
+const updateOne2 = function(id, fields) {
+    return Product.updateOne({
+        _id: id
+    }, {
+        $set: fields
+    });
+}
+
 module.exports = {
     create:  createOrder,
     findById,
     findAll,
     getOrderWithPopulate,
+    updateOne2,
 }
