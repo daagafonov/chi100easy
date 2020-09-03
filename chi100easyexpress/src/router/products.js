@@ -1,5 +1,5 @@
 const express = require("express");
-const uuidv4 = require('uuid/v4');
+var short = require('short-uuid');
 
 const router = express.Router();
 
@@ -22,7 +22,7 @@ router.post('/', async(req, res) => {
         name: req.body.name,
         price: req.body.price,
         currency: req.body.currency,
-        productIdentifier: uuidv4(),
+        productIdentifier: short.generate(),
     };
 
     try {

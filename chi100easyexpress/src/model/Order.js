@@ -1,20 +1,38 @@
 const mongoose = require('mongoose');
 const OrderItem = require('./OrderItem');
+const User = require('./User');
 
 const orderSchema = new mongoose.Schema({
-    date: {
+    created_dt: {
         type: Date,
         required: true,
-        default: Date.new,
+        default: new Date(),
+    },
+    updated_dt: {
+        type: Date,
+        required: true,
+        default: new Date(),
     },
     comment: {
         type: String,
         required: false
     },
-    items: [{
+    status: {
+        type: String,
+        enum: ['CREATED', 'PAID', 'IN_PROGRESS', 'FINISHED'],
+        required: true,
+        default: 'CREATED',
+    },
+    user: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: OrderItem,
-    }]
+        ref: 'User',
+        index: true,
+        required: true,
+    },
+    // items: [{
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: OrderItem,
+    // }]
 });
 
 module.exports = mongoose.model('Order', orderSchema);

@@ -5,7 +5,7 @@ const createUser = function(u) {
 }
 
 const getUserWithPopulate = function(userId) {
-    return User.findById(userId).populate("orders", "-__v");
+    return User.findById(userId);
 };
 
 const findByTelegramUserId = function (externalId) {

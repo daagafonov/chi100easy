@@ -36,6 +36,8 @@ services:
     build: ./chi100easybot
     restart: always
     container_name: bot
+    ports:
+    - "8080:8080"
     depends_on:
       - express
 
@@ -63,7 +65,7 @@ services:
     restart: always
     container_name: gui
     ports:
-      - 8080:8080
+      - 80:8080
     volumes:
       - ./chi100easygui/docker/update.sh:/docker-entrypoint.d/update.sh
     environment:
@@ -71,9 +73,9 @@ services:
     depends_on:
       - express
 
-  nginx:
-    build: ./chi100easybot-nginx
-    restart: always
-    container_name: botnginx
-    ports:
-      - "18080:80"
+#  nginx:
+#    build: ./chi100easybot-nginx
+#    restart: always
+#    container_name: botnginx
+#    ports:
+#      - "80:80"

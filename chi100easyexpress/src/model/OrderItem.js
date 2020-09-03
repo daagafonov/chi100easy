@@ -25,6 +25,13 @@ const orderItemSchema = new mongoose.Schema({
         default: new Date(),
     },
 
+    order: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Order',
+        index: true,
+        required: true,
+    },
+
 });
 
 module.exports = mongoose.model('OrderItem', orderItemSchema);

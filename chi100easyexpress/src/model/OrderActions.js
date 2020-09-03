@@ -6,10 +6,21 @@ const createOrder = function(o) {
 }
 
 const addOrderToUser = function(userId, order) {
-    return User.findByIdAndUpdate(
-        userId, { $push: { orders: order._id } }, { new: true, useFindAndModify: false }
-    );
+    const o = Order.updateOne({
+        _id: order._id
+    }, {
+        $set: {
+            user: userId,
+        }
+    });
+    return o;
 };
+
+const findByUserId = function(userId) {
+    return Order.find({
+        user: userId
+    });
+}
 
 const getOrderWithPopulate = function(id) {
     return Order.findById(id).populate("items", "-__v");
@@ -29,4 +40,5 @@ module.exports = {
     findById,
     findAll,
     getOrderWithPopulate,
+    findByUserId,
 }

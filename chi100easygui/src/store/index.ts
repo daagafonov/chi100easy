@@ -33,6 +33,10 @@ export default new Vuex.Store({
         addProduct(state, payload) {
             EventService.sendEvent('addProduct', payload);
         },
+
+        getOrders(state, payload) {
+            EventService.sendEvent('getOrders', payload);
+        }
     },
     actions: {
         getUsers({commit}, payload: any) {
@@ -157,6 +161,71 @@ export default new Vuex.Store({
                     const {data} = response.data;
                     commit('addProduct', {
                         action: 'addProduct',
+                        payload: data,
+                    });
+                }
+            }).catch(error => {
+                console.log(error);
+            });
+        },
+        getOrders({commit}, payload: any) {
+
+            const userId = payload.userId;
+
+            axios.get(`${sessionStorage.getItem('backendUrl')}/orders/user/${userId}`, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).then((response: any) => {
+                if (response.message) {
+                    wrapError(response.message);
+                } else {
+                    const payload = response.data;
+                    console.log('action', payload);
+                    commit('getOrders', {
+                        action: 'orders',
+                        payload,
+                    });
+                }
+            });
+        },
+        editOrder({commit}, payload: any) {
+            const userId = payload.userId;
+            axios.put(`${sessionStorage.getItem('backendUrl')}/orders/user/${userId}`, payload, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).then((response: any) => {
+                if (response.message) {
+                    wrapError(response.message);
+                } else {
+                    const {data} = response.data;
+                    commit('editOrder', {
+                        action: 'editOrder',
+                        payload: data,
+                    });
+                }
+            }).catch(error => {
+                console.log(error);
+            });
+        },
+
+        addOrder({commit}, payload: any) {
+            const userId = payload.userId;
+            axios.post(`${sessionStorage.getItem('backendUrl')}/orders/user/${userId}`, payload, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).then((response: any) => {
+
+                console.log('response', response);
+
+                if (response.message) {
+                    wrapError(response.message);
+                } else {
+                    const {data} = response.data;
+                    commit('addOrder', {
+                        action: 'addOrder',
                         payload: data,
                     });
                 }

@@ -3,9 +3,9 @@ const router = express.Router();
 
 const db = require('../model');
 
-router.get('/', async(req, res) => {
+router.get('/user/:userId', async(req, res) => {
     try {
-        const orders = await db.actions.order.findAll();
+        const orders = await db.actions.order.findByUserId(req.params.userId);
         res.json(orders);
     } catch (error) {
         console.error(error);
@@ -36,9 +36,11 @@ router.get('/:id', async(req, res) => {
 router.post('/user/:userId', async(req, res) => {
     try {
         const saved = await db.actions.order.create({
-            date: req.body.date,
+            comment: req.body.comment,
+            user: req.params.userId,
         });
-        const updatedUser = await db.actions.order.addOrderToUser(req.params.userId, saved);
+        // const order = await db.actions.order.addOrderToUser(req.params.userId, saved);
+        console.log(saved);
         res.json(saved);
     } catch (error) {
         res.json({

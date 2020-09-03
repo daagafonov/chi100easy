@@ -1,6 +1,6 @@
-FROM node:latest
+FROM node
 
-#RUN install_packages git openjdk-8-jdk
+#RUN apt update && apt upgrade -y && apt install nodejs npm -y
 
 WORKDIR /usr/src/app
 
@@ -15,6 +15,8 @@ COPY . ./
 
 # Enable udevd so that plugged dynamic hardware devices show up in our container.
 #ENV UDEV=1
+
+EXPOSE 8080
 
 # server.js will run when container starts up on the device
 CMD ["npm", "run", "docker"]

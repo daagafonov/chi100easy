@@ -20,39 +20,24 @@ const stage = new Stage();
 const Telegraf = require('telegraf');
 
 let app;
-// if (process.env.NODE_ENV === 'docker') {
+
     app = new Telegraf(process.env.BOT_TOKEN);
 
-    // botServer.use(app.webhookCallback(`/${process.env.BOT_TOKEN}`));
-    //
-    // const webhook = `https://${process.env.EXTERNAL_SERVER_API}:8443/${process.env.BOT_TOKEN}`;
-    // console.log(`telegram bot listens on ${webhook}`);
-    //
-    // app.telegram.setWebhook(webhook);
-    //
-    // botServer.get('/', (req, res) => {
-    //     res.json({
-    //         message: 'success',
-    //     })
-    // })
-    //
-    // https.createServer({
-    //     key: fs.readFileSync('./ssl/key.pem'),
-    //     cert: fs.readFileSync('./ssl/sert.pem'),
-    // }, botServer).listen(8000, () => {
-    //     console.log(`Example app listening on port 8000!`);
-    // })
+    botServer.use(app.webhookCallback(`/${process.env.BOT_TOKEN}`));
 
-// } else {
-//     app = new Telegraf(process.env.BOT_TOKEN);
-//     // http.createServer(botServer).listen(process.env.EXTERNAL_SERVER_HTTP_PORT, () => {
-//     //     console.log('Example app listening on port 8080!')
-//     // });
-// }
+    const webhook = `https://${process.env.EXTERNAL_SERVER_API}:443/${process.env.BOT_TOKEN}`;
 
+    app.telegram.setWebhook(webhook);
 
+    botServer.get('/', (req, res) => {
+        res.json({
+            message: 'success',
+        })
+    })
 
-
+    http.createServer(botServer).listen(8080, () => {
+        console.log('Example app listening on port 8080!')
+    });
 
 const scanQR = new Scene('scanQR');
 stage.register(scanQR);

@@ -18,7 +18,10 @@
             <template v-slot:table-caption>Список зарегистрированных пользователей</template>
 
             <template v-slot:cell(actions)="row">
-                <b-button size="sm" v-b-modal.my-modal @click="details(row.item, row.index, $event.target)"
+                <b-button size="sm" variant="warning" @click="orders(row.item, row.index, $event.target)">
+                    Orders
+                </b-button>
+                <b-button size="sm" variant="warning" v-b-modal.my-modal @click="details(row.item, row.index, $event.target)"
                           class="mr-1">
                     Details
                 </b-button>
@@ -51,11 +54,11 @@ export default class UserComponent extends Vue {
             userList1: [],
             greeting: '...',
             fields: [
-                {key: 'firstName'},
-                {key: 'lastName'},
-                {key: 'username'},
-                {key: 'telegramUserId'},
-                {key: 'actions', label: 'Actions'}
+                {key: 'firstName', label: 'Имя'},
+                {key: 'lastName', label: 'Фамилия'},
+                {key: 'username', label: 'Имя пользователя'},
+                {key: 'telegramUserId', label: 'Телеграм ID'},
+                {key: 'actions', label: 'Действия'}
             ],
             filter: null,
         };
@@ -92,6 +95,15 @@ export default class UserComponent extends Vue {
 
     delete(item: any, index: any, event: any) {
 
+    }
+
+    orders(item: any, index: any, event: any) {
+        this.$router.push({
+            name: 'Orders',
+            query: {
+                userId: item._id,
+            }
+        });
     }
 
 }
