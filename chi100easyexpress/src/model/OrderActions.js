@@ -34,6 +34,14 @@ const findAll = function() {
     return Order.find();
 }
 
+const updateOne = function(id, fields) {
+    return Order.updateOne({
+        _id: id
+    }, {
+        $set: fields
+    });
+}
+
 module.exports = {
     create:  createOrder,
     addOrderToUser,
@@ -41,4 +49,5 @@ module.exports = {
     findAll,
     getOrderWithPopulate,
     findByUserId,
+    updateOne,
 }

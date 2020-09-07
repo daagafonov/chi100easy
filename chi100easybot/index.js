@@ -1,4 +1,3 @@
-
 const axios = require('axios');
 const fs = require('fs');
 const path = require('path');
@@ -8,7 +7,6 @@ const express = require('express');
 const morgan = require('morgan');
 const fileUpload = require('express-fileupload');
 const FormData = require('form-data');
-
 
 
 const botServer = express();
@@ -27,63 +25,53 @@ const Telegraf = require('telegraf');
 
 botServer.use(morgan('tiny'));
 botServer.use(fileUpload({
-    //useTempFiles : true,
-    limits: { fileSize: 50 * 1024 * 1024 },
-    //tempFileDir : '/tmp/',
+    // useTempFiles : true,
+    limits: {fileSize: 50 * 1024 * 1024},
+    // tempFileDir : '/tmp/',
     // debug: true,
 }));
 
 let app;
 
-    app = new Telegraf(process.env.BOT_TOKEN);
+app = new Telegraf(process.env.BOT_TOKEN);
 
-    botServer.use(app.webhookCallback(`/${process.env.BOT_TOKEN}`));
+botServer.use(app.webhookCallback(`/${process.env.BOT_TOKEN}`));
 
-    const webhook = `https://${process.env.EXTERNAL_SERVER_API}`;
+const webhook = `https://${process.env.EXTERNAL_SERVER_API}`;
 
-    app.telegram.setWebhook(webhook);
+app.telegram.setWebhook(webhook);
 
-    botServer.get(`/bot${process.env.BOT_TOKEN}`, (req, res) => {
-        // res.json({
-        //     message: 'success',
-        // })
+botServer.get(`/bot${process.env.BOT_TOKEN}`, (req, res) => {
+    app.telegram.processUpdate(req.body);
+    res.sendStatus(200);
+});
 
-        app.telegram.processUpdate(req.body);
-        res.sendStatus(200);
-    });
+botServer.post('/bot/shareDocument', (req, res) => {
+    console.log('req', req.files);
 
-    botServer.post('/bot/single-file', (req, res) => {
-        console.log('req', req.files);
+    const {file} = req.files;
+    const {name, data, size, mimetype, md5, tempFilePath} = file;
 
-        const { file } = req.files;
-        const { name, data, size, mimetype, md5, tempFilePath } = file;
+    const caption = req.body.caption;
 
-        const fileName = `/tmp/${new Date().getTime()}-${name}`;
-        file.mv(fileName, (err) => {
-            // if (!err) {
-            //     // res.json({
-            //     //     message: 'OK',
-            //     // });
-            // } else {
-            //     res.json({
-            //         message: 'error',
-            //     });
-            // }
-        });
-
+    const fileName = `/tmp/${new Date().getTime()}-${name}`;
+    file.mv(fileName, async (err) => {
         const chatId = req.body.chatId;
 
-        const f = fs.createReadStream(fileName);
+        const f = await fs.createReadStream(fileName);
 
-        console.log(f);
+        console.log('tmp file is ', f);
 
         const form = new FormData();
-        form.append('document', data ,{
+        form.append('document', data, {
             filename: name,
             contentType: 'application/pdf',
             knownLength: size,
         });
         form.append('chat_id', chatId);
+        if (caption) {
+            form.append('caption', caption);
+        }
 
         console.log(form);
 
@@ -94,18 +82,20 @@ let app;
             console.log('sending document was success!!!!');
             console.log(response);
 
+            return res.json({
+                message: 'OK',
+            });
+
         }).catch(error => {
             console.log(error);
         });
 
-        res.json({
-            message: 'success',
-        });
     });
+});
 
-    http.createServer(botServer).listen(8080, () => {
-        console.log('Example app listening on port 8080!')
-    });
+http.createServer(botServer).listen(8080, () => {
+    console.log('Example app listening on port 8080!')
+});
 
 const scanQR = new Scene('scanQR');
 stage.register(scanQR);

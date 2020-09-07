@@ -14,6 +14,8 @@ function wrapError(error: any) {
 export default new Vuex.Store({
     state: {},
     mutations: {
+
+        // users
         getUsers(state, payload: any) {
             EventService.sendEvent('getUsers', payload);
         },
@@ -23,6 +25,8 @@ export default new Vuex.Store({
         editUser(state, payload) {
             EventService.sendEvent('editUser', payload);
         },
+
+        // products
         getProducts(state, payload) {
             console.log('mutation', payload);
             EventService.sendEvent('getProducts', payload);
@@ -34,8 +38,15 @@ export default new Vuex.Store({
             EventService.sendEvent('addProduct', payload);
         },
 
+        // orders
         getOrders(state, payload) {
             EventService.sendEvent('getOrders', payload);
+        },
+        addOrder(state, payload) {
+            EventService.sendEvent('addOrder', payload);
+        },
+        editOrder(state, payload) {
+            EventService.sendEvent('editOrder', payload);
         }
     },
     actions: {
@@ -210,28 +221,78 @@ export default new Vuex.Store({
             });
         },
 
-        addOrder({commit}, payload: any) {
-            const userId = payload.userId;
-            axios.post(`${sessionStorage.getItem('backendUrl')}/orders/user/${userId}`, payload, {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            }).then((response: any) => {
+        // addOrder({commit}, payload: any) {
+        //     const userId = payload.userId;
+        //     axios.post(`${sessionStorage.getItem('backendUrl')}/orders/user/${userId}`, payload, {
+        //         headers: {
+        //             'Content-Type': 'application/json'
+        //         }
+        //     }).then((response: any) => {
+        //
+        //         console.log('response', response);
+        //
+        //         if (response.message) {
+        //             wrapError(response.message);
+        //         } else {
+        //             const {data} = response.data;
+        //             commit('addOrder', {
+        //                 action: 'addOrder',
+        //                 payload: data,
+        //             });
+        //         }
+        //     }).catch(error => {
+        //         console.log(error);
+        //     });
+        // },
 
-                console.log('response', response);
+        saveOrder({commit}, order: any) {
+            const userId = order.user;
 
-                if (response.message) {
-                    wrapError(response.message);
-                } else {
-                    const {data} = response.data;
-                    commit('addOrder', {
-                        action: 'addOrder',
-                        payload: data,
-                    });
-                }
-            }).catch(error => {
-                console.log(error);
-            });
+            if (order._id) {
+                // update
+                axios.put(`${sessionStorage.getItem('backendUrl')}/orders/${order._id}`, order, {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }).then((response: any) => {
+
+                    console.log('response', response);
+
+                    if (response.message) {
+                        wrapError(response.message);
+                    } else {
+                        const {data} = response.data;
+                        commit('editOrder', {
+                            action: 'editOrder',
+                            payload: data,
+                        });
+                    }
+                }).catch(error => {
+                    console.log(error);
+                });
+            } else {
+                // create
+                axios.post(`${sessionStorage.getItem('backendUrl')}/orders/user/${userId}`, order, {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }).then((response: any) => {
+
+                    console.log('response', response);
+
+                    if (response.message) {
+                        wrapError(response.message);
+                    } else {
+                        const {data} = response.data;
+                        commit('addOrder', {
+                            action: 'addOrder',
+                            payload: data,
+                        });
+                    }
+                }).catch(error => {
+                    console.log(error);
+                });
+            }
         },
     },
     modules: {}

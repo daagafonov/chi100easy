@@ -21,14 +21,15 @@
 
                 <label>File
                     <input type="file" id="file" v-on:change="sendDocument(row.item, $event.target.files)"
-                    accept="application/pdf"/>
+                           accept="application/pdf"/>
                 </label>
-                <button v-on:click="submitFile()">Submit</button>
+                <!--                <b-button variant="success" v-on:click="submitFile()">Submit</b-button>-->
 
                 <b-button size="sm" variant="warning" @click="orders(row.item, row.index, $event.target)">
                     Orders
                 </b-button>
-                <b-button size="sm" variant="warning" v-b-modal.my-modal @click="details(row.item, row.index, $event.target)"
+                <b-button size="sm" variant="warning" v-b-modal.my-modal
+                          @click="details(row.item, row.index, $event.target)"
                           class="mr-1">
                     Details
                 </b-button>
@@ -122,6 +123,8 @@ export default class UserComponent extends Vue {
         this.$data.file = files[0];
         this.$data.telegramUserId = item.telegramUserId;
         this.$data.chatId = item.chatId;
+
+        this.submitFile();
     }
 
     submitFile() {
@@ -130,18 +133,19 @@ export default class UserComponent extends Vue {
         formData.append('file', this.$data.file, this.$data.file.name);
         formData.append('telegramUserId', this.$data.telegramUserId);
         formData.append('chatId', this.$data.chatId);
+        formData.append('caption', 'Подтверждение заказа!');
 
-        axios.post( '/bot/single-file',
+        axios.post('/bot/shareDocument',
             formData,
             {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
             }
-        ).then(function(){
+        ).then(function () {
             console.log('SUCCESS!!');
         })
-            .catch(function(){
+            .catch(function () {
                 console.log('FAILURE!!');
             });
     }

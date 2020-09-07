@@ -8,28 +8,37 @@
                             <b-form-input v-model="filter"></b-form-input>
                         </b-col>
                         <b-col md="2">
-                            <b-button v-b-modal.product-modal @click="addOrder($event)" variant="success">Add Order</b-button>
+                            <b-button @click="addOrder($event)" variant="success">Add Order</b-button>
                         </b-col>
                     </b-row>
                 </b-form-group>
-            </b-form>
-            <b-table id="itemsTable" hover striped caption-top responsive
-                     :items="items"
-                     :fields="fields"
-                     :filter="filter"
-            >
-                <template v-slot:table-caption>Заказы ...</template>
+                <b-table id="itemsTable" hover striped caption-top responsive
+                         :items="items"
+                         :fields="fields"
+                         :filter="filter"
+                >
+                    <template v-slot:table-caption>Заказы ...</template>
 
-                <template v-slot:cell(actions)="row">
-                    <b-button size="sm" v-b-modal.order-modal @click="details(row.item, row.index, $event.target)"
-                              class="mr-1">
-                        Детали
-                    </b-button>
-                    <b-button variant="danger" size="sm" @click="delete(row.item, row.index, $event.target)">
-                        Удалить
-                    </b-button>
-                </template>
-            </b-table>
+                    <template v-slot:cell(comment)="row">
+                        <b-input type="text" name="comment" v-model="row.item.comment" />
+                    </template>
+
+
+                    <template v-slot:cell(actions)="row">
+                        <b-button size="sm" @click="save(row.item, row.index, $event.target)"
+                                  class="mr-1">
+                            Сохранить
+                        </b-button>
+                        <b-button v-if="row.item._id" size="sm" @click="details(row.item, row.index, $event.target)"
+                                  class="mr-1">
+                            Детали
+                        </b-button>
+                        <b-button v-if="row.item._id" variant="danger" size="sm" @click="delete(row.item, row.index, $event.target)">
+                            Удалить
+                        </b-button>
+                    </template>
+                </b-table>
+            </b-form>
         </div>
 
     </div>
@@ -55,6 +64,10 @@ export default class OrdersComponent extends Vue {
             }, {
                 key: 'status'
             }, {
+                key: 'created_dt'
+            }, {
+                key: 'updated_dt'
+            }, {
                 key: 'actions',
                 label: 'Actions'
             }]
@@ -68,12 +81,10 @@ export default class OrdersComponent extends Vue {
         });
 
         EventService.subscribeEvent('addOrder', (payload: any) => {
-            this.$bvModal.hide('product-modal');
-            EventService.sendEvent('reload', {});
+            EventService.sendEvent('reloadOrders', {});
         });
         EventService.subscribeEvent('editOrder', (payload: any) => {
-            this.$bvModal.hide('product-modal');
-            EventService.sendEvent('reload', {});
+            EventService.sendEvent('reloadOrders', {});
         });
 
         EventService.subscribeEvent('getOrders', (payload: any) => {
@@ -83,7 +94,7 @@ export default class OrdersComponent extends Vue {
             }
         });
 
-        EventService.subscribeEvent('reload', (payload: any) => {
+        EventService.subscribeEvent('reloadOrders', (payload: any) => {
             this.$store.dispatch('getOrders', {
                 userId: this.$route.query.userId,
             });
@@ -91,15 +102,18 @@ export default class OrdersComponent extends Vue {
     }
 
     addOrder(event: any) {
-        EventService.sendEvent('add-order', {});
+        this.$data.items.push({
+            comment: '',
+            user: this.$route.query.userId,
+        });
     }
 
     deleteOrder(userId: string) {
         // delete by id
     }
 
-    details(item: any, index: any, event: any) {
-        EventService.sendEvent('edit-order', item);
+    save(item: any, index: any, event: any) {
+        this.$store.dispatch('saveOrder', item);
     }
 
 }

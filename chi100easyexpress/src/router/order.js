@@ -49,4 +49,22 @@ router.post('/user/:userId', async(req, res) => {
     }
 });
 
+router.put('/:id', async(req, res) => {
+
+    const order = {
+        comment: req.body.comment,
+        updated_dt: new Date(),
+    };
+
+    try {
+        const saved = await db.actions.order.updateOne(req.params.id, order);
+        console.log(saved);
+        res.json(saved);
+    } catch (error) {
+        res.json({
+            message: error
+        });
+    }
+});
+
 module.exports = router;
