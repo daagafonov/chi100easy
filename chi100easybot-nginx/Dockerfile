@@ -1,5 +1,10 @@
 FROM nginx
 
+RUN apt update && apt upgrade -y && apt install certbot python-certbot-nginx iputils-ping -y
+
+#RUN certbot --nginx -d agafonov.tech -d www.agafonov.tech
+
+
 #RUN install_packages git openjdk-8-jdk
 
 #WORKDIR /usr/src/app
@@ -22,3 +27,4 @@ FROM nginx
 COPY default.conf /etc/nginx/conf.d/
 
 EXPOSE 80
+EXPOSE 443

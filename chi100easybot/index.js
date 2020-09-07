@@ -1,9 +1,15 @@
+
 const axios = require('axios');
 const fs = require('fs');
 const path = require('path');
 const http = require('http');
 const https = require('https');
 const express = require('express');
+const morgan = require('morgan');
+const fileUpload = require('express-fileupload');
+const FormData = require('form-data');
+
+
 
 const botServer = express();
 
@@ -19,21 +25,83 @@ const stage = new Stage();
 
 const Telegraf = require('telegraf');
 
+botServer.use(morgan('tiny'));
+botServer.use(fileUpload({
+    //useTempFiles : true,
+    limits: { fileSize: 50 * 1024 * 1024 },
+    //tempFileDir : '/tmp/',
+    // debug: true,
+}));
+
 let app;
 
     app = new Telegraf(process.env.BOT_TOKEN);
 
     botServer.use(app.webhookCallback(`/${process.env.BOT_TOKEN}`));
 
-    const webhook = `https://${process.env.EXTERNAL_SERVER_API}:443/${process.env.BOT_TOKEN}`;
+    const webhook = `https://${process.env.EXTERNAL_SERVER_API}`;
 
     app.telegram.setWebhook(webhook);
 
-    botServer.get('/', (req, res) => {
+    botServer.get(`/bot${process.env.BOT_TOKEN}`, (req, res) => {
+        // res.json({
+        //     message: 'success',
+        // })
+
+        app.telegram.processUpdate(req.body);
+        res.sendStatus(200);
+    });
+
+    botServer.post('/bot/single-file', (req, res) => {
+        console.log('req', req.files);
+
+        const { file } = req.files;
+        const { name, data, size, mimetype, md5, tempFilePath } = file;
+
+        const fileName = `/tmp/${new Date().getTime()}-${name}`;
+        file.mv(fileName, (err) => {
+            // if (!err) {
+            //     // res.json({
+            //     //     message: 'OK',
+            //     // });
+            // } else {
+            //     res.json({
+            //         message: 'error',
+            //     });
+            // }
+        });
+
+        const chatId = req.body.chatId;
+
+        const f = fs.createReadStream(fileName);
+
+        console.log(f);
+
+        const form = new FormData();
+        form.append('document', data ,{
+            filename: name,
+            contentType: 'application/pdf',
+            knownLength: size,
+        });
+        form.append('chat_id', chatId);
+
+        console.log(form);
+
+        axios.post(`https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendDocument`, form, {
+            headers: form.getHeaders()
+        }).then(response => {
+
+            console.log('sending document was success!!!!');
+            console.log(response);
+
+        }).catch(error => {
+            console.log(error);
+        });
+
         res.json({
             message: 'success',
-        })
-    })
+        });
+    });
 
     http.createServer(botServer).listen(8080, () => {
         console.log('Example app listening on port 8080!')
@@ -48,6 +116,7 @@ stage.register(scanBarcode);
 
 app.use(session());
 app.use(stage.middleware());
+
 
 app.start((ctx) => {
     starter(ctx);
@@ -97,7 +166,7 @@ app.catch((err, ctx) => {
 
 // botServer().use(bodyParser.json());
 
-botServer.listen(process.env.PORT);
+// botServer.listen(process.env.PORT);
 
 // botServer.post('/' + process.env.BOT_TOKEN, (req, res) => {
 //
@@ -177,6 +246,7 @@ function starter(ctx) {
             lastName: ctx.message.from.last_name,
             username: ctx.message.from.username,
             telegramUserId: ctx.message.from.id,
+            chatId: ctx.chat.id,
         }).then((response) => {
 
             console.log('created user ', response.data);

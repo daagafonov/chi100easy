@@ -36,6 +36,10 @@ const userSchema = new mongoose.Schema({
         index: true,
         min: 6,
     },
+    chatId: {
+        type: String,
+        required: true,
+    }
 });
 
 module.exports = mongoose.model('User', userSchema);

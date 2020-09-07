@@ -58,6 +58,7 @@ router.post('/', async(req, res) => {
         lastName: req.body.lastName,
         username: req.body.username,
         telegramUserId: req.body.telegramUserId,
+        chatId: req.body.chatId,
     };
 
     try {

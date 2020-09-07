@@ -18,6 +18,13 @@
             <template v-slot:table-caption>Список зарегистрированных пользователей</template>
 
             <template v-slot:cell(actions)="row">
+
+                <label>File
+                    <input type="file" id="file" v-on:change="sendDocument(row.item, $event.target.files)"
+                    accept="application/pdf"/>
+                </label>
+                <button v-on:click="submitFile()">Submit</button>
+
                 <b-button size="sm" variant="warning" @click="orders(row.item, row.index, $event.target)">
                     Orders
                 </b-button>
@@ -42,6 +49,8 @@ import AddUser from '@/components/AddUser.vue'
 import {Component, Vue} from 'vue-property-decorator'
 import EventService from '@/services/event.service'
 
+import axios from 'axios';
+
 @Component({
     components: {
         'add-user-modal': AddUser,
@@ -61,6 +70,9 @@ export default class UserComponent extends Vue {
                 {key: 'actions', label: 'Действия'}
             ],
             filter: null,
+            file: '',
+            telegramUserId: '',
+            chatId: '',
         };
     }
 
@@ -104,6 +116,34 @@ export default class UserComponent extends Vue {
                 userId: item._id,
             }
         });
+    }
+
+    sendDocument(item: any, files: any) {
+        this.$data.file = files[0];
+        this.$data.telegramUserId = item.telegramUserId;
+        this.$data.chatId = item.chatId;
+    }
+
+    submitFile() {
+
+        let formData = new FormData();
+        formData.append('file', this.$data.file, this.$data.file.name);
+        formData.append('telegramUserId', this.$data.telegramUserId);
+        formData.append('chatId', this.$data.chatId);
+
+        axios.post( '/bot/single-file',
+            formData,
+            {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            }
+        ).then(function(){
+            console.log('SUCCESS!!');
+        })
+            .catch(function(){
+                console.log('FAILURE!!');
+            });
     }
 
 }

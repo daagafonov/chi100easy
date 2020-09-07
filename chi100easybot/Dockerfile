@@ -17,6 +17,7 @@ COPY . ./
 #ENV UDEV=1
 
 EXPOSE 8080
+EXPOSE 4242
 
 # server.js will run when container starts up on the device
 CMD ["npm", "run", "docker"]

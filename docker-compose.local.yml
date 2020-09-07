@@ -1,6 +1,10 @@
 version: '3.7'
 volumes:
   mongo-data3:
+  certbot-etc:
+  certbot-var:
+  nginx-config:
+
 services:
 
   mongo:
@@ -37,7 +41,8 @@ services:
     restart: always
     container_name: bot
     ports:
-    - "8080:8080"
+      - "8080:8080"
+      - "9090:4242"
     depends_on:
       - express
 
@@ -50,22 +55,12 @@ services:
     depends_on:
       - mongo
 
-#  api:
-#    build: ./chi100easyapi
-#    restart: always
-#    ports:
-#      - 9001:9000
-#    expose:
-#      - "9000"
-#    depends_on:
-#      - mongo
-
   gui:
     build: ./chi100easygui
     restart: always
     container_name: gui
     ports:
-      - 80:8080
+      - 9000:8080
     volumes:
       - ./chi100easygui/docker/update.sh:/docker-entrypoint.d/update.sh
     environment:
@@ -73,9 +68,18 @@ services:
     depends_on:
       - express
 
-#  nginx:
-#    build: ./chi100easybot-nginx
-#    restart: always
-#    container_name: botnginx
-#    ports:
-#      - "80:80"
+  nginx:
+    build: ./chi100easybot-nginx
+    restart: always
+    container_name: botnginx
+    volumes:
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/lib/letsencrypt
+      - nginx-config:/etc/nginx/conf.d
+    ports:
+      - "80:80"
+      - "443:443"
+
+# certbot -n --nginx -d agafonov.tech -d www.agafonov.tech --email daagafonov@gmail.com --agree-tos --no-eff-email --redirect
+# command: certonly --webroot --webroot-path=/var/www/html --email sammy@example.com --agree-tos --no-eff-email --force-renewal -d example.com -d www.example.com
+

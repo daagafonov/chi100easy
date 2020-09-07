@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "NODE_ENV=development node index.js",
-    "docker": "NODE_ENV=docker node index.js"
+    "docker": "NODE_ENV=docker node --trace-warnings index.js"
   },
   "author": "",
   "license": "ISC",
@@ -14,7 +14,12 @@
     "custom-env": "^2.0.1",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "form-data": "^3.0.0",
+    "morgan": "^1.10.0",
     "qrcode": "^1.4.4",
     "telegraf": "^3.38.0"
+  },
+  "devDependencies": {
+    "express-fileupload": "^1.2.0"
   }
 }
