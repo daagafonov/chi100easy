@@ -1,5 +1,5 @@
 const express = require("express");
-var short = require('short-uuid');
+const short = require('short-uuid');
 
 const router = express.Router();
 

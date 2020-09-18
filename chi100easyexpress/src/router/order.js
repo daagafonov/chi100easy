@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const short = require('short-uuid');
 
 const db = require('../model');
 
@@ -38,6 +39,7 @@ router.post('/user/:userId', async(req, res) => {
         const saved = await db.actions.order.create({
             comment: req.body.comment,
             user: req.params.userId,
+            orderId: short.generate(),
         });
         // const order = await db.actions.order.addOrderToUser(req.params.userId, saved);
         console.log(saved);

@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
-const OrderItem = require('./OrderItem');
-const User = require('./User');
+// const OrderItem = require('./OrderItem');
+// const User = require('./User');
 
 const orderSchema = new mongoose.Schema({
     created_dt: {
@@ -12,6 +12,10 @@ const orderSchema = new mongoose.Schema({
         type: Date,
         required: true,
         default: new Date(),
+    },
+    orderId: {
+        type: String,
+        required: false,
     },
     comment: {
         type: String,

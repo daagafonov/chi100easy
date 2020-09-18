@@ -1,12 +1,13 @@
 const axios = require('axios');
 const fs = require('fs');
-const path = require('path');
+// const path = require('path');
 const http = require('http');
-const https = require('https');
+// const https = require('https');
 const express = require('express');
 const morgan = require('morgan');
 const fileUpload = require('express-fileupload');
 const FormData = require('form-data');
+const crypto = require('crypto');
 
 
 const botServer = express();
@@ -35,15 +36,19 @@ let app;
 
 app = new Telegraf(process.env.BOT_TOKEN);
 
-botServer.use(app.webhookCallback(`/${process.env.BOT_TOKEN}`));
+// botServer.use(app.webhookCallback(`/${process.env.BOT_TOKEN}`));
 
-const webhook = `https://${process.env.EXTERNAL_SERVER_API}`;
+// const webhook = `https://${process.env.EXTERNAL_SERVER_API}`;
 
-app.telegram.setWebhook(webhook);
+// app.telegram.setWebhook(webhook);
 
-botServer.get(`/bot${process.env.BOT_TOKEN}`, (req, res) => {
-    app.telegram.processUpdate(req.body);
-    res.sendStatus(200);
+// botServer.get(`/bot${process.env.BOT_TOKEN}`, (req, res) => {
+//     app.telegram.processUpdate(req.body);
+//     res.sendStatus(200);
+// });
+
+botServer.post('/payment', (req, res) => {
+    console.log('payment', req);
 });
 
 botServer.post('/bot/shareDocument', (req, res) => {
@@ -80,14 +85,91 @@ botServer.post('/bot/shareDocument', (req, res) => {
         }).then(response => {
 
             console.log('sending document was success!!!!');
-            console.log(response);
+
+            const wayForPayAPI = 'https://api.wayforpay.com/api';
+            const merchantSecretKey = 'e41d4cb261a4fe6a328acf27c0d61fa7f320a6a8';
+
+            const params = {
+                transactionType: 'CREATE_QR',
+                merchantAccount: 'freelance_user_5f44fcec40c51',
+                merchantAuthType: 'SimpleSignature',
+                merchantDomainName: 'www.chystoprosto.com',
+                merchantSignature: '',
+                apiVersion: 1,
+                serviceUrl: 'https://agafonov.tech/payment',
+                orderReference: '123456789-3',
+                orderDate: new Date().getTime(),
+                amount: 100.87,
+                currency: 'UAH',
+                productName: ['Шорты'],
+                productPrice: [100.87],
+                productCount: [1],
+            };
+
+            const paramsForSig = `${params.merchantAccount};${params.merchantDomainName};${params.orderReference};${params.orderDate};${params.amount};${params.currency};${params.productName[0]};${params.productCount[0]};${params.productPrice[0]}`;
+            console.log('paramsForSig', paramsForSig);
+
+            const hmac = crypto.createHmac('md5', merchantSecretKey);
+            hmac.update(paramsForSig, 'utf8');
+
+            params.merchantSignature = hmac.digest('hex');
+
+            console.log('params', params);
+
+            axios.post(`${wayForPayAPI}`, params, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).then((wayforpayres) => {
+                console.log(wayforpayres.data);
+
+                const { reason, reasonCode, imageUrl } = wayforpayres.data;
+
+                console.log(reason);
+                console.log(reasonCode);
+                console.log(imageUrl);
+
+                if (reason === 'Ok') {
+
+                    console.log('reason is ok');
+
+                    const form = new FormData();
+                    form.append('photo', imageUrl);
+                    form.append('chat_id', chatId);
+                    form.append('caption', 'QR на оплату');
+
+                    axios.post(`https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendPhoto`, form, {
+                        headers: form.getHeaders()
+                    }).then(response => {
+
+                        console.log('sending QR was success!!!!');
+
+                    }).catch(error => {
+                        console.log(error);
+                    });
+                } else {
+                    return res.json({
+                        message: 'ERROR',
+                        error: wayforpayres.data,
+                    });
+                }
+
+            }).catch(error => {
+                return res.json({
+                    message: 'ERROR',
+                    error,
+                });
+            });
 
             return res.json({
                 message: 'OK',
             });
 
         }).catch(error => {
-            console.log(error);
+            return res.json({
+                message: 'ERROR',
+                error,
+            });
         });
 
     });
