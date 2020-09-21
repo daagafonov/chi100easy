@@ -5,8 +5,6 @@ const fs = require('fs');
 
 const db = require('../model');
 
-const order = require('../model/Order');
-
 router.get('/user/:userId', async(req, res) => {
     try {
         const orders = await db.actions.order.findByUserId(req.params.userId);
@@ -47,8 +45,8 @@ router.post('/user/:userId', async(req, res) => {
         const saved = await db.actions.order.create({
             comment: req.body.comment,
             user: req.params.userId,
-            orderId: short.generate(),
-            //file: req.files.file,
+            internalOrderId: short.generate(),
+            externalOrderId: req.body.externalOrderId,
             finalCost: req.body.finalCost,
         });
 
@@ -58,9 +56,13 @@ router.post('/user/:userId', async(req, res) => {
 
             const imageData = fs.readFileSync(fileName);
 
+            const doc = await db.actions.document.create({
+                type: mimetype,
+                data: imageData,
+            });
+
             await db.actions.order.updateOne(saved._id, {
-                documentType: mimetype,
-                documentData: imageData,
+                document: doc._id,
             });
 
             res.json({

@@ -42,7 +42,7 @@
 import {Component, Vue} from 'vue-property-decorator';
 import ProductModal from "@/components/ProductModal.vue";
 import EventService from "@/services/event.service";
-import OrderModal from "@/components/Order.vue";
+import OrderModal from "@/components/OrderModal.vue";
 
 @Component({
     components: {
@@ -56,9 +56,9 @@ export default class OrdersComponent extends Vue {
             items: [],
             filter: null,
             fields: [{
-                key: 'comment',
-            }, {
-                key: 'finalCost'
+                key: 'externalOrderId',
+            },{
+                key: 'finalCost',
             }, {
                 key: 'actions',
                 label: 'Actions'

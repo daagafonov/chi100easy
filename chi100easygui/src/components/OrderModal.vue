@@ -21,6 +21,14 @@
                     /></b-col>
                 </b-row>
                 <b-row>
+                    <b-col md="3">OrderID</b-col>
+                    <b-col md="9"><b-textarea
+                        placeholder="externalOrderId"
+                        name="externalOrderId"
+                        v-model="form.externalOrderId"
+                    /></b-col>
+                </b-row>
+                <b-row>
                     <b-col md="3">Comment</b-col>
                     <b-col md="9"><b-textarea
                                           placeholder="comment"
@@ -65,7 +73,7 @@ export default class OrderModal extends Vue {
             form: {
                 userId: '',
                 document: '',
-                orderId: '',
+                externalOrderId: '',
                 comment: '',
                 status: '',
                 finalCost: '',

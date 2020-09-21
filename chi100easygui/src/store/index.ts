@@ -28,7 +28,6 @@ export default new Vuex.Store({
 
         // products
         getProducts(state, payload) {
-            console.log('mutation', payload);
             EventService.sendEvent('getProducts', payload);
         },
         editProduct(state, payload) {
@@ -65,6 +64,8 @@ export default new Vuex.Store({
                         payload,
                     });
                 }
+            }).catch(error => {
+                console.error(error);
             });
         },
 
@@ -86,9 +87,8 @@ export default new Vuex.Store({
                     });
                 }
 
-                console.log(response);
             }).catch(error => {
-                console.log(error);
+                console.error(error);
             });
         },
 
@@ -112,7 +112,7 @@ export default new Vuex.Store({
 
                 console.log(response);
             }).catch(error => {
-                console.log(error);
+                console.error(error);
             });
         },
 
@@ -129,12 +129,14 @@ export default new Vuex.Store({
                     wrapError(response.message);
                 } else {
                     const payload = response.data;
-                    console.log('action', payload);
+                    console.error('action', payload);
                     commit('getProducts', {
                         action: 'products',
                         payload,
                     });
                 }
+            }).catch(error => {
+                console.error(error);
             });
         },
         editProduct({commit}, payload: any) {
@@ -153,7 +155,7 @@ export default new Vuex.Store({
                     });
                 }
             }).catch(error => {
-                console.log(error);
+                console.error(error);
             });
         },
 
@@ -176,7 +178,7 @@ export default new Vuex.Store({
                     });
                 }
             }).catch(error => {
-                console.log(error);
+                console.error(error);
             });
         },
         getOrders({commit}, payload: any) {
@@ -192,12 +194,14 @@ export default new Vuex.Store({
                     wrapError(response.message);
                 } else {
                     const payload = response.data;
-                    console.log('action', payload);
+                    console.error('action', payload);
                     commit('getOrders', {
                         action: 'orders',
                         payload,
                     });
                 }
+            }).catch(error => {
+                console.error(error);
             });
         },
         editOrder({commit}, payload: any) {
@@ -217,7 +221,7 @@ export default new Vuex.Store({
                     });
                 }
             }).catch(error => {
-                console.log(error);
+                console.error(error);
             });
         },
 
@@ -232,6 +236,7 @@ export default new Vuex.Store({
             formData.append('userId', payload.userId);
             formData.append('comment', payload.comment);
             formData.append('finalCost', payload.finalCost);
+            formData.append('externalOrderId', payload.externalOrderId);
 
 
             axios.post(`${sessionStorage.getItem('backendUrl')}/orders/user/${userId}`, formData, {
@@ -252,7 +257,7 @@ export default new Vuex.Store({
                     });
                 }
             }).catch(error => {
-                console.log(error);
+                console.error(error);
             });
         },
 
@@ -279,7 +284,7 @@ export default new Vuex.Store({
                         });
                     }
                 }).catch(error => {
-                    console.log(error);
+                    console.error(error);
                 });
             } else {
                 // create
@@ -301,7 +306,7 @@ export default new Vuex.Store({
                         });
                     }
                 }).catch(error => {
-                    console.log(error);
+                    console.error(error);
                 });
             }
         },

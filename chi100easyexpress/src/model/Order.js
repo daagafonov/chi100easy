@@ -13,9 +13,13 @@ const orderSchema = new mongoose.Schema({
         required: true,
         default: new Date(),
     },
-    orderId: {
+    internalOrderId: {
         type: String,
-        required: false,
+        required: true,
+    },
+    externalOrderId: {
+        type: String,
+        required: true,
     },
     comment: {
         type: String,
@@ -38,8 +42,10 @@ const orderSchema = new mongoose.Schema({
         required: true,
         default: 0.0,
     },
-    documentType: String,
-    documentData: Buffer,
+    document: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Document',
+    },
 });
 
 module.exports = mongoose.model('Order', orderSchema);
