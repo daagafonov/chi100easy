@@ -33,10 +33,13 @@ const orderSchema = new mongoose.Schema({
         index: true,
         required: true,
     },
-    // items: [{
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: OrderItem,
-    // }]
+    finalCost: {
+        type: Number,
+        required: true,
+        default: 0.0,
+    },
+    documentType: String,
+    documentData: Buffer,
 });
 
 module.exports = mongoose.model('Order', orderSchema);

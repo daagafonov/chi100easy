@@ -25,6 +25,7 @@ RUN apt update && apt upgrade -y && apt install certbot python-certbot-nginx ipu
 #CMD ["npm", "run", "docker"]
 
 COPY default.conf /etc/nginx/conf.d/
+COPY nginx.conf /etc/nginx/
 
 EXPOSE 80
 EXPOSE 443

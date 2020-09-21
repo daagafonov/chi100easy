@@ -61,6 +61,7 @@ services:
     container_name: gui
     ports:
       - 9000:8080
+      - 9001:80
     volumes:
       - ./chi100easygui/docker/update.sh:/docker-entrypoint.d/update.sh
     environment:
@@ -79,6 +80,10 @@ services:
     ports:
       - "80:80"
       - "443:443"
+    depends_on:
+      - express
+      - gui
+      - bot
 
 # certbot -n --nginx -d agafonov.tech -d www.agafonov.tech --email daagafonov@gmail.com --agree-tos --no-eff-email --redirect
 # command: certonly --webroot --webroot-path=/var/www/html --email sammy@example.com --agree-tos --no-eff-email --force-renewal -d example.com -d www.example.com

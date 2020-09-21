@@ -13,7 +13,7 @@ router.use('/products', productsRouter);
 
 router.get('/', (req, res) => {
     res.status(200).json({
-        message: 'OK 1'
+        message: 'OK'
     });
 });
 

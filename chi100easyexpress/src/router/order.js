@@ -1,8 +1,11 @@
 const express = require("express");
 const router = express.Router();
 const short = require('short-uuid');
+const fs = require('fs');
 
 const db = require('../model');
+
+const order = require('../model/Order');
 
 router.get('/user/:userId', async(req, res) => {
     try {
@@ -36,15 +39,37 @@ router.get('/:id', async(req, res) => {
 
 router.post('/user/:userId', async(req, res) => {
     try {
+
+        console.log('files', req.files);
+
+        const { name, mimetype } = req.files.file;
+
         const saved = await db.actions.order.create({
             comment: req.body.comment,
             user: req.params.userId,
             orderId: short.generate(),
+            //file: req.files.file,
+            finalCost: req.body.finalCost,
         });
-        // const order = await db.actions.order.addOrderToUser(req.params.userId, saved);
-        console.log(saved);
-        res.json(saved);
+
+        const fileName = `/tmp/${new Date().getTime()}-${name}`;
+
+        await req.files.file.mv(fileName, async (error) => {
+
+            const imageData = fs.readFileSync(fileName);
+
+            await db.actions.order.updateOne(saved._id, {
+                documentType: mimetype,
+                documentData: imageData,
+            });
+
+            res.json({
+                message: 'OK'
+            });
+
+        });
     } catch (error) {
+        console.log('error', error);
         res.json({
             message: error
         });

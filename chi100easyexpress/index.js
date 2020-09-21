@@ -2,6 +2,7 @@ const express = require("express");
 const morgan = require("morgan");
 const helmet = require("helmet");
 const cors = require("cors");
+const fileUpload = require('express-fileupload');
 
 require('custom-env').env(true);
 
@@ -19,6 +20,13 @@ app.use(morgan('dev'));
 app.use(helmet());
 app.use(cors());
 app.use(express.json());
+
+app.use(fileUpload({
+    // useTempFiles : true,
+    limits: {fileSize: 50 * 1024 * 1024},
+    // tempFileDir : '/tmp/',
+    debug: true,
+}));
 
 
 app.use(process.env.API_CONTEXT_PATH, api);

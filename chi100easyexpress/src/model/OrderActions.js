@@ -34,6 +34,10 @@ const findAll = function() {
     return Order.find();
 }
 
+const save = function() {
+    return Order.find();
+}
+
 const updateOne = function(id, fields) {
     return Order.updateOne({
         _id: id

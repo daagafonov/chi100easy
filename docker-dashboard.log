@@ -1,0 +1,104 @@
+[2020-09-18T12:44:40.012] [INFO] default - { status: 'tag',
+  id:
+   'sha256:8945243fd5b36f0b7382d3021fa1e3cf6a01241aae24b244cf4ae672295b0d8b',
+  Type: 'image',
+  Action: 'tag',
+  Actor:
+   { ID:
+      'sha256:8945243fd5b36f0b7382d3021fa1e3cf6a01241aae24b244cf4ae672295b0d8b',
+     Attributes: { name: 'chi100easy_express:latest' } },
+  scope: 'local',
+  time: 1600422280,
+  timeNano: 1600422280011281000 }
+[2020-09-18T12:44:40.967] [INFO] default - { status: 'tag',
+  id:
+   'sha256:be777840c1c3914684eb19fc5e174cbd9736454a536e98ca6a8c30bfc49c39af',
+  Type: 'image',
+  Action: 'tag',
+  Actor:
+   { ID:
+      'sha256:be777840c1c3914684eb19fc5e174cbd9736454a536e98ca6a8c30bfc49c39af',
+     Attributes: { name: 'chi100easy_bot:latest' } },
+  scope: 'local',
+  time: 1600422280,
+  timeNano: 1600422280966810600 }
+[2020-09-18T12:44:41.136] [INFO] default - { status: 'tag',
+  id:
+   'sha256:a495c1711aa8ae8e87bbf2d847d2b29eeb07c855b9aab7523c0c4c638a9eb117',
+  Type: 'image',
+  Action: 'tag',
+  Actor:
+   { ID:
+      'sha256:a495c1711aa8ae8e87bbf2d847d2b29eeb07c855b9aab7523c0c4c638a9eb117',
+     Attributes:
+      { maintainer: 'NGINX Docker Maintainers <docker-maint@nginx.com>',
+        name: 'chi100easy_gui:latest' } },
+  scope: 'local',
+  time: 1600422281,
+  timeNano: 1600422281135909400 }
+[2020-09-18T12:44:41.192] [INFO] default - { status: 'tag',
+  id:
+   'sha256:a0f688554831a9796401994f4928517ecf911bdd5833cd9f8fea3a503d0c9c18',
+  Type: 'image',
+  Action: 'tag',
+  Actor:
+   { ID:
+      'sha256:a0f688554831a9796401994f4928517ecf911bdd5833cd9f8fea3a503d0c9c18',
+     Attributes:
+      { maintainer: 'NGINX Docker Maintainers <docker-maint@nginx.com>',
+        name: 'chi100easy_nginx:latest' } },
+  scope: 'local',
+  time: 1600422281,
+  timeNano: 1600422281192109300 }
+[2020-09-18T12:44:41.280] [INFO] default - { status: 'kill',
+  id:
+   'c79e5177e4ff72a973a27f1dd58624f20273921d400d735fc29fb02c5c497d1d',
+  from: 'chi100easy_gui',
+  Type: 'container',
+  Action: 'kill',
+  Actor:
+   { ID:
+      'c79e5177e4ff72a973a27f1dd58624f20273921d400d735fc29fb02c5c497d1d',
+     Attributes:
+      { 'com.docker.compose.config-hash':
+         'fbc3a04a0f012fdd7c9820adcd2c5bdcdfa1ca82c50f351e34f021e387884bbf',
+        'com.docker.compose.container-number': '1',
+        'com.docker.compose.oneoff': 'False',
+        'com.docker.compose.project': 'chi100easy',
+        'com.docker.compose.project.config_files': 'docker-compose.local.yml',
+        'com.docker.compose.project.working_dir': '/home/daa/projects/chi100easy',
+        'com.docker.compose.service': 'gui',
+        'com.docker.compose.version': '1.25.0',
+        image: 'chi100easy_gui',
+        maintainer: 'NGINX Docker Maintainers <docker-maint@nginx.com>',
+        name: 'gui',
+        signal: '15' } },
+  scope: 'local',
+  time: 1600422281,
+  timeNano: 1600422281279926500 }
+[2020-09-18T12:44:41.413] [INFO] default - { status: 'die',
+  id:
+   'c79e5177e4ff72a973a27f1dd58624f20273921d400d735fc29fb02c5c497d1d',
+  from: 'chi100easy_gui',
+  Type: 'container',
+  Action: 'die',
+  Actor:
+   { ID:
+      'c79e5177e4ff72a973a27f1dd58624f20273921d400d735fc29fb02c5c497d1d',
+     Attributes:
+      { 'com.docker.compose.config-hash':
+         'fbc3a04a0f012fdd7c9820adcd2c5bdcdfa1ca82c50f351e34f021e387884bbf',
+        'com.docker.compose.container-number': '1',
+        'com.docker.compose.oneoff': 'False',
+        'com.docker.compose.project': 'chi100easy',
+        'com.docker.compose.project.config_files': 'docker-compose.local.yml',
+        'com.docker.compose.project.working_dir': '/home/daa/projects/chi100easy',
+        'com.docker.compose.service': 'gui',
+        'com.docker.compose.version': '1.25.0',
+        exitCode: '0',
+        image: 'chi100easy_gui',
+        maintainer: 'NGINX Docker Maintainers <docker-maint@nginx.com>',
+        name: 'gui' } },
+  scope: 'local',
+  time: 1600422281,
+  timeNano: 1600422281413497000 }

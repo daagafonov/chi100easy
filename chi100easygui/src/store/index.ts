@@ -221,29 +221,40 @@ export default new Vuex.Store({
             });
         },
 
-        // addOrder({commit}, payload: any) {
-        //     const userId = payload.userId;
-        //     axios.post(`${sessionStorage.getItem('backendUrl')}/orders/user/${userId}`, payload, {
-        //         headers: {
-        //             'Content-Type': 'application/json'
-        //         }
-        //     }).then((response: any) => {
-        //
-        //         console.log('response', response);
-        //
-        //         if (response.message) {
-        //             wrapError(response.message);
-        //         } else {
-        //             const {data} = response.data;
-        //             commit('addOrder', {
-        //                 action: 'addOrder',
-        //                 payload: data,
-        //             });
-        //         }
-        //     }).catch(error => {
-        //         console.log(error);
-        //     });
-        // },
+        addOrder({commit}, payload: any) {
+
+            console.log('addOrder', payload);
+
+            const userId = payload.userId;
+
+            let formData = new FormData();
+            formData.append('file', payload.file, payload.file.name);
+            formData.append('userId', payload.userId);
+            formData.append('comment', payload.comment);
+            formData.append('finalCost', payload.finalCost);
+
+
+            axios.post(`${sessionStorage.getItem('backendUrl')}/orders/user/${userId}`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            }).then((response: any) => {
+
+                console.log(response);
+
+                if (response.message) {
+                    wrapError(response.message);
+                } else {
+                    const {data} = response.data;
+                    commit('addOrder', {
+                        action: 'addOrder',
+                        payload: data,
+                    });
+                }
+            }).catch(error => {
+                console.log(error);
+            });
+        },
 
         saveOrder({commit}, order: any) {
             const userId = order.user;
