@@ -8,5 +8,4 @@ mongoose.connect(process.env.MONGO_SERVER_URI, {
     console.log('connected to db');
 });
 
-
 module.exports = mongoose;

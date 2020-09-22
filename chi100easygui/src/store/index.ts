@@ -310,6 +310,30 @@ export default new Vuex.Store({
                 });
             }
         },
+        sendDocument({commit}, payload: any) {
+            const { orderId } = payload;
+
+            axios.post(`${sessionStorage.getItem('backendUrl')}/orders/${orderId}/send`, {}, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).then((response: any) => {
+
+                console.log('response', response);
+
+                if (response.message) {
+                    wrapError(response.message);
+                } else {
+                    const {data} = response.data;
+                    commit('sendDocument', {
+                        action: 'sendDocument',
+                        payload: data,
+                    });
+                }
+            }).catch(error => {
+                console.error(error);
+            });
+        }
     },
     modules: {}
 });

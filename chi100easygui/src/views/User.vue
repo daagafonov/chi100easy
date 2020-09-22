@@ -19,10 +19,10 @@
 
             <template v-slot:cell(actions)="row">
 
-                <label>File
-                    <input type="file" id="file" v-on:change="sendDocument(row.item, $event.target.files)"
-                           accept="application/pdf"/>
-                </label>
+<!--                <label>File-->
+<!--                    <input type="file" id="file" v-on:change="sendDocument(row.item, $event.target.files)"-->
+<!--                           accept="application/pdf"/>-->
+<!--                </label>-->
                 <!--                <b-button variant="success" v-on:click="submitFile()">Submit</b-button>-->
 
                 <b-button size="sm" variant="warning" @click="orders(row.item, row.index, $event.target)">
@@ -119,36 +119,36 @@ export default class UserComponent extends Vue {
         });
     }
 
-    sendDocument(item: any, files: any) {
-        this.$data.file = files[0];
-        this.$data.telegramUserId = item.telegramUserId;
-        this.$data.chatId = item.chatId;
-
-        this.submitFile();
-    }
-
-    submitFile() {
-
-        let formData = new FormData();
-        formData.append('file', this.$data.file, this.$data.file.name);
-        formData.append('telegramUserId', this.$data.telegramUserId);
-        formData.append('chatId', this.$data.chatId);
-        formData.append('caption', 'Подтверждение заказа!');
-
-        axios.post('/bot/shareDocument',
-            formData,
-            {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            }
-        ).then(function () {
-            console.log('SUCCESS!!');
-        })
-            .catch(function () {
-                console.log('FAILURE!!');
-            });
-    }
+    // sendDocument(item: any, files: any) {
+    //     this.$data.file = files[0];
+    //     this.$data.telegramUserId = item.telegramUserId;
+    //     this.$data.chatId = item.chatId;
+    //
+    //     this.submitFile();
+    // }
+    //
+    // submitFile() {
+    //
+    //     let formData = new FormData();
+    //     formData.append('file', this.$data.file, this.$data.file.name);
+    //     formData.append('telegramUserId', this.$data.telegramUserId);
+    //     formData.append('chatId', this.$data.chatId);
+    //     formData.append('caption', 'Подтверждение заказа!');
+    //
+    //     axios.post('/bot/shareDocument',
+    //         formData,
+    //         {
+    //             headers: {
+    //                 'Content-Type': 'multipart/form-data'
+    //             }
+    //         }
+    //     ).then(function () {
+    //         console.log('SUCCESS!!');
+    //     })
+    //         .catch(function () {
+    //             console.log('FAILURE!!');
+    //         });
+    // }
 
 }
 </script>

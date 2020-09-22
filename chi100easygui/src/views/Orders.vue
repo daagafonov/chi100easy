@@ -20,10 +20,10 @@
                     <template v-slot:table-caption>Заказы ...</template>
 
                     <template v-slot:cell(actions)="row">
-<!--                        <b-button size="sm" @click="save(row.item, row.index, $event.target)"-->
-<!--                                  class="mr-1">-->
-<!--                            Сохранить-->
-<!--                        </b-button>-->
+                        <b-button size="sm" @click="sendDocument(row.item, row.index, $event.target)"
+                                  class="mr-1">
+                            Отправить документ
+                        </b-button>
 <!--                        <b-button v-if="row.item._id" size="sm" @click="details(row.item, row.index, $event.target)"-->
 <!--                                  class="mr-1">-->
 <!--                            Детали-->
@@ -104,8 +104,11 @@ export default class OrdersComponent extends Vue {
         // delete by id
     }
 
-    save(item: any, index: any, event: any) {
-        this.$store.dispatch('saveOrder', item);
+    sendDocument(item: any, index: any, event: any) {
+        console.log(item);
+        this.$store.dispatch('sendDocument', {
+            orderId: item._id,
+        });
     }
 
 }

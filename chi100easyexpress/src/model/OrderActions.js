@@ -22,8 +22,12 @@ const findByUserId = function(userId) {
     });
 }
 
-const getOrderWithPopulate = function(id) {
+const getOrderWithPopulateItems = function(id) {
     return Order.findById(id).populate("items", "-__v");
+};
+
+const getOrderWithPopulateDocument = function(id) {
+    return Order.findById(id).populate("document", "-__v").populate('user', '-__v');
 };
 
 const findById = function(id) {
@@ -51,7 +55,8 @@ module.exports = {
     addOrderToUser,
     findById,
     findAll,
-    getOrderWithPopulate,
+    getOrderWithPopulateItems,
+    getOrderWithPopulateDocument,
     findByUserId,
     updateOne,
 }
