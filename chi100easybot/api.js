@@ -4,6 +4,7 @@ const FormData = require('form-data');
 const crypto = require('crypto');
 const fs = require('fs');
 const router = express.Router();
+const shared = require('./shared');
 
 router.get('/', (req, res) => {
     res.status(200).json({
@@ -139,6 +140,30 @@ router.post('/shareDocument', (req, res) => {
             });
         });
 
+    });
+});
+
+router.post('/confirmDocument', (req, res) => {
+
+    console.log('confirmDocument...');
+
+    axios.post(`https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendMessage`, {
+        chat_id: req.body.chat_id,
+        text: 'Please confirm, foo *bold* _italic_',
+        parse_mode: 'Markdown',
+        reply_to_message_id: req.body.message_id,
+        reply_markup: {
+            keyboard: [[{
+                text: 'Confirm',
+            }, {
+                text: 'Decline',
+            }]],
+            resize_keyboard: true,
+        }
+    }).then(response => {
+        console.log(response.data);
+    }).catch(error => {
+        console.error(error);
     });
 });
 

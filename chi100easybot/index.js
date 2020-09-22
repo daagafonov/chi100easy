@@ -17,6 +17,8 @@ const session = require("telegraf/session");
 const Stage = require('telegraf/stage');
 const Scene = require('telegraf/scenes/base');
 
+const shared = require('./shared');
+
 require('custom-env').env(true);
 console.log("node env ", process.env.NODE_ENV);
 
@@ -43,6 +45,8 @@ botServer.use('/bot', api);
 let app;
 
 app = new Telegraf(process.env.BOT_TOKEN);
+
+shared.app = app;
 
 // botServer.use(app.webhookCallback(`/${process.env.BOT_TOKEN}`));
 
@@ -182,6 +186,14 @@ app.on("location", async (ctx) => {
     }).catch((error) => {
         console.error(error);
     });
+});
+
+app.hears('Confirm', async (ctx) => {
+    await ctx.reply('GOOD guy');
+});
+
+app.hears('Decline', async (ctx) => {
+    await ctx.reply('BAD guy');
 });
 
 app.launch();

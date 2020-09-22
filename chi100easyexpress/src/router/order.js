@@ -114,14 +114,6 @@ router.put('/:id', async(req, res) => {
 
 router.post('/:orderId/send', async (req, res)=>{
     try {
-        // const order = await db.actions.order.getOrderWithPopulateDocument(req.params.orderId);
-        // console.log('order %o', order);
-        //
-        // const { document } = order;
-        //
-        // console.log(document);
-        //
-        // console.log('creating form');
         const order = await db.actions.order.getOrderWithPopulateDocument(req.params.orderId);
         const gridfs = new mongoose.mongo.GridFSBucket(mongoose.connection.db, {
             chunkSizeBytes: 1024,
@@ -136,32 +128,39 @@ router.post('/:orderId/send', async (req, res)=>{
             .on('finish', async () => {
                 const content = fs.readFileSync(`/tmp/${order._id}`);
                 const form = new FormData();
-                console.log('creating data');
+                // console.log('creating data');
                 form.append('document', content, {
                     filename: order.document.name,
                     contentType: order.document.type,
                     knownLength: order.document.size,
                 });
-                console.log('creating chat_id');
+                // console.log('creating chat_id');
                 form.append('chat_id', order.user.telegramUserId);
                 // if (caption) {
-                console.log('creating caption');
+                // console.log('creating caption');
                 form.append('caption', 'Please confirm an order');
 
-                console.log(form);
+                // console.log(form);
 
                 await axios.post(`https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendDocument`, form, {
                     headers: form.getHeaders()
                 }).then(response => {
 
                     const { ok, result } = response.data;
+
+                    console.log('ok typeof', typeof ok);
+
                     if (ok === true) {
 
                         console.log(result);
-                        const { message_id, from, chat, date, document } = result;
+                        const { message_id, chat, document } = result;
 
-                        res.status(200).json({
-                            data: result,
+                        confirmDocument(message_id, chat, document, (response) => {
+                            res.status(200).json({
+                                data: result,
+                            });
+                        }, (error) => {
+                            console.error(error);
                         });
 
                         // send request to bot to display the buttons
@@ -212,5 +211,20 @@ router.post('/:orderId/send', async (req, res)=>{
         });
     }
 });
+
+function confirmDocument(message_id, chat, document, success, error) {
+    axios.post(`${process.env.BOT_SERVER_URI}/confirmDocument`, {
+        message_id: message_id,
+        chat_id: chat.id,
+        file_id: document.file_id,
+        file_unique_id: document.file_unique_id,
+    }).then(response => {
+        console.log(response.data);
+        success(response);
+    }).catch(err => {
+        console.error(err);
+        error(err);
+    });
+}
 
 module.exports = router;
