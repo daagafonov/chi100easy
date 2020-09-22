@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 
 const documentSchema = new mongoose.Schema({
+    name: String,
     type: String,
-    data: Buffer,
     size: Number,
     md5: String,
 });

@@ -42,10 +42,15 @@ const orderSchema = new mongoose.Schema({
         required: true,
         default: 0.0,
     },
+    discount: {
+        type: Number,
+        required: true,
+        default: 0.0,
+    },
     document: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Document',
-    },
+        ref: 'Document'
+    }
 });
 
 module.exports = mongoose.model('Order', orderSchema);

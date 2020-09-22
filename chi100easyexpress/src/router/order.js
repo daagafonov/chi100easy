@@ -22,7 +22,7 @@ router.get('/user/:userId', async(req, res) => {
 
 router.get('/:id', async(req, res) => {
     try {
-        const order = await db.actions.order.getOrderWithPopulate(req.params.id);
+        const order = await db.actions.order.getOrderWithPopulateUser(req.params.id);
         if (order) {
             res.json(order);
         } else {
@@ -58,20 +58,6 @@ router.post('/user/:userId', async(req, res) => {
 
         await req.files.file.mv(fileName, async (error) => {
 
-
-            // const writestream = gfs.createWriteStream({
-            //     filename: name + Date.now(),
-            //     mode: 'w',
-            //     content_type: mimetype,
-            //     metadata: req.body
-            // });
-            // fs.createReadStream(fileName).pipe(writestream);
-            // writestream.on('close', (file) => {
-            //
-            //     console.log(file);
-            //     //res.status(200).json(file);
-            // });
-
             const gridfs = new mongoose.mongo.GridFSBucket(mongoose.connection.db, {
                 chunkSizeBytes: 1024,
                 bucketName: 'documents'
@@ -83,30 +69,21 @@ router.post('/user/:userId', async(req, res) => {
                     console.log(error);
                 }).
                 on('finish', async () => {
-                    console.log('done!');
+                    console.log('upload was done!');
+                    const doc = await db.actions.document.create({
+                        name,
+                        type: mimetype,
+                        size,
+                        md5,
+                    });
                     await db.actions.order.updateOne(saved._id, {
-                        document: doc._id,
+                        document: doc._id
                     });
 
                     res.json({
                         message: 'OK'
                     });
                 });
-
-            // const imageData = fs.readFileSync(fileName);
-
-            // const doc = await db.actions.document.create({
-            //     type: mimetype,
-            //     data: imageData,
-            //     size,
-            //     md5,
-            // });
-
-            // await db.actions.order.updateOne(saved._id, {
-            //     document: doc._id,
-            // });
-
-
 
         });
     } catch (error) {
@@ -137,42 +114,97 @@ router.put('/:id', async(req, res) => {
 
 router.post('/:orderId/send', async (req, res)=>{
     try {
+        // const order = await db.actions.order.getOrderWithPopulateDocument(req.params.orderId);
+        // console.log('order %o', order);
+        //
+        // const { document } = order;
+        //
+        // console.log(document);
+        //
+        // console.log('creating form');
         const order = await db.actions.order.getOrderWithPopulateDocument(req.params.orderId);
-        console.log('order %o', order);
-
-        const { document } = order;
-
-        console.log(document);
-
-        console.log('creating form');
-        const form = new FormData();
-        console.log('creating data');
-        form.append('document', document.data, {
-            filename: document.name,
-            contentType: document.type,
-            knownLength: document.size,
+        const gridfs = new mongoose.mongo.GridFSBucket(mongoose.connection.db, {
+            chunkSizeBytes: 1024,
+            bucketName: 'documents'
         });
-        console.log('creating chat_id');
-        form.append('chat_id', order.user.telegramUserId);
-        // if (caption) {
-        console.log('creating caption');
-        form.append('caption', 'Please confirm an order');
-        // }
 
-        console.log(form);
+        gridfs.openDownloadStreamByName(order._id)
+            .pipe(fs.createWriteStream(`/tmp/${order._id}`))
+            .on('error', function (error) {
+                console.log(error);
+            })
+            .on('finish', async () => {
+                const content = fs.readFileSync(`/tmp/${order._id}`);
+                const form = new FormData();
+                console.log('creating data');
+                form.append('document', content, {
+                    filename: order.document.name,
+                    contentType: order.document.type,
+                    knownLength: order.document.size,
+                });
+                console.log('creating chat_id');
+                form.append('chat_id', order.user.telegramUserId);
+                // if (caption) {
+                console.log('creating caption');
+                form.append('caption', 'Please confirm an order');
 
-        await axios.post(`https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendDocument`, form, {
-            headers: form.getHeaders()
-        }).then(response => {
+                console.log(form);
 
-            console.log(response);
+                await axios.post(`https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendDocument`, form, {
+                    headers: form.getHeaders()
+                }).then(response => {
 
-        }).catch((error) => {
-            console.error(error);
-            res.status(500).json({
-                message: error
-            });
-        });
+                    const { ok, result } = response.data;
+                    if (ok === true) {
+
+                        console.log(result);
+                        const { message_id, from, chat, date, document } = result;
+
+                        res.status(200).json({
+                            data: result,
+                        });
+
+                        // send request to bot to display the buttons
+
+                    }
+
+                }).catch((error) => {
+                    console.error(error);
+                    res.status(500).json({
+                        message: error
+                    });
+                });
+            })
+        ;
+
+        // const form = new FormData();
+        // console.log('creating data');
+        // form.append('document', document.data, {
+        //     filename: document.name,
+        //     contentType: document.type,
+        //     knownLength: document.size,
+        // });
+        // console.log('creating chat_id');
+        // form.append('chat_id', order.user.telegramUserId);
+        // // if (caption) {
+        // console.log('creating caption');
+        // form.append('caption', 'Please confirm an order');
+        // // }
+        //
+        // console.log(form);
+        //
+        // await axios.post(`https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendDocument`, form, {
+        //     headers: form.getHeaders()
+        // }).then(response => {
+        //
+        //     console.log(response);
+        //
+        // }).catch((error) => {
+        //     console.error(error);
+        //     res.status(500).json({
+        //         message: error
+        //     });
+        // });
 
     } catch(error) {
         res.status(500).json({

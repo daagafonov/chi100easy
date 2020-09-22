@@ -46,6 +46,9 @@ export default new Vuex.Store({
         },
         editOrder(state, payload) {
             EventService.sendEvent('editOrder', payload);
+        },
+        sendDocument(state, payload) {
+            EventService.sendEvent('sendDocument', payload);
         }
     },
     actions: {
@@ -76,7 +79,6 @@ export default new Vuex.Store({
                     'Content-Type': 'application/json'
                 }
             }).then((response: any) => {
-
                 if (response.message) {
                     wrapError(response.message);
                 } else {
@@ -86,7 +88,6 @@ export default new Vuex.Store({
                         payload: data,
                     });
                 }
-
             }).catch(error => {
                 console.error(error);
             });
@@ -99,7 +100,6 @@ export default new Vuex.Store({
                     'Content-Type': 'application/json'
                 }
             }).then((response: any) => {
-
                 if (response.message) {
                     wrapError(response.message);
                 } else {
@@ -109,8 +109,6 @@ export default new Vuex.Store({
                         payload: data,
                     });
                 }
-
-                console.log(response);
             }).catch(error => {
                 console.error(error);
             });
@@ -129,7 +127,6 @@ export default new Vuex.Store({
                     wrapError(response.message);
                 } else {
                     const payload = response.data;
-                    console.error('action', payload);
                     commit('getProducts', {
                         action: 'products',
                         payload,
@@ -165,9 +162,6 @@ export default new Vuex.Store({
                     'Content-Type': 'application/json'
                 }
             }).then((response: any) => {
-
-                console.log('response', response);
-
                 if (response.message) {
                     wrapError(response.message);
                 } else {
@@ -194,7 +188,6 @@ export default new Vuex.Store({
                     wrapError(response.message);
                 } else {
                     const payload = response.data;
-                    console.error('action', payload);
                     commit('getOrders', {
                         action: 'orders',
                         payload,
@@ -244,9 +237,6 @@ export default new Vuex.Store({
                     'Content-Type': 'multipart/form-data'
                 }
             }).then((response: any) => {
-
-                console.log(response);
-
                 if (response.message) {
                     wrapError(response.message);
                 } else {
@@ -271,9 +261,6 @@ export default new Vuex.Store({
                         'Content-Type': 'application/json'
                     }
                 }).then((response: any) => {
-
-                    console.log('response', response);
-
                     if (response.message) {
                         wrapError(response.message);
                     } else {
@@ -293,9 +280,6 @@ export default new Vuex.Store({
                         'Content-Type': 'application/json'
                     }
                 }).then((response: any) => {
-
-                    console.log('response', response);
-
                     if (response.message) {
                         wrapError(response.message);
                     } else {
@@ -318,9 +302,6 @@ export default new Vuex.Store({
                     'Content-Type': 'application/json'
                 }
             }).then((response: any) => {
-
-                console.log('response', response);
-
                 if (response.message) {
                     wrapError(response.message);
                 } else {

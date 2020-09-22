@@ -92,6 +92,10 @@ export default class OrdersComponent extends Vue {
                 userId: this.$route.query.userId,
             });
         });
+
+        EventService.subscribeEvent('sendDocument', (payload: any) => {
+            this.sendDocumentResult(payload);
+        });
     }
 
     addOrder(event: any) {
@@ -105,10 +109,13 @@ export default class OrdersComponent extends Vue {
     }
 
     sendDocument(item: any, index: any, event: any) {
-        console.log(item);
         this.$store.dispatch('sendDocument', {
             orderId: item._id,
         });
+    }
+
+    sendDocumentResult(payload: any) {
+        console.log(payload);
     }
 
 }
