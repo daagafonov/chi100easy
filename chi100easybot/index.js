@@ -189,11 +189,24 @@ app.on("location", async (ctx) => {
 });
 
 app.hears('Confirm', async (ctx) => {
-    await ctx.reply('GOOD guy');
+
+    // call express back to update order status
+
+    await ctx.replyWithMarkdown('GOOD guy', {
+        reply_markup: {
+            remove_keyboard: true,
+        },
+        disable_notification: true,
+    });
 });
 
 app.hears('Decline', async (ctx) => {
-    await ctx.reply('BAD guy');
+    await ctx.reply('BAD guy', {
+        reply_markup: {
+            remove_keyboard: true,
+        },
+        disable_notification: true,
+    });
 });
 
 app.launch();
@@ -201,11 +214,7 @@ app.launch();
 function starter(ctx) {
 
     axios.get(`http://${process.env.API_HOST}:${process.env.API_PORT}${process.env.API_CONTEXT_PATH}/users/byTelegramUserId/${ctx.message.from.id}`).then((response) => {
-
-        console.log(response.data);
-
         buildStarterButtons(ctx);
-
     }).catch((err) => {
         axios.post(`http://${process.env.API_HOST}:${process.env.API_PORT}${process.env.API_CONTEXT_PATH}/users`, {
             firstName: ctx.message.from.first_name,

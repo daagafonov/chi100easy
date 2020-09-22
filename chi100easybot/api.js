@@ -144,14 +144,11 @@ router.post('/shareDocument', (req, res) => {
 });
 
 router.post('/confirmDocument', (req, res) => {
-
-    console.log('confirmDocument...');
-
     axios.post(`https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendMessage`, {
         chat_id: req.body.chat_id,
-        text: 'Please confirm, foo *bold* _italic_',
+        text: 'Please confirm',
         parse_mode: 'Markdown',
-        reply_to_message_id: req.body.message_id,
+        // reply_to_message_id: req.body.message_id,
         reply_markup: {
             keyboard: [[{
                 text: 'Confirm',
