@@ -12,7 +12,7 @@ router.get('/', (req, res) => {
     });
 });
 
-router.get('/payment', (req, res) => {
+router.post('/payment', (req, res) => {
 
     console.log('payment request', req.body);
 
