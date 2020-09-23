@@ -9,45 +9,37 @@ const crypto = require('crypto');
 
 const db = require('../model');
 
-function makeError(message) {
-    return {
-        ok: false,
-        message,
-    }
-}
+const utils = require('./utils');
 
-router.get('/user/:userId', async(req, res) => {
+router.get('/user/:userId', async (req, res) => {
     try {
         const orders = await db.actions.order.findByUserId(req.params.userId);
         res.json(orders);
     } catch (error) {
         console.error(error);
-        res.status(500).json(makeError(error));
+        utils.resError(res, error);
     }
 });
 
-router.get('/:id', async(req, res) => {
+router.get('/:id', async (req, res) => {
     try {
         const order = await db.actions.order.getOrderWithPopulateUser(req.params.id);
         if (order) {
             res.json(order);
         } else {
-            res.status(404).json({
-                error: true,
-                message: 'does not exist'
-            });
+            utils.resNotFound(res, 'not found');
         }
     } catch (error) {
-        res.status(500).json(makeError(error));
+        utils.resError(res, error);
     }
 });
 
-router.post('/user/:userId', async(req, res) => {
+router.post('/user/:userId', async (req, res) => {
     try {
 
         console.log('files', req.files);
 
-        const { name, mimetype, size, md5 } = req.files.file;
+        const {name, mimetype, size, md5} = req.files.file;
 
         const saved = await db.actions.order.create({
             comment: req.body.comment,
@@ -67,36 +59,34 @@ router.post('/user/:userId', async(req, res) => {
                 bucketName: 'documents'
             });
 
-            fs.createReadStream(fileName).
-                pipe(gridfs.openUploadStream(saved._id)).
-                on('error', function (error) {
-                    res.json(makeError(error));
-                }).
-                on('finish', async () => {
-                    console.log('upload was done!');
-                    const doc = await db.actions.document.create({
-                        name,
-                        type: mimetype,
-                        size,
-                        md5,
-                    });
-                    await db.actions.order.updateOne(saved._id, {
-                        document: doc._id
-                    });
-
-                    res.json({
-                        message: 'OK'
-                    });
+            fs.createReadStream(fileName).pipe(gridfs.openUploadStream(saved._id)).on('error', function (error) {
+                res.json(utils.makeError(error));
+            }).on('finish', async () => {
+                console.log('upload was done!');
+                const doc = await db.actions.document.create({
+                    name,
+                    type: mimetype,
+                    size,
+                    md5,
                 });
+                await db.actions.order.updateOne(saved._id, {
+                    document: doc._id
+                });
+
+                res.json({
+                    ok: true,
+                    message: 'OK'
+                });
+            });
 
         });
     } catch (error) {
         console.log('error', error);
-        res.status(500).json(makeError(error));
+        utils.resError(res, error);
     }
 });
 
-router.put('/:id', async(req, res) => {
+router.put('/:id', async (req, res) => {
 
     const order = {
         comment: req.body.comment,
@@ -108,15 +98,13 @@ router.put('/:id', async(req, res) => {
         console.log(saved);
         res.json(saved);
     } catch (error) {
-        res.status(500).json(makeError(error));
+        utils.resError(res, error);
     }
 });
 
 router.post('/:orderId/confirm', async (req, res) => {
     try {
         const order = await db.actions.order.findById(req.params.orderId);
-
-        console.log('order.status < CONFIRMED', order.status === 'CREATED');
 
         if (order.status === 'CREATED') {
 
@@ -132,13 +120,13 @@ router.post('/:orderId/confirm', async (req, res) => {
                 });
 
             }, err => {
-                res.json(makeError(err));
+                utils.resError(res, error);
             });
         } else {
-            res.json(makeError('This document was already confirmed or declined'));
+            utils.resError(res, 'This document was already confirmed or declined');
         }
-    } catch(error) {
-        res.json(makeError(error));
+    } catch (error) {
+        utils.resError(res, error);
     }
 });
 
@@ -153,19 +141,19 @@ router.post('/:orderId/decline', async (req, res) => {
                 ok: true
             });
         } else {
-            res.json(makeError('document was already declined or confirmed'));
+            utils.resError(res, 'document was already declined or confirmed');
         }
-    } catch(error) {
-        res.json(makeError(error));
+    } catch (error) {
+        utils.resError(res, error);
     }
 });
 
-router.post('/:orderId/send', async (req, res)=>{
+router.post('/:orderId/send', async (req, res) => {
     try {
         const order = await db.actions.order.getOrderWithPopulateDocument(req.params.orderId);
 
         if (order.status !== 'CREATED') {
-            res.json(makeError('Order was already sent'));
+            utils.resError(res, 'Order was already sent');
             return;
         }
 
@@ -177,10 +165,7 @@ router.post('/:orderId/send', async (req, res)=>{
         await gridfs.openDownloadStreamByName(order._id)
             .pipe(fs.createWriteStream(`/tmp/${order._id}`))
             .on('error', function (error) {
-                res.status(500).json({
-                    ok: false,
-                    message: error,
-                });
+                utils.resError(res, error);
             })
             .on('finish', () => {
                 const content = fs.readFileSync(`/tmp/${order._id}`);
@@ -203,14 +188,14 @@ router.post('/:orderId/send', async (req, res)=>{
                     headers: form.getHeaders()
                 }).then(response => {
 
-                    const { ok, result } = response.data;
+                    const {ok, result} = response.data;
 
                     console.log('ok typeof', typeof ok);
 
                     if (ok) {
 
                         console.log('result:', result);
-                        const { message_id, chat, document } = result;
+                        const {message_id, chat, document} = result;
 
                         axios.post(`${process.env.BOT_SERVER_URI}/confirmDocument`, {
                             message_id: message_id,
@@ -221,36 +206,28 @@ router.post('/:orderId/send', async (req, res)=>{
                         }).then(response => {
                             console.log('conf doc succ');
                             res.status(200).json({
+                                ok: true,
                                 data: response.data,
                             });
                         }).catch(error => {
                             console.log('conf doc error');
-                            res.status(500).json({
-                                message: error
-                            });
+                            utils.resError(res, error);
                         });
 
                         // send request to bot to display the buttons
 
                     } else {
-                        res.status(500).json({
-                            message: 'sendDocument was not ok',
-                            payload: result,
-                        });
+                        utils.resError(res, 'sendDocument was not ok');
                     }
 
                 }).catch((error) => {
                     console.error(error);
-                    res.status(500).json({
-                        message: error
-                    });
+                    utils.resError(res, error);
                 });
             });
 
-    } catch(error) {
-        res.status(500).json({
-            message: error
-        });
+    } catch (error) {
+        utils.resError(res, error);
     }
 });
 
@@ -288,7 +265,7 @@ function sendInvoice(order, success, error) {
             'Content-Type': 'application/json'
         }
     }).then((wayforpayres) => {
-        const { reason, reasonCode, imageUrl } = wayforpayres.data;
+        const {reason, reasonCode, imageUrl} = wayforpayres.data;
         success(wayforpayres.data);
     }).catch(err => {
         error(err);
