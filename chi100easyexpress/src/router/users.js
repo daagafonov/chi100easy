@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const utils = require('./utils');
 
 const db = require('../model');
 
@@ -9,9 +10,7 @@ router.get('/', async (req, res) => {
         res.json(users);
     } catch (error) {
         console.error(error);
-        res.json({
-            message: error
-        });
+        utils.resError(res, error);
     }
 });
 
@@ -21,15 +20,10 @@ router.get('/byTelegramUserId/:telegramUserId', async(req, res) => {
         if (user) {
             res.json(user);
         } else {
-            res.status(404).json({
-                error: true,
-                message: 'does not exist'
-            });
+            utils.resNotFound(res, 'does not exist');
         }
     } catch (error) {
-        res.json({
-            message2: error
-        });
+        utils.resError(res, error);
     }
 });
 
@@ -39,15 +33,10 @@ router.get('/:id', async(req, res) => {
         if (user) {
             res.json(user);
         } else {
-            res.status(404).json({
-                error: true,
-                message: 'does not exist'
-            });
+            utils.resNotFound(res, 'does not exist');
         }
     } catch (error) {
-        res.json({
-            message: error
-        });
+        utils.resError(res, error);
     }
 });
 
@@ -67,9 +56,7 @@ router.post('/', async(req, res) => {
         res.json(saved);
 
     } catch (error) {
-        res.json({
-            message: error
-        });
+        utils.resError(res, error);
     }
 });
 
@@ -83,9 +70,7 @@ router.put('/:id/phoneNumber', async(req, res, next) => {
         console.log("updated phoneNumber", updated);
         res.json(updated);
     } catch (error) {
-        res.json({
-            message: error
-        });
+        utils.resError(res, error);
     }
 });
 
@@ -99,9 +84,7 @@ router.put('/:id/location', async(req, res, next) => {
         res.json(updated);
 
     } catch (error) {
-        res.json({
-            message: JSON.stringify(error),
-        });
+        utils.resError(res, error);
     }
 });
 
@@ -117,16 +100,12 @@ router.put('/:id', async(req, res, next) => {
         res.json(updated);
 
     } catch (error) {
-        res.json({
-            message: JSON.stringify(error),
-        });
+        utils.resError(res, error);
     }
 });
 
 router.delete('/:id', async(req, res, next) => {
-    res.json({
-        message: "Method is not supported"
-    });
+    utils.resError(res, 'Method is not supported');
 });
 
 module.exports = router;
