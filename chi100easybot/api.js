@@ -148,19 +148,31 @@ router.post('/confirmDocument', (req, res) => {
         chat_id: req.body.chat_id,
         text: 'Please confirm',
         parse_mode: 'Markdown',
-        // reply_to_message_id: req.body.message_id,
         reply_markup: {
-            keyboard: [[{
-                text: 'Confirm',
-            }, {
-                text: 'Decline',
-            }]],
+            inline_keyboard: [[
+                { text: 'Подтвердить', callback_data: JSON.stringify({
+                        order_id: req.body.order_id,
+                        action: 'confirm'
+                })},
+                { text: 'Отменить', callback_data: JSON.stringify({
+                        order_id: req.body.order_id,
+                        action: 'decline'
+                })}
+            ]],
             resize_keyboard: true,
         }
     }).then(response => {
         console.log(response.data);
+        res.json({
+            ok: true,
+            payload: response.data,
+        });
     }).catch(error => {
         console.error(error);
+        res.json({
+            ok: false,
+            error,
+        });
     });
 });
 

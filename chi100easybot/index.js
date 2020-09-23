@@ -46,7 +46,14 @@ let app;
 
 app = new Telegraf(process.env.BOT_TOKEN);
 
-shared.app = app;
+// app.use(async (ctx, next) => {
+//     const start = new Date()
+//     await next()
+//     const ms = new Date() - start
+//     console.log('Response time: %sms', ms)
+// })
+//
+// app.on('text', (ctx) => ctx.reply('Hello World'))
 
 // botServer.use(app.webhookCallback(`/${process.env.BOT_TOKEN}`));
 
@@ -75,7 +82,6 @@ stage.register(scanBarcode);
 app.use(session());
 app.use(stage.middleware());
 
-
 app.start((ctx) => {
     starter(ctx);
 });
@@ -83,7 +89,7 @@ app.help((ctx) => ctx.reply('Send me a sticker'));
 
 app.command('health', async (ctx) => {
 
-    axios.get(`http://${process.env.API_HOST}:${process.env.API_PORT}${process.env.API_CONTEXT_PATH}/actuator/health`).then((response) => {
+    axios.get(`${process.env.API_URI}/actuator/health`).then((response) => {
 
         console.log('%o', response.data);
 
@@ -160,11 +166,11 @@ app.catch((err, ctx) => {
 
 app.on("contact", async (ctx) => {
     console.log(ctx.message.contact);
-    const userPayload = await axios.get(`http://${process.env.API_HOST}:${process.env.API_PORT}${process.env.API_CONTEXT_PATH}/users/byTelegramUserId/${ctx.message.from.id}`);
+    const userPayload = await axios.get(`${process.env.API_URI}/users/byTelegramUserId/${ctx.message.from.id}`);
 
     console.log('incoming user', userPayload.data);
 
-    axios.put(`http://${process.env.API_HOST}:${process.env.API_PORT}${process.env.API_CONTEXT_PATH}/users/${userPayload.data._id}/phoneNumber`, {
+    axios.put(`${process.env.API_URI}/users/${userPayload.data._id}/phoneNumber`, {
         phoneNumber: ctx.message.contact.phone_number,
     }).then((response) => {
         console.log(response.data);
@@ -177,8 +183,8 @@ app.on("location", async (ctx) => {
 
     console.log(ctx.message.location);
 
-    const userPayload = await axios.get(`http://${process.env.API_HOST}:${process.env.API_PORT}${process.env.API_CONTEXT_PATH}/users/byTelegramUserId/${ctx.message.from.id}`);
-    axios.put(`http://${process.env.API_HOST}:${process.env.API_PORT}${process.env.API_CONTEXT_PATH}/users/${userPayload.data._id}/location`, {
+    const userPayload = await axios.get(`${process.env.API_URI}/users/byTelegramUserId/${ctx.message.from.id}`);
+    axios.put(`${process.env.API_URI}/users/${userPayload.data._id}/location`, {
         longitude: ctx.message.location.longitude,
         latitude: ctx.message.location.latitude,
     }).then((response) => {
@@ -188,35 +194,92 @@ app.on("location", async (ctx) => {
     });
 });
 
-app.hears('Confirm', async (ctx) => {
+// app.hears('Подтвердить', async (ctx) => {
+//
+//     // call express back to update order status
+//
+//     // axios.post(`${process.env.API_URI}/order/${}`, {}).then(response => {
+//     //
+//     // }).catch(error => {
+//     //
+//     // });
+//
+//     await ctx.replyWithMarkdown('GOOD guy', {
+//         reply_markup: {
+//             remove_keyboard: true,
+//         },
+//         disable_notification: true,
+//     });
+// });
+//
+// app.hears('Отменить', async (ctx) => {
+//
+//     await ctx.reply('BAD guy', {
+//         reply_markup: {
+//             remove_keyboard: true,
+//         },
+//         disable_notification: true,
+//     });
+// });
 
-    // call express back to update order status
+app.on('callback_query', async (ctx) => {
 
-    await ctx.replyWithMarkdown('GOOD guy', {
-        reply_markup: {
-            remove_keyboard: true,
-        },
-        disable_notification: true,
-    });
-});
+    const callbackQuery = ctx.update.callback_query;
+    const callbackData = JSON.parse(callbackQuery.data);
+    console.log(callbackData);
 
-app.hears('Decline', async (ctx) => {
-    await ctx.reply('BAD guy', {
-        reply_markup: {
-            remove_keyboard: true,
-        },
-        disable_notification: true,
-    });
+    switch (callbackData.action) {
+        case "confirm":
+            axios.post(`${process.env.API_URI}/orders/${callbackData.order_id}/confirm`, {}).then(async response => {
+
+                console.log(response);
+
+                if(response.data.ok) {
+                    await ctx.reply(response.data.invoiceUrl, {
+                        reply_markup: {
+                            inline_keyboard: [],
+                            remove_keyboard: true,
+                        },
+                        disable_notification: true,
+                    });
+                } else {
+                    await ctx.reply(response.data.message, {
+                        reply_markup: {
+                            inline_keyboard: [],
+                            remove_keyboard: true,
+                        },
+                        disable_notification: true,
+                    });
+                }
+            }).catch(async (error) => {
+                console.error(error);
+                await ctx.reply('error');
+            });
+            break;
+        case "decline":
+            axios.post(`${process.env.API_URI}/orders/${callbackData.order_id}/decline`, {}).then(async response => {
+                await ctx.reply('GOOD guy', {
+                    reply_markup: {
+                        remove_keyboard: true,
+                    },
+                    disable_notification: true,
+                });
+            }).catch(async (error) => {
+                console.error(error);
+                await ctx.reply('error');
+            });
+            break;
+    }
 });
 
 app.launch();
 
 function starter(ctx) {
 
-    axios.get(`http://${process.env.API_HOST}:${process.env.API_PORT}${process.env.API_CONTEXT_PATH}/users/byTelegramUserId/${ctx.message.from.id}`).then((response) => {
+    axios.get(`${process.env.API_URI}/users/byTelegramUserId/${ctx.message.from.id}`).then((response) => {
         buildStarterButtons(ctx);
     }).catch((err) => {
-        axios.post(`http://${process.env.API_HOST}:${process.env.API_PORT}${process.env.API_CONTEXT_PATH}/users`, {
+        axios.post(`${process.env.API_URI}/users`, {
             firstName: ctx.message.from.first_name,
             lastName: ctx.message.from.last_name,
             username: ctx.message.from.username,
@@ -244,6 +307,7 @@ function buildStarterButtons(ctx) {
                 }, {
                     text: 'Поделиться своим номером',
                     request_contact: true,
+
                 }], [{
                     text: 'Поделиться своим местоположением',
                     request_location: true,

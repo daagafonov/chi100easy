@@ -5,8 +5,16 @@ const fs = require('fs');
 const axios = require('axios');
 const FormData = require('form-data');
 const mongoose = require('mongoose');
+const crypto = require('crypto');
 
 const db = require('../model');
+
+function makeError(message) {
+    return {
+        ok: false,
+        message,
+    }
+}
 
 router.get('/user/:userId', async(req, res) => {
     try {
@@ -14,9 +22,7 @@ router.get('/user/:userId', async(req, res) => {
         res.json(orders);
     } catch (error) {
         console.error(error);
-        res.status(500).json({
-            message: error
-        });
+        res.status(500).json(makeError(error));
     }
 });
 
@@ -32,9 +38,7 @@ router.get('/:id', async(req, res) => {
             });
         }
     } catch (error) {
-        res.status(500).json({
-            message: error
-        });
+        res.status(500).json(makeError(error));
     }
 });
 
@@ -66,7 +70,7 @@ router.post('/user/:userId', async(req, res) => {
             fs.createReadStream(fileName).
                 pipe(gridfs.openUploadStream(saved._id)).
                 on('error', function (error) {
-                    console.log(error);
+                    res.json(makeError(error));
                 }).
                 on('finish', async () => {
                     console.log('upload was done!');
@@ -88,9 +92,7 @@ router.post('/user/:userId', async(req, res) => {
         });
     } catch (error) {
         console.log('error', error);
-        res.status(500).json({
-            message: error
-        });
+        res.status(500).json(makeError(error));
     }
 });
 
@@ -106,26 +108,81 @@ router.put('/:id', async(req, res) => {
         console.log(saved);
         res.json(saved);
     } catch (error) {
-        res.status(500).json({
-            message: error
-        });
+        res.status(500).json(makeError(error));
+    }
+});
+
+router.post('/:orderId/confirm', async (req, res) => {
+    try {
+        const order = await db.actions.order.findById(req.params.orderId);
+
+        console.log('order.status < CONFIRMED', order.status === 'CREATED');
+
+        if (order.status === 'CREATED') {
+
+            sendInvoice(order, async response => {
+
+                await db.actions.order.updateOne(req.params.orderId, {
+                    status: 'CONFIRMED'
+                });
+
+                res.json({
+                    ok: true,
+                    invoiceUrl: response.invoiceUrl,
+                });
+
+            }, err => {
+                res.json(makeError(err));
+            });
+        } else {
+            res.json(makeError('This document was already confirmed or declined'));
+        }
+    } catch(error) {
+        res.json(makeError(error));
+    }
+});
+
+router.post('/:orderId/decline', async (req, res) => {
+    try {
+        const order = await db.actions.order.findById(req.params.orderId);
+        if (order.status === 'CREATED') {
+            await db.actions.order.updateOne(req.params.orderId, {
+                status: 'DECLINED'
+            });
+            res.json({
+                ok: true
+            });
+        } else {
+            res.json(makeError('document was already declined or confirmed'));
+        }
+    } catch(error) {
+        res.json(makeError(error));
     }
 });
 
 router.post('/:orderId/send', async (req, res)=>{
     try {
         const order = await db.actions.order.getOrderWithPopulateDocument(req.params.orderId);
+
+        if (order.status !== 'CREATED') {
+            res.json(makeError('Order was already sent'));
+            return;
+        }
+
         const gridfs = new mongoose.mongo.GridFSBucket(mongoose.connection.db, {
             chunkSizeBytes: 1024,
             bucketName: 'documents'
         });
 
-        gridfs.openDownloadStreamByName(order._id)
+        await gridfs.openDownloadStreamByName(order._id)
             .pipe(fs.createWriteStream(`/tmp/${order._id}`))
             .on('error', function (error) {
-                console.log(error);
+                res.status(500).json({
+                    ok: false,
+                    message: error,
+                });
             })
-            .on('finish', async () => {
+            .on('finish', () => {
                 const content = fs.readFileSync(`/tmp/${order._id}`);
                 const form = new FormData();
                 // console.log('creating data');
@@ -138,11 +195,11 @@ router.post('/:orderId/send', async (req, res)=>{
                 form.append('chat_id', order.user.telegramUserId);
                 // if (caption) {
                 // console.log('creating caption');
-                form.append('caption', 'Please confirm an order');
+                // form.append('caption', 'Please confirm an order');
 
                 // console.log(form);
 
-                await axios.post(`https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendDocument`, form, {
+                axios.post(`https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendDocument`, form, {
                     headers: form.getHeaders()
                 }).then(response => {
 
@@ -150,21 +207,36 @@ router.post('/:orderId/send', async (req, res)=>{
 
                     console.log('ok typeof', typeof ok);
 
-                    if (ok === true) {
+                    if (ok) {
 
-                        console.log(result);
+                        console.log('result:', result);
                         const { message_id, chat, document } = result;
 
-                        confirmDocument(message_id, chat, document, (response) => {
+                        axios.post(`${process.env.BOT_SERVER_URI}/confirmDocument`, {
+                            message_id: message_id,
+                            chat_id: chat.id,
+                            file_id: document.file_id,
+                            file_unique_id: document.file_unique_id,
+                            order_id: order._id,
+                        }).then(response => {
+                            console.log('conf doc succ');
                             res.status(200).json({
-                                data: result,
+                                data: response.data,
                             });
-                        }, (error) => {
-                            console.error(error);
+                        }).catch(error => {
+                            console.log('conf doc error');
+                            res.status(500).json({
+                                message: error
+                            });
                         });
 
                         // send request to bot to display the buttons
 
+                    } else {
+                        res.status(500).json({
+                            message: 'sendDocument was not ok',
+                            payload: result,
+                        });
                     }
 
                 }).catch((error) => {
@@ -173,37 +245,7 @@ router.post('/:orderId/send', async (req, res)=>{
                         message: error
                     });
                 });
-            })
-        ;
-
-        // const form = new FormData();
-        // console.log('creating data');
-        // form.append('document', document.data, {
-        //     filename: document.name,
-        //     contentType: document.type,
-        //     knownLength: document.size,
-        // });
-        // console.log('creating chat_id');
-        // form.append('chat_id', order.user.telegramUserId);
-        // // if (caption) {
-        // console.log('creating caption');
-        // form.append('caption', 'Please confirm an order');
-        // // }
-        //
-        // console.log(form);
-        //
-        // await axios.post(`https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendDocument`, form, {
-        //     headers: form.getHeaders()
-        // }).then(response => {
-        //
-        //     console.log(response);
-        //
-        // }).catch((error) => {
-        //     console.error(error);
-        //     res.status(500).json({
-        //         message: error
-        //     });
-        // });
+            });
 
     } catch(error) {
         res.status(500).json({
@@ -212,17 +254,43 @@ router.post('/:orderId/send', async (req, res)=>{
     }
 });
 
-function confirmDocument(message_id, chat, document, success, error) {
-    axios.post(`${process.env.BOT_SERVER_URI}/confirmDocument`, {
-        message_id: message_id,
-        chat_id: chat.id,
-        file_id: document.file_id,
-        file_unique_id: document.file_unique_id,
-    }).then(response => {
-        console.log(response.data);
-        success(response);
+function sendInvoice(order, success, error) {
+
+    const wayForPayAPI = process.env.WAYFORPAY_API_URI;
+    const merchantSecretKey = process.env.WAYFORPAY_MERCHANT_SECRET_KEY;
+
+    const params = {
+        transactionType: 'CREATE_INVOICE',
+        merchantAccount: process.env.WAYFORPAY_MERCHANT_ACCOUNT,
+        merchantAuthType: 'SimpleSignature',
+        merchantDomainName: process.env.DOMAIN_NAME,
+        merchantSignature: '',
+        apiVersion: 1,
+        serviceUrl: process.env.WAYFORPAY_SERVICE_URI,
+        orderReference: order.internalOrderId,
+        orderDate: new Date().getTime(),
+        amount: order.finalCost,
+        currency: 'UAH',
+        productName: ['Стирка белья'],
+        productPrice: [order.finalCost],
+        productCount: [1],
+    };
+
+    const paramsForSig = `${params.merchantAccount};${params.merchantDomainName};${params.orderReference};${params.orderDate};${params.amount};${params.currency};${params.productName[0]};${params.productCount[0]};${params.productPrice[0]}`;
+
+    const hmac = crypto.createHmac('md5', merchantSecretKey);
+    hmac.update(paramsForSig, 'utf8');
+
+    params.merchantSignature = hmac.digest('hex');
+
+    axios.post(`${wayForPayAPI}`, params, {
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }).then((wayforpayres) => {
+        const { reason, reasonCode, imageUrl } = wayforpayres.data;
+        success(wayforpayres.data);
     }).catch(err => {
-        console.error(err);
         error(err);
     });
 }
