@@ -265,7 +265,6 @@ function sendInvoice(order, success, error) {
             'Content-Type': 'application/json'
         }
     }).then((wayforpayres) => {
-        const {reason, reasonCode, imageUrl} = wayforpayres.data;
         success(wayforpayres.data);
     }).catch(err => {
         error(err);

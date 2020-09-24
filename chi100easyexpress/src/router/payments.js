@@ -3,9 +3,11 @@ const router = express.Router();
 const crypto = require('crypto');
 const bodyParser = require('body-parser');
 
+const db = require('../model');
+
 const urlencodedParser = bodyParser.urlencoded({ extended: true });
 
-router.post('/wayforpayservice', urlencodedParser, (req, res) => {
+router.post('/wayforpayservice', urlencodedParser, async (req, res) => {
 
     var body = '';
 
@@ -13,45 +15,48 @@ router.post('/wayforpayservice', urlencodedParser, (req, res) => {
         try {
             body = JSON.parse(val + '""}');
             console.log('payment info', body);
-        } catch(error) {
+        } catch (error) {
             console.error(error);
         }
     });
 
-    // {
-    //     merchantAccount: 'freelance_user_5f44fcec40c51',
-    //         orderReference: 'akwAGags1cF6H3Wyy28NvA',
-    //     merchantSignature: '024f067a83f60992fa2988f763e7c507',
-    //     amount: 55,
-    //     currency: 'UAH',
-    //     authCode: '',
-    //     email: null,
-    //     phone: null,
-    //     createdDate: 1600940096,
-    //     processingDate: 1600941040,
-    //     cardPan: '',
-    //     cardType: null,
-    //     issuerBankCountry: null,
-    //     issuerBankName: null,
-    //     recToken: '',
-    //     transactionStatus: 'Refunded',
-    //     reason: 'Ok',
-    //     reasonCode: 1100,
-    //     fee: 0,
-    //     paymentSystem: 'googlePay',
-    //     acquirerBankName: 'WayForPay',
-    //     cardProduct: 'debit',
-    //     clientName: null,
-    //     products: ''
-    // }
+    try {
+        const payment = await db.actions.payment.create({
+            merchantAccount: body.merchantAccount,
+            orderReference: body.orderReference,
+            amount: body.amount,
+            currency: body.currency,
+            authCode: body.authCode,
+            email: body.email,
+            phone: body.phone,
+            createdDate: body.createdDate,
+            processingDate: body.processingDate,
+            cardPan: body.cardPan,
+            cardType: body.cardType,
+            issuerBankCountry: body.issuerBankCountry,
+            issuerBankName: body.issuerBankName,
+            recToken: body.recToken,
+            transactionStatus: body.transactionStatus,
+            reason: body.reason,
+            reasonCode: body.reasonCode,
+            fee: body.fee,
+            paymentSystem: body.paymentSystem,
+            acquirerBankName: body.acquirerBankName,
+            cardProduct: body.cardProduct,
+            clientName: body.clientName,
+        });
 
-    const merchantSecretKey = 'e41d4cb261a4fe6a328acf27c0d61fa7f320a6a8';
+    } catch(error) {
+        console.error(error);
+    }
+
+    const merchantSecretKey = process.env.WAYFORPAY_MERCHANT_SECRET_KEY;
     const hmac = crypto.createHmac('md5', merchantSecretKey);
 
     const result = {
         orderReference: body.orderReference,
         status: 'accept',
-        time:new Date().getTime()
+        time: new Date().getTime()
     };
 
     const paramsForSig = `${result.orderReference};${result.status};${result.time}`;
@@ -62,6 +67,7 @@ router.post('/wayforpayservice', urlencodedParser, (req, res) => {
     console.log('response', result);
 
     res.status(200).json(result);
+
 });
 
 module.exports = router;

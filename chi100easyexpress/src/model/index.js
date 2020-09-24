@@ -4,11 +4,13 @@ module.exports = {
     OrderItem: require('./OrderItem'),
     Document: require('./Document'),
     Product: require('./dictionary/Product'),
+    Payment: require('./Payment'),
     actions: {
         user: require('./UserActions'),
         order: require('./OrderActions'),
         orderItem: require('./OrderItemsActions'),
         product: require('./dictionary/ProductActions'),
         document: require('./DocumentActions'),
+        payment: require('./PaymentActions'),
     }
 }
