@@ -1,23 +1,15 @@
 const express = require('express');
 const axios = require('axios');
 const FormData = require('form-data');
-const crypto = require('crypto');
+
 const fs = require('fs');
 const router = express.Router();
 const shared = require('./shared');
 
-router.get('/', (req, res) => {
+
+router.get('/test', (req, res) => {
     res.status(200).json({
         message: 'OK'
-    });
-});
-
-router.post('/payment', (req, res) => {
-
-    console.log('payment request', req.body);
-
-    res.json({
-        message: 'OK',
     });
 });
 

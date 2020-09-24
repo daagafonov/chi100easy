@@ -1,5 +1,5 @@
 const axios = require('axios');
-
+const bodyParser = require('body-parser');
 // const path = require('path');
 const http = require('http');
 // const https = require('https');
@@ -39,8 +39,13 @@ botServer.use(fileUpload({
 botServer.use(helmet());
 botServer.use(cors());
 botServer.use(express.json());
+// botServer.use(bodyParser.json());
+// botServer.use(bodyParser.raw());
+// botServer.use(bodyParser.text());
+// botServer.use(bodyParser.urlencoded({ extended: false }));
 
 botServer.use('/bot', api);
+
 
 let app;
 
