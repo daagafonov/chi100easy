@@ -49,7 +49,12 @@ export default new Vuex.Store({
         },
         sendDocument(state, payload) {
             EventService.sendEvent('sendDocument', payload);
-        }
+        },
+
+        // payments
+        getPayments(state, payload) {
+            EventService.sendEvent('getPayments', payload);
+        },
     },
     actions: {
         getUsers({commit}, payload: any) {
@@ -314,7 +319,27 @@ export default new Vuex.Store({
             }).catch(error => {
                 console.error(error);
             });
-        }
+        },
+        getPayments({commit}, payload: any) {
+
+            axios.get(`${sessionStorage.getItem('backendUrl')}/payments`, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).then((response: any) => {
+                if (response.message) {
+                    wrapError(response.message);
+                } else {
+                    const payload = response.data;
+                    commit('getPayments', {
+                        action: 'payments',
+                        payload,
+                    });
+                }
+            }).catch(error => {
+                console.error(error);
+            });
+        },
     },
     modules: {}
 });

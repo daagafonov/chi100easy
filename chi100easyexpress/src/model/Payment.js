@@ -34,7 +34,7 @@ const paymentSchema = new mongoose.Schema({
     recToken: String,
     transactionStatus: {
         type: String,
-        enum: ['Refunded', 'Created', 'DECLINED'],
+        enum: ['Refunded', 'Approved'],
     },
     reason: String,
     reasonCode: Number,

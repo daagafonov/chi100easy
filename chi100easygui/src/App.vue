@@ -1,10 +1,11 @@
 <template>
   <div id="app">
     <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link> |
-      <router-link to="/users.html">User</router-link>|
-        <router-link to="/products">Products</router-link>
+      <router-link to="/">Домашняя</router-link> |
+      <router-link to="/about.html">О Нас</router-link> |
+      <router-link to="/users.html">Пользователи</router-link> |
+      <router-link to="/products.html">Продукты</router-link> |
+      <router-link to="/payments.html">Платежи</router-link>
     </div>
     <b-container ma>
       <router-view/>

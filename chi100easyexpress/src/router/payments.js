@@ -70,4 +70,14 @@ router.post('/wayforpayservice', urlencodedParser, async (req, res) => {
 
 });
 
+router.get('/', async (req, res) => {
+    try {
+        const payments = await db.actions.payment.find();
+        res.json(payments);
+    } catch (error) {
+        console.error(error);
+        utils.resError(res, error);
+    }
+});
+
 module.exports = router;

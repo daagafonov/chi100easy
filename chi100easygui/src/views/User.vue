@@ -119,36 +119,5 @@ export default class UserComponent extends Vue {
         });
     }
 
-    // sendDocument(item: any, files: any) {
-    //     this.$data.file = files[0];
-    //     this.$data.telegramUserId = item.telegramUserId;
-    //     this.$data.chatId = item.chatId;
-    //
-    //     this.submitFile();
-    // }
-    //
-    // submitFile() {
-    //
-    //     let formData = new FormData();
-    //     formData.append('file', this.$data.file, this.$data.file.name);
-    //     formData.append('telegramUserId', this.$data.telegramUserId);
-    //     formData.append('chatId', this.$data.chatId);
-    //     formData.append('caption', 'Подтверждение заказа!');
-    //
-    //     axios.post('/bot/shareDocument',
-    //         formData,
-    //         {
-    //             headers: {
-    //                 'Content-Type': 'multipart/form-data'
-    //             }
-    //         }
-    //     ).then(function () {
-    //         console.log('SUCCESS!!');
-    //     })
-    //         .catch(function () {
-    //             console.log('FAILURE!!');
-    //         });
-    // }
-
 }
 </script>
