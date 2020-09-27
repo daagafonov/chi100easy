@@ -5,6 +5,7 @@ module.exports = {
     Document: require('./Document'),
     Product: require('./dictionary/Product'),
     Payment: require('./Payment'),
+    LoginUser: require('./LoginUser'),
     actions: {
         user: require('./UserActions'),
         order: require('./OrderActions'),
@@ -12,5 +13,6 @@ module.exports = {
         product: require('./dictionary/ProductActions'),
         document: require('./DocumentActions'),
         payment: require('./PaymentActions'),
+        loginUser: require('./LoginUserActions'),
     }
 }

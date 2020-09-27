@@ -18,13 +18,6 @@
             <template v-slot:table-caption>Список зарегистрированных пользователей</template>
 
             <template v-slot:cell(actions)="row">
-
-<!--                <label>File-->
-<!--                    <input type="file" id="file" v-on:change="sendDocument(row.item, $event.target.files)"-->
-<!--                           accept="application/pdf"/>-->
-<!--                </label>-->
-                <!--                <b-button variant="success" v-on:click="submitFile()">Submit</b-button>-->
-
                 <b-button size="sm" variant="warning" @click="orders(row.item, row.index, $event.target)">
                     Orders
                 </b-button>
@@ -32,9 +25,6 @@
                           @click="details(row.item, row.index, $event.target)"
                           class="mr-1">
                     Details
-                </b-button>
-                <b-button size="sm" @click="delete(row.item, row.index, $event.target)">
-                    Delete
                 </b-button>
             </template>
         </b-table>

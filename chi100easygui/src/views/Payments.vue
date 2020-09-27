@@ -30,17 +30,17 @@ export default class Payments extends Vue {
             items: [],
             filter: null,
             fields: [{
-                key: 'merchantAccount',
+                key: 'merchantAccount', label: 'Код магазина'
             },{
-                key: 'orderReference',
+                key: 'orderReference', label: 'Код заказа'
             },{
-                key: 'amount',
+                key: 'amount',  label: 'Общая сумма'
             }, {
-                key: 'currency',
+                key: 'currency', label: 'Валюта'
             },{
-                key: 'transactionStatus',
+                key: 'transactionStatus', label: 'Статус транзакции'
             },{
-                key: 'fee',
+                key: 'fee', label: 'Комиссия'
             }]
         };
     }

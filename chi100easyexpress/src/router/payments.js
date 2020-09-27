@@ -46,6 +46,14 @@ router.post('/wayforpayservice', urlencodedParser, async (req, res) => {
             clientName: body.clientName,
         });
 
+        const order = await db.actions.order.findBy({
+            internalOrderId: body.orderReference,
+        });
+
+        await db.actions.order.updateOne(order._id, {
+            status: 'PAID',
+        });
+
     } catch(error) {
         console.error(error);
     }

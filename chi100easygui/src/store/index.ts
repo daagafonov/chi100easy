@@ -12,7 +12,14 @@ function wrapError(error: any) {
 }
 
 export default new Vuex.Store({
-    state: {},
+    state: {
+        token: localStorage.getItem('user-token') || '',
+        status: '',
+    },
+    getters: {
+        isAuthenticated: state => !!state.token,
+        authStatus: state => state.status,
+    },
     mutations: {
 
         // users
@@ -57,6 +64,7 @@ export default new Vuex.Store({
         },
     },
     actions: {
+
         getUsers({commit}, payload: any) {
             axios.get(`${sessionStorage.getItem('backendUrl')}/users/`, {
                 headers: {
