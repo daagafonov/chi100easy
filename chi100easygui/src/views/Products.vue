@@ -52,16 +52,14 @@ export default class ProductsComponent extends Vue {
             items: [],
             filter: null,
             fields: [{
-                key: 'name',
+                key: 'name', label: 'Название'
             }, {
-                key: 'price'
+                key: 'price', label: 'Цена'
             }, {
-                key: 'currency'
-            // }, {
-            //     key: 'productIdentifier',
+                key: 'currency', label: 'Валюта'
             }, {
                 key: 'actions',
-                label: 'Actions'
+                label: 'Действия'
             }]
         };
     }

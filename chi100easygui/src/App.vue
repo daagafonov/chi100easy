@@ -12,7 +12,32 @@
     </b-container>
   </div>
 </template>
+<script lang="ts">
 
+import {Component, Vue} from 'vue-property-decorator';
+import router from "@/router";
+
+@Component({})
+export default class AppComponent extends Vue {
+    // loginWithGoogle () {
+    //     this.$gAuth
+    //         .signIn()
+    //         .then((GoogleUser: any) => {
+    //             // on success do something
+    //             console.log('GoogleUser', GoogleUser);
+    //             var userInfo = {
+    //                 loginType: 'google',
+    //                 google: GoogleUser
+    //             };
+    //             this.$store.commit('setLoginUser', userInfo);
+    //             router.push('/home');
+    //         })
+    //         .catch((error: any) => {
+    //             console.log('error', error);
+    //         })
+    // }
+}
+</script>
 <style lang="scss">
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;

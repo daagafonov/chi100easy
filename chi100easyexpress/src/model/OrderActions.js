@@ -22,6 +22,10 @@ const findByUserId = function(userId) {
     });
 }
 
+const findBy = function(query) {
+    return Order.find(query);
+}
+
 const getOrderWithPopulateUser = function(id) {
     return Order.findById(id).populate("user", "-__v");
 };
@@ -59,4 +63,5 @@ module.exports = {
     getOrderWithPopulateDocument,
     findByUserId,
     updateOne,
+    findBy,
 }

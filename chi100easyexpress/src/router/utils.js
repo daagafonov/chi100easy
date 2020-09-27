@@ -6,15 +6,15 @@ function makeError(message) {
 }
 
 function resStatusError(status, res, message) {
-    res.status(status).json(makeError(message));
+    return res.status(status).json(makeError(message));
 }
 
 function resError(res, message) {
-    resStatusError(500, res, message);
+    return resStatusError(500, res, message);
 }
 
 function resNotFound(res, message) {
-    resStatusError(404, res, message);
+    return resStatusError(404, res, message);
 }
 
 module.exports = {
