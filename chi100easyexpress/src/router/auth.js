@@ -4,15 +4,13 @@ const db = require('../model');
 const bcrypt = require('bcryptjs');
 const { registerValidation, loginValidation } = require('./validation');
 const jwt = require('jsonwebtoken');
+const utils = require('./utils');
 
 router.post('/register', async (req, res) => {
 
     const { error } = registerValidation(req.body);
     if (error) {
-        return res.status(400).json({
-            ok: false,
-            message: error.details[0].message,
-        });
+        return utils.resStatusError(400, res, error.details[0].message);
     }
 
     const emailExists = await db.LoginUser.findOne({
