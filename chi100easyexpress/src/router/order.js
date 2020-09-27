@@ -106,7 +106,7 @@ router.post('/:orderId/confirm', async (req, res) => {
     try {
         const order = await db.actions.order.findById(req.params.orderId);
 
-        if (order.status === 'CREATED') {
+        if (order.status === 'SENT') {
 
             sendInvoice(order, async response => {
 
@@ -123,7 +123,7 @@ router.post('/:orderId/confirm', async (req, res) => {
                 utils.resError(res, error);
             });
         } else {
-            utils.resError(res, 'This document was already confirmed or declined');
+            utils.resStatusError(200, res, 'Document is not in a SENT status!');
         }
     } catch (error) {
         utils.resError(res, error);
@@ -133,7 +133,7 @@ router.post('/:orderId/confirm', async (req, res) => {
 router.post('/:orderId/decline', async (req, res) => {
     try {
         const order = await db.actions.order.findById(req.params.orderId);
-        if (order.status === 'CREATED') {
+        if (order.status === 'SENT') {
             await db.actions.order.updateOne(req.params.orderId, {
                 status: 'DECLINED'
             });
@@ -141,7 +141,7 @@ router.post('/:orderId/decline', async (req, res) => {
                 ok: true
             });
         } else {
-            utils.resError(res, 'document was already declined or confirmed');
+            utils.resStatusError(200, res, 'Document is not in a SENT status!');
         }
     } catch (error) {
         utils.resError(res, error);
@@ -153,7 +153,7 @@ router.post('/:orderId/send', async (req, res) => {
         const order = await db.actions.order.getOrderWithPopulateDocument(req.params.orderId);
 
         if (order.status !== 'CREATED') {
-            utils.resError(res, 'Order was already sent');
+            utils.resStatusError(400, res, 'Order was already sent');
             return;
         }
 
@@ -182,20 +182,15 @@ router.post('/:orderId/send', async (req, res) => {
                 // console.log('creating caption');
                 // form.append('caption', 'Please confirm an order');
 
-                // console.log(form);
-
                 axios.post(`https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendDocument`, form, {
                     headers: form.getHeaders()
                 }).then(response => {
 
                     const {ok, result} = response.data;
 
-                    console.log('ok typeof', typeof ok);
-
                     if (ok) {
 
-                        console.log('result:', result);
-                        const {message_id, chat, document} = result;
+                        const { message_id, chat, document } = result;
 
                         axios.post(`${process.env.BOT_SERVER_URI}/confirmDocument`, {
                             message_id: message_id,
@@ -203,8 +198,12 @@ router.post('/:orderId/send', async (req, res) => {
                             file_id: document.file_id,
                             file_unique_id: document.file_unique_id,
                             order_id: order._id,
-                        }).then(response => {
-                            console.log('conf doc succ');
+                        }).then(async response => {
+
+                            await db.actions.order.updateOne(order._id, {
+                                status: 'SENT'
+                            });
+
                             res.status(200).json({
                                 ok: true,
                                 data: response.data,

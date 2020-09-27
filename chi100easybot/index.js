@@ -237,7 +237,7 @@ app.on('callback_query', async (ctx) => {
         case "confirm":
             axios.post(`${process.env.API_URI}/orders/${callbackData.order_id}/confirm`, {}).then(async response => {
 
-                console.log(response);
+                console.log('confirm 1', response);
 
                 if(response.data.ok) {
                     await ctx.reply(response.data.invoiceUrl, {
@@ -257,8 +257,7 @@ app.on('callback_query', async (ctx) => {
                     });
                 }
             }).catch(async (error) => {
-                console.error(error);
-                await ctx.reply('error');
+                await ctx.reply('Order was already confirmed');
             });
             break;
         case "decline":
@@ -270,8 +269,7 @@ app.on('callback_query', async (ctx) => {
                     disable_notification: true,
                 });
             }).catch(async (error) => {
-                console.error(error);
-                await ctx.reply('error');
+                await ctx.reply('Order was already declined');
             });
             break;
     }
