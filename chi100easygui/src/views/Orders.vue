@@ -57,8 +57,10 @@ export default class OrdersComponent extends Vue {
             filter: null,
             fields: [{
                 key: 'externalOrderId',
-            },{
+            }, {
                 key: 'finalCost',
+            }, {
+                key: 'status'
             }, {
                 key: 'actions',
                 label: 'Actions'

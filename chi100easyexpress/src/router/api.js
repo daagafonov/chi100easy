@@ -4,6 +4,7 @@ const orderRouter = require("./order");
 const orderItemsRouter = require("./order-item");
 const productsRouter = require("./products");
 const paymentsRouter = require('./payments');
+const auth = require('./auth');
 
 const router = express.Router();
 
@@ -12,6 +13,7 @@ router.use('/orders', orderRouter);
 router.use('/orderItems', orderItemsRouter);
 router.use('/products', productsRouter);
 router.use('/payments', paymentsRouter);
+router.use('/auth', auth);
 
 router.get('/', (req, res) => {
     res.status(200).json({

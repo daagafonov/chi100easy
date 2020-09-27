@@ -1,10 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const utils = require('./utils');
-
+const verify = require('./verifyToken');
 const db = require('../model');
 
-router.get('/', async (req, res) => {
+router.get('/', verify, async (req, res) => {
     try {
         const users = await db.actions.user.find();
         res.json(users);
@@ -14,7 +14,7 @@ router.get('/', async (req, res) => {
     }
 });
 
-router.get('/byTelegramUserId/:telegramUserId', async(req, res) => {
+router.get('/byTelegramUserId/:telegramUserId', verify, async(req, res) => {
     try {
         const user = await db.actions.user.getByTelegramUserId(req.params.telegramUserId);
         if (user) {
@@ -27,7 +27,7 @@ router.get('/byTelegramUserId/:telegramUserId', async(req, res) => {
     }
 });
 
-router.get('/:id', async(req, res) => {
+router.get('/:id', verify, async(req, res) => {
     try {
         const user = await db.actions.user.getWithPopulate(req.params.id);
         if (user) {
@@ -104,8 +104,8 @@ router.put('/:id', async(req, res, next) => {
     }
 });
 
-router.delete('/:id', async(req, res, next) => {
-    utils.resError(res, 'Method is not supported');
+router.delete('/:id', verify, async(req, res, next) => {
+    utils.resError(res, 'Method is not supported yet');
 });
 
 module.exports = router;
