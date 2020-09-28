@@ -62,13 +62,20 @@ export default new Vuex.Store({
         getPayments(state, payload) {
             EventService.sendEvent('getPayments', payload);
         },
+        loginSuccess(state, payload) {
+            localStorage.setItem('user-token', payload.token);
+            state.status = 'Logged in';
+
+            EventService.sendEvent('loggedin', {});
+        }
     },
     actions: {
 
         getUsers({commit}, payload: any) {
             axios.get(`${sessionStorage.getItem('backendUrl')}/users/`, {
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'auth-token': localStorage.getItem('user-token'),
                 }
             }).then((response: any) => {
                 if (response.message) {
@@ -89,7 +96,8 @@ export default new Vuex.Store({
             console.log('payload', payload);
             axios.post(`${sessionStorage.getItem('backendUrl')}/users/`, payload, {
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'auth-token': localStorage.getItem('user-token'),
                 }
             }).then((response: any) => {
                 if (response.message) {
@@ -110,7 +118,8 @@ export default new Vuex.Store({
             console.log('payload', payload);
             axios.put(`${sessionStorage.getItem('backendUrl')}/users/${payload.id}`, payload, {
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'auth-token': localStorage.getItem('user-token'),
                 }
             }).then((response: any) => {
                 if (response.message) {
@@ -128,12 +137,10 @@ export default new Vuex.Store({
         },
 
         getProducts({commit}) {
-
-            console.log('get products');
-
             axios.get(`${sessionStorage.getItem('backendUrl')}/products/`, {
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'auth-token': localStorage.getItem('user-token'),
                 }
             }).then((response: any) => {
                 if (response.message) {
@@ -152,7 +159,8 @@ export default new Vuex.Store({
         editProduct({commit}, payload: any) {
             axios.put(`${sessionStorage.getItem('backendUrl')}/products/${payload.id}`, payload, {
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'auth-token': localStorage.getItem('user-token'),
                 }
             }).then((response: any) => {
                 if (response.message) {
@@ -172,7 +180,8 @@ export default new Vuex.Store({
         addProduct({commit}, payload: any) {
             axios.post(`${sessionStorage.getItem('backendUrl')}/products/`, payload, {
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'auth-token': localStorage.getItem('user-token'),
                 }
             }).then((response: any) => {
                 if (response.message) {
@@ -194,7 +203,8 @@ export default new Vuex.Store({
 
             axios.get(`${sessionStorage.getItem('backendUrl')}/orders/user/${userId}`, {
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'auth-token': localStorage.getItem('user-token'),
                 }
             }).then((response: any) => {
                 if (response.message) {
@@ -214,7 +224,8 @@ export default new Vuex.Store({
             const userId = payload.userId;
             axios.put(`${sessionStorage.getItem('backendUrl')}/orders/user/${userId}`, payload, {
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'auth-token': localStorage.getItem('user-token'),
                 }
             }).then((response: any) => {
                 if (response.message) {
@@ -247,7 +258,8 @@ export default new Vuex.Store({
 
             axios.post(`${sessionStorage.getItem('backendUrl')}/orders/user/${userId}`, formData, {
                 headers: {
-                    'Content-Type': 'multipart/form-data'
+                    'Content-Type': 'multipart/form-data',
+                    'auth-token': localStorage.getItem('user-token'),
                 }
             }).then((response: any) => {
                 if (response.message) {
@@ -271,7 +283,8 @@ export default new Vuex.Store({
                 // update
                 axios.put(`${sessionStorage.getItem('backendUrl')}/orders/${order._id}`, order, {
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'auth-token': localStorage.getItem('user-token'),
                     }
                 }).then((response: any) => {
                     if (response.message) {
@@ -290,7 +303,8 @@ export default new Vuex.Store({
                 // create
                 axios.post(`${sessionStorage.getItem('backendUrl')}/orders/user/${userId}`, order, {
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'auth-token': localStorage.getItem('user-token'),
                     }
                 }).then((response: any) => {
                     if (response.message) {
@@ -312,7 +326,8 @@ export default new Vuex.Store({
 
             axios.post(`${sessionStorage.getItem('backendUrl')}/orders/${orderId}/send`, {}, {
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'auth-token': localStorage.getItem('user-token'),
                 }
             }).then((response: any) => {
                 if (response.message) {
@@ -332,7 +347,8 @@ export default new Vuex.Store({
 
             axios.get(`${sessionStorage.getItem('backendUrl')}/payments`, {
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'auth-token': localStorage.getItem('user-token'),
                 }
             }).then((response: any) => {
                 if (response.message) {
@@ -348,6 +364,20 @@ export default new Vuex.Store({
                 console.error(error);
             });
         },
+
+        login({commit}, payload: any) {
+            axios.post(`${sessionStorage.getItem('backendUrl')}/auth/login`, payload, {
+
+            }).then((response: any) => {
+                if (response.data.ok) {
+                    commit('loginSuccess', {
+                        token: response.data.token,
+                    });
+                }
+            }).catch(error => {
+                console.error(error);
+            });
+        }
     },
     modules: {}
 });
