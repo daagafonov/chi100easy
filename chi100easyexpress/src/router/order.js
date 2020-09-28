@@ -3,13 +3,16 @@ const router = express.Router();
 const short = require('short-uuid');
 const fs = require('fs');
 const axios = require('axios');
-const FormData = require('form-data');
+
 const mongoose = require('mongoose');
 const crypto = require('crypto');
 
 const db = require('../model');
 
 const utils = require('./utils');
+
+const { confirmDocument } = require('./botUtils');
+const { sendDocument} = require('./telegramUtils');
 
 router.get('/user/:userId', async (req, res) => {
     try {
@@ -168,22 +171,8 @@ router.post('/:orderId/send', async (req, res) => {
             })
             .on('finish', () => {
                 const content = fs.readFileSync(`/tmp/${order._id}`);
-                const form = new FormData();
-                // console.log('creating data');
-                form.append('document', content, {
-                    filename: order.document.name,
-                    contentType: order.document.type,
-                    knownLength: order.document.size,
-                });
-                // console.log('creating chat_id');
-                form.append('chat_id', order.user.telegramUserId);
-                // if (caption) {
-                // console.log('creating caption');
-                // form.append('caption', 'Please confirm an order');
 
-                axios.post(`https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendDocument`, form, {
-                    headers: form.getHeaders()
-                }).then(response => {
+                sendDocument(order, content).then(response => {
 
                     const {ok, result} = response.data;
 
@@ -191,13 +180,7 @@ router.post('/:orderId/send', async (req, res) => {
 
                         const { message_id, chat, document } = result;
 
-                        axios.post(`${process.env.BOT_SERVER_URI}/confirmDocument`, {
-                            message_id: message_id,
-                            chat_id: chat.id,
-                            file_id: document.file_id,
-                            file_unique_id: document.file_unique_id,
-                            order_id: order._id,
-                        }).then(async response => {
+                        confirmDocument(message_id, chat, document, order).then(async response => {
 
                             await db.actions.order.updateOne(order._id, {
                                 status: 'SENT'

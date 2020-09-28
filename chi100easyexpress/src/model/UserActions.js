@@ -14,6 +14,10 @@ const findByTelegramUserId = function (externalId) {
     });
 }
 
+const findBy = function(obj) {
+    return User.find(obj);
+}
+
 const find = function() {
     return User.find({});
 }
@@ -37,5 +41,5 @@ module.exports = {
     find,
     updateOne,
     updateOne2,
-
+    findBy,
 }

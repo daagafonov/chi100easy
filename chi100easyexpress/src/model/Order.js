@@ -27,7 +27,7 @@ const orderSchema = new mongoose.Schema({
     },
     status: {
         type: String,
-        enum: ['CREATED', 'SENT', 'CONFIRMED', 'DECLINED', 'PAID', 'IN_PROGRESS', 'FINISHED'],
+        enum: ['CREATED', 'SENT', 'CONFIRMED', 'DECLINED', 'PAID', 'REFUNDED', 'IN_PROGRESS', 'FINISHED'],
         required: true,
         default: 'CREATED',
     },

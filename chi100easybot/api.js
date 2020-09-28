@@ -141,7 +141,7 @@ router.get('/test', (req, res) => {
 router.post('/confirmDocument', (req, res) => {
     axios.post(`https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendMessage`, {
         chat_id: req.body.chat_id,
-        text: 'Please confirm',
+        text: `Пожалуйста подтвердите или отмените заказ №${req.body.externalOrderId} ...`,
         parse_mode: 'Markdown',
         reply_markup: {
             inline_keyboard: [[

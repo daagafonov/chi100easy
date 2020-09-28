@@ -23,7 +23,7 @@ const findByUserId = function(userId) {
 }
 
 const findBy = function(query) {
-    return Order.find(query);
+    return Order.find(query).populate("user", "-__v");
 }
 
 const getOrderWithPopulateUser = function(id) {
@@ -42,8 +42,10 @@ const findAll = function() {
     return Order.find();
 }
 
-const save = function() {
-    return Order.find();
+const findByInternalId = (internalId) => {
+    return Order.where({
+        internalOrderId: internalId
+    }).findOne();
 }
 
 const updateOne = function(id, fields) {
@@ -64,4 +66,5 @@ module.exports = {
     findByUserId,
     updateOne,
     findBy,
+    findByInternalId,
 }

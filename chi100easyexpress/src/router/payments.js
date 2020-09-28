@@ -4,8 +4,10 @@ const crypto = require('crypto');
 const bodyParser = require('body-parser');
 
 const db = require('../model');
+const { confirmPaymentIsDone } = require('./telegramUtils');
 
 const urlencodedParser = bodyParser.urlencoded({ extended: true });
+// const jsonParser = bodyParser.json();
 
 router.post('/wayforpayservice', urlencodedParser, async (req, res) => {
 
@@ -46,13 +48,28 @@ router.post('/wayforpayservice', urlencodedParser, async (req, res) => {
             clientName: body.clientName,
         });
 
-        const order = await db.actions.order.findBy({
-            internalOrderId: body.orderReference,
-        });
+        if (body.transactionStatus === 'Approved') {
+            const order = await db.actions.order.findByInternalId({
+                internalOrderId: body.orderReference,
+            });
+            await db.actions.order.updateOne(order._id, {
+                status: 'PAID',
+            });
 
-        await db.actions.order.updateOne(order._id, {
-            status: 'PAID',
-        });
+            confirmPaymentIsDone(order.user.telegramUserId, `Заказ №${order.externalOrderId} оплачен.`).then(response => {
+                console.log(response.data);
+            }).catch(error => {
+                console.error(error);
+            });
+
+        } else if (body.transactionStatus === 'Refunded') {
+            const order = await db.actions.order.findBy({
+                internalOrderId: body.orderReference,
+            });
+            await db.actions.order.updateOne(order._id, {
+                status: 'REFUNDED',
+            });
+        }
 
     } catch(error) {
         console.error(error);
@@ -71,8 +88,6 @@ router.post('/wayforpayservice', urlencodedParser, async (req, res) => {
     hmac.update(paramsForSig, 'utf8');
 
     result.signature = hmac.digest('hex');
-
-    console.log('response', result);
 
     res.status(200).json(result);
 
