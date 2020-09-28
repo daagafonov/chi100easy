@@ -1,12 +1,12 @@
 <template>
   <div id="app">
     <div id="nav">
-      <router-link to="/">Домашняя</router-link> |
-      <router-link to="/about.html">О Нас</router-link> |
-      <router-link v-if="isAuthenticated()" to="/users.html">Пользователи</router-link> |
-      <router-link v-if="isAuthenticated()" to="/products.html">Продукты</router-link> |
-      <router-link v-if="isAuthenticated()" to="/payments.html">Платежи</router-link> |
-      <router-link v-if="!isAuthenticated()" to="/login.html">Login</router-link>
+      <router-link to="/">Домашняя</router-link>
+      <router-link to="/about.html">| О Нас</router-link>
+      <router-link v-if="isAuthenticated()" to="/users.html">| Пользователи</router-link>
+      <router-link v-if="isAuthenticated()" to="/products.html">| Продукты</router-link>
+      <router-link v-if="isAuthenticated()" to="/payments.html">| Платежи</router-link>
+      <router-link v-if="!isAuthenticated()" to="/login.html">| Login</router-link>
     </div>
     <b-container ma>
       <router-view/>

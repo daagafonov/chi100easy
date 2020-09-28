@@ -137,14 +137,14 @@ router.post('/:orderId/decline', async (req, res) => {
             await db.actions.order.updateOne(req.params.orderId, {
                 status: 'DECLINED'
             });
-            res.json({
+            return res.json({
                 ok: true
             });
         } else {
-            utils.resStatusError(200, res, 'Document is not in a SENT status!');
+            return utils.resStatusError(200, res, 'Document is not in a SENT status!');
         }
     } catch (error) {
-        utils.resError(res, error);
+        return utils.resError(res, error);
     }
 });
 
@@ -153,8 +153,7 @@ router.post('/:orderId/send', async (req, res) => {
         const order = await db.actions.order.getOrderWithPopulateDocument(req.params.orderId);
 
         if (order.status !== 'CREATED') {
-            utils.resStatusError(400, res, 'Order was already sent');
-            return;
+            return utils.resStatusError(400, res, 'Order was already sent');
         }
 
         const gridfs = new mongoose.mongo.GridFSBucket(mongoose.connection.db, {
@@ -216,17 +215,17 @@ router.post('/:orderId/send', async (req, res) => {
                         // send request to bot to display the buttons
 
                     } else {
-                        utils.resError(res, 'sendDocument was not ok');
+                        return utils.resError(res, 'sendDocument was not ok');
                     }
 
                 }).catch((error) => {
                     console.error(error);
-                    utils.resError(res, error);
+                    return utils.resError(res, error);
                 });
             });
 
     } catch (error) {
-        utils.resError(res, error);
+        return utils.resError(res, error);
     }
 });
 
