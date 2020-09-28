@@ -49,9 +49,12 @@ router.post('/wayforpayservice', urlencodedParser, async (req, res) => {
         });
 
         if (body.transactionStatus === 'Approved') {
-            const order = await db.actions.order.findByInternalId({
+            const orders = await db.actions.order.findBy({
                 internalOrderId: body.orderReference,
             });
+
+            const order = orders[0];
+
             await db.actions.order.updateOne(order._id, {
                 status: 'PAID',
             });

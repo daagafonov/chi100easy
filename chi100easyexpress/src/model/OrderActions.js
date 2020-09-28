@@ -43,9 +43,9 @@ const findAll = function() {
 }
 
 const findByInternalId = (internalId) => {
-    return Order.where({
+    return Order.findOne({
         internalOrderId: internalId
-    }).findOne();
+    });
 }
 
 const updateOne = function(id, fields) {
