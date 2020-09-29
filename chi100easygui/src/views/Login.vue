@@ -1,5 +1,8 @@
 <template>
     <div class="container">
+        <div class="error">
+            {{errorMessage}}
+        </div>
         <b-form>
             <b-form-group>
                 <b-row>
@@ -21,7 +24,6 @@
                     </b-col>
                 </b-row>
             </b-form-group>
-
             <b-row>
                 <b-col md="12">
                     <b-button @click="login()">Login</b-button>
@@ -46,6 +48,7 @@ export default class LoginComponent extends Vue {
         return {
             email: '',
             password: '',
+            errorMessage: '',
         };
     }
 
@@ -61,6 +64,9 @@ export default class LoginComponent extends Vue {
             router.push({
                 name: 'Users'
             });
+        });
+        EventService.subscribeEvent('loggedFailed', (payload: any) => {
+            this.$data.errorMessage = payload.message;
         });
     }
 }

@@ -7,6 +7,7 @@
       <router-link v-if="isAuthenticated()" to="/products.html">| Продукты</router-link>
       <router-link v-if="isAuthenticated()" to="/payments.html">| Платежи</router-link>
       <router-link v-if="!isAuthenticated()" to="/login.html">| Login</router-link>
+      <router-link v-if="isAuthenticated()" to="/logout.html">| Logout</router-link>
     </div>
     <b-container ma>
       <router-view/>

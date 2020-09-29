@@ -6,6 +6,8 @@ const { registerValidation, loginValidation } = require('./validation');
 const jwt = require('jsonwebtoken');
 const utils = require('./utils');
 
+var refreshTokens = [];
+
 router.post('/register', async (req, res) => {
 
     const { error } = registerValidation(req.body);
@@ -69,12 +71,57 @@ router.post('/login', async (req, res) => {
         });
     }
 
-    const token = jwt.sign({_id: user._id}, process.env.TOKEN_SECRET);
-    res.header('auth-token', token);
+    const accessToken = jwt.sign(
+        {_id: user._id},
+        process.env.TOKEN_SECRET,
+        { expiresIn: '2m' }
+    );
+
+    const refreshToken = jwt.sign(
+        {_id: user._id},
+        process.env.REFRESH_TOKEN_SECRET
+    );
+
+    refreshTokens.push(refreshToken);
+
+    res.status(200).json({
+        ok: true,
+        accessToken,
+        refreshToken
+    });
+});
+
+router.post('/token', (req, res) => {
+    const { token } = req.body;
+
+    if (!token) {
+        return res.sendStatus(401);
+    }
+
+    if (!refreshTokens.includes(token)) {
+        return res.sendStatus(403);
+    }
+
+    jwt.verify(token, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
+        if (err) {
+            return res.sendStatus(403);
+        }
+
+        const accessToken = jwt.sign({ _id: user._id}, process.env.TOKEN_SECRET, { expiresIn: '20m' });
+
+        res.json({
+            ok: true,
+            accessToken
+        });
+    });
+});
+
+router.post('/logout', (req, res) => {
+    const { token } = req.body;
+    refreshTokens = refreshTokens.filter(t => t !== token);
 
     res.json({
         ok: true,
-        token,
     });
 });
 
