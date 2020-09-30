@@ -143,7 +143,7 @@ export default new Vuex.Store({
             });
         },
 
-        addUser({commit}, payload: any) {
+        addUser({dispatch, commit}, payload: any) {
             console.log('payload', payload);
             axios.post(`${sessionStorage.getItem('backendUrl')}/users/`, payload, {
                 headers: {
@@ -161,12 +161,13 @@ export default new Vuex.Store({
                     });
                 }
             }).catch(err => {
-                generalErrorHandler(commit, err);
+                generalErrorHandler(commit, err, () => {
+                    dispatch('addUser', payload);
+                });
             });
         },
 
-        editUser({commit}, payload: any) {
-            console.log('payload', payload);
+        editUser({dispatch, commit}, payload: any) {
             axios.put(`${sessionStorage.getItem('backendUrl')}/users/${payload.id}`, payload, {
                 headers: {
                     'Content-Type': 'application/json',
@@ -183,11 +184,13 @@ export default new Vuex.Store({
                     });
                 }
             }).catch(err => {
-                generalErrorHandler(commit, err);
+                generalErrorHandler(commit, err, () => {
+                    dispatch('editUser', payload);
+                });
             });
         },
 
-        getProducts({commit}) {
+        getProducts({dispatch, commit}) {
             axios.get(`${sessionStorage.getItem('backendUrl')}/products/`, {
                 headers: {
                     'Content-Type': 'application/json',
@@ -204,7 +207,9 @@ export default new Vuex.Store({
                     });
                 }
             }).catch(err => {
-                generalErrorHandler(commit, err);
+                generalErrorHandler(commit, err, () => {
+                    dispatch('getProducts');
+                });
             });
         },
         editProduct({commit}, payload: any) {
