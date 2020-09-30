@@ -7,7 +7,7 @@ const db = require('../model');
 
 router.get('/', async(req, res) => {
     try {
-        const order = await db.actions.products.findAll();
+        const order = await db.actions.product.findAll();
         res.json(order);
     } catch (error) {
         res.status(500).json({
@@ -26,7 +26,7 @@ router.post('/', async(req, res) => {
     };
 
     try {
-        const saved = await db.actions.products.create(product);
+        const saved = await db.actions.product.create(product);
         console.log("created product", saved);
         res.json(saved);
 
@@ -48,7 +48,7 @@ router.put('/:id', async(req, res) => {
     };
 
     try {
-        const saved = await db.actions.products.updateOne2(req.params.id, product);
+        const saved = await db.actions.product.updateOne2(req.params.id, product);
         console.log('updated product', saved);
         res.json(saved);
 
