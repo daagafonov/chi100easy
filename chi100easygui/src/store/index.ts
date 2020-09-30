@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import Vuex from 'vuex';
+import Vuex, {mapActions} from 'vuex';
 import axios from 'axios';
 import EventService from "@/services/event.service";
 
@@ -18,6 +18,7 @@ function createAuthorizationHeader() {
 export default new Vuex.Store({
     state: {
         token: localStorage.getItem('user-token') || '',
+        refreshToken: localStorage.getItem('refresh-token') || '',
         status: '',
     },
     getters: {
@@ -68,6 +69,7 @@ export default new Vuex.Store({
         },
         loginSuccess(state, payload) {
             localStorage.setItem('user-token', payload.token);
+            localStorage.setItem('refresh-token', payload.refreshToken);
             state.status = 'Logged in';
 
             EventService.sendEvent('loggedin', {});
@@ -77,8 +79,27 @@ export default new Vuex.Store({
         },
         logoutSuccess(state, payload) {
             localStorage.removeItem('user-token');
+            localStorage.removeItem('refresh-token');
             state.status = '';
             EventService.sendEvent('loggedout', {});
+        },
+        logoutFailed(state, payload) {
+            console.log('logout failed', payload.response.data);
+        },
+        generalError(state, payload) {
+            console.log('error', payload.response.data);
+
+            const { ok, message } = payload.response.data;
+
+            if (!ok) {
+
+                const { code, description } = message;
+                if (code === 'INVALID_TOKEN') {
+                    this.dispatch('token', {
+                        token: state.refreshToken,
+                    });
+                }
+            }
         }
     },
     actions: {
@@ -100,7 +121,7 @@ export default new Vuex.Store({
                     });
                 }
             }).catch(error => {
-                console.error(error);
+                commit('generalError', error);
             });
         },
 
@@ -122,7 +143,7 @@ export default new Vuex.Store({
                     });
                 }
             }).catch(error => {
-                console.error(error);
+                commit('generalError', error);
             });
         },
 
@@ -144,7 +165,7 @@ export default new Vuex.Store({
                     });
                 }
             }).catch(error => {
-                console.error(error);
+                commit('generalError', error);
             });
         },
 
@@ -165,7 +186,7 @@ export default new Vuex.Store({
                     });
                 }
             }).catch(error => {
-                console.error(error);
+                commit('generalError', error);
             });
         },
         editProduct({commit}, payload: any) {
@@ -185,7 +206,7 @@ export default new Vuex.Store({
                     });
                 }
             }).catch(error => {
-                console.error(error);
+                commit('generalError', error);
             });
         },
 
@@ -206,7 +227,7 @@ export default new Vuex.Store({
                     });
                 }
             }).catch(error => {
-                console.error(error);
+                commit('generalError', error);
             });
         },
         getOrders({commit}, payload: any) {
@@ -229,7 +250,7 @@ export default new Vuex.Store({
                     });
                 }
             }).catch(error => {
-                console.error(error);
+                commit('generalError', error);
             });
         },
         editOrder({commit}, payload: any) {
@@ -250,7 +271,7 @@ export default new Vuex.Store({
                     });
                 }
             }).catch(error => {
-                console.error(error);
+                commit('generalError', error);
             });
         },
 
@@ -284,7 +305,7 @@ export default new Vuex.Store({
                     });
                 }
             }).catch(error => {
-                console.error(error);
+                commit('generalError', error);
             });
         },
 
@@ -309,7 +330,7 @@ export default new Vuex.Store({
                         });
                     }
                 }).catch(error => {
-                    console.error(error);
+                    commit('generalError', error);
                 });
             } else {
                 // create
@@ -329,7 +350,7 @@ export default new Vuex.Store({
                         });
                     }
                 }).catch(error => {
-                    console.error(error);
+                    commit('generalError', error);
                 });
             }
         },
@@ -352,7 +373,7 @@ export default new Vuex.Store({
                     });
                 }
             }).catch(error => {
-                console.error(error);
+                commit('generalError', error);
             });
         },
         getPayments({commit}, payload: any) {
@@ -373,7 +394,7 @@ export default new Vuex.Store({
                     });
                 }
             }).catch(error => {
-                console.error(error);
+                commit('generalError', error);
             });
         },
 
@@ -383,14 +404,40 @@ export default new Vuex.Store({
                     if (response.data.ok) {
                         commit('loginSuccess', {
                             token: response.data.accessToken,
+                            refreshToken: response.data.refreshToken,
                         });
                     }
                 }).catch(error => {
                     commit('loginFailed', error);
                 });
         },
+
+        token({commit}, payload) {
+            axios.post(`${sessionStorage.getItem('backendUrl')}/auth/token`, payload)
+                .then((response: any) => {
+                    if (response.data.ok) {
+                        commit('loginSuccess', {
+                            token: response.data.accessToken,
+                            refreshToken: response.data.refreshToken,
+                        });
+                    }
+                }).catch(error => {
+                commit('loginFailed', error);
+            });
+        },
+
         logout({commit}, payload: any) {
-            commit('logoutSuccess', {});
+
+            axios.post(`${sessionStorage.getItem('backendUrl')}/auth/logout`, {
+                token: localStorage.getItem('refresh-token')
+            })
+                .then((response: any) => {
+                    if (response.data.ok) {
+                        commit('logoutSuccess', {});
+                    }
+                }).catch(error => {
+                    commit('logoutFailed', error);
+                });
         }
     },
     modules: {}
