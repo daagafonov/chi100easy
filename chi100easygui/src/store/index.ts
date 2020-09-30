@@ -15,6 +15,34 @@ function createAuthorizationHeader() {
     return `Bearer ${localStorage.getItem('user-token')}`;
 }
 
+const generalErrorHandler = (commit: any, error: any, callback?: () => void) => {
+    const { ok, message } = error.response.data;
+
+    if (!ok) {
+
+        const { code, description } = message;
+        if (code === 'INVALID_TOKEN') {
+
+            axios.post(`${sessionStorage.getItem('backendUrl')}/auth/token`, {
+                token: localStorage.getItem('refresh-token'),
+            })
+                .then((response: any) => {
+                    localStorage.setItem('user-token', response.data.accessToken);
+
+                    if (callback) {
+                        callback();
+                    }
+
+                }).catch(error => {
+                    console.log(error);
+            });
+
+        } else {
+            commit('generalError', error);
+        }
+    }
+};
+
 export default new Vuex.Store({
     state: {
         token: localStorage.getItem('user-token') || '',
@@ -88,23 +116,11 @@ export default new Vuex.Store({
         },
         generalError(state, payload) {
             console.log('error', payload.response.data);
-
-            const { ok, message } = payload.response.data;
-
-            if (!ok) {
-
-                const { code, description } = message;
-                if (code === 'INVALID_TOKEN') {
-                    this.dispatch('token', {
-                        token: state.refreshToken,
-                    });
-                }
-            }
         }
     },
     actions: {
 
-        getUsers({commit}, payload: any) {
+        getUsers({dispatch, commit}, payload: any) {
             axios.get(`${sessionStorage.getItem('backendUrl')}/users/`, {
                 headers: {
                     'Content-Type': 'application/json',
@@ -120,8 +136,10 @@ export default new Vuex.Store({
                         payload,
                     });
                 }
-            }).catch(error => {
-                commit('generalError', error);
+            }).catch(err => {
+                generalErrorHandler(commit, err, () => {
+                    dispatch('getUsers', payload);
+                });
             });
         },
 
@@ -142,8 +160,8 @@ export default new Vuex.Store({
                         payload: data,
                     });
                 }
-            }).catch(error => {
-                commit('generalError', error);
+            }).catch(err => {
+                generalErrorHandler(commit, err);
             });
         },
 
@@ -164,8 +182,8 @@ export default new Vuex.Store({
                         payload: data,
                     });
                 }
-            }).catch(error => {
-                commit('generalError', error);
+            }).catch(err => {
+                generalErrorHandler(commit, err);
             });
         },
 
@@ -185,8 +203,8 @@ export default new Vuex.Store({
                         payload,
                     });
                 }
-            }).catch(error => {
-                commit('generalError', error);
+            }).catch(err => {
+                generalErrorHandler(commit, err);
             });
         },
         editProduct({commit}, payload: any) {
@@ -205,8 +223,8 @@ export default new Vuex.Store({
                         payload: data,
                     });
                 }
-            }).catch(error => {
-                commit('generalError', error);
+            }).catch(err => {
+                generalErrorHandler(commit, err);
             });
         },
 
@@ -226,8 +244,8 @@ export default new Vuex.Store({
                         payload: data,
                     });
                 }
-            }).catch(error => {
-                commit('generalError', error);
+            }).catch(err => {
+                generalErrorHandler(commit, err);
             });
         },
         getOrders({commit}, payload: any) {
@@ -249,8 +267,8 @@ export default new Vuex.Store({
                         payload,
                     });
                 }
-            }).catch(error => {
-                commit('generalError', error);
+            }).catch(err => {
+                generalErrorHandler(commit, err);
             });
         },
         editOrder({commit}, payload: any) {
@@ -270,8 +288,8 @@ export default new Vuex.Store({
                         payload: data,
                     });
                 }
-            }).catch(error => {
-                commit('generalError', error);
+            }).catch(err => {
+                generalErrorHandler(commit, err);
             });
         },
 
@@ -304,8 +322,8 @@ export default new Vuex.Store({
                         payload: data,
                     });
                 }
-            }).catch(error => {
-                commit('generalError', error);
+            }).catch(err => {
+                generalErrorHandler(commit, err);
             });
         },
 
@@ -329,8 +347,8 @@ export default new Vuex.Store({
                             payload: data,
                         });
                     }
-                }).catch(error => {
-                    commit('generalError', error);
+                }).catch(err => {
+                    generalErrorHandler(commit, err);
                 });
             } else {
                 // create
@@ -349,8 +367,8 @@ export default new Vuex.Store({
                             payload: data,
                         });
                     }
-                }).catch(error => {
-                    commit('generalError', error);
+                }).catch(err => {
+                    generalErrorHandler(commit, err);
                 });
             }
         },
@@ -372,8 +390,8 @@ export default new Vuex.Store({
                         payload: data,
                     });
                 }
-            }).catch(error => {
-                commit('generalError', error);
+            }).catch(err => {
+                generalErrorHandler(commit, err);
             });
         },
         getPayments({commit}, payload: any) {
@@ -393,8 +411,8 @@ export default new Vuex.Store({
                         payload,
                     });
                 }
-            }).catch(error => {
-                commit('generalError', error);
+            }).catch(err => {
+                generalErrorHandler(commit, err);
             });
         },
 
@@ -410,20 +428,6 @@ export default new Vuex.Store({
                 }).catch(error => {
                     commit('loginFailed', error);
                 });
-        },
-
-        token({commit}, payload) {
-            axios.post(`${sessionStorage.getItem('backendUrl')}/auth/token`, payload)
-                .then((response: any) => {
-                    if (response.data.ok) {
-                        commit('loginSuccess', {
-                            token: response.data.accessToken,
-                            refreshToken: response.data.refreshToken,
-                        });
-                    }
-                }).catch(error => {
-                commit('loginFailed', error);
-            });
         },
 
         logout({commit}, payload: any) {
