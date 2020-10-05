@@ -21,7 +21,11 @@ const schema = new mongoose.Schema({
     date: {
         type: Date,
         default: Date.now,
-    }
+    },
+    roles: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'LoginRole'
+    }]
 });
 
 module.exports = mongoose.model('LoginUser', schema);

@@ -6,6 +6,7 @@ module.exports = {
     Product: require('./dictionary/Product'),
     Payment: require('./Payment'),
     LoginUser: require('./LoginUser'),
+    LoginRole: require('./LoginRole'),
     actions: {
         user: require('./UserActions'),
         order: require('./OrderActions'),
