@@ -1,0 +1,96 @@
+version: '3.7'
+volumes:
+  mongo-data3:
+  certbot-etc:
+  certbot-var:
+  nginx-config:
+
+services:
+
+  mongo:
+    image: mongo:latest
+    restart: always
+    container_name: mongo
+    ports:
+      - 27017:27017
+    volumes:
+      - mongo-data3:/data/db
+      - ./chi100easymongo/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: mongoadmin
+      MONGO_INITDB_ROOT_PASSWORD: secret
+      MONGO_INITDB_DATABASE: chi100easy
+
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    container_name: mongo-express
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_SERVER: mongo
+      ME_CONFIG_MONGODB_PORT: 27017
+      ME_CONFIG_MONGODB_ADMINUSERNAME: mongoadmin
+      ME_CONFIG_MONGODB_ADMINPASSWORD: secret
+    depends_on:
+      - mongo
+
+  bot:
+    build:
+      context: ./chi100easybot
+      dockerfile: Dockerfile.prod
+    restart: always
+    container_name: bot
+    ports:
+      - "8080:8080"
+      - "9090:4242"
+    depends_on:
+      - express
+
+  express:
+    build:
+      context: ./chi100easyexpress
+      dockerfile: Dockerfile.prod
+    restart: always
+    container_name: express
+    ports:
+      - 4242:4242
+    environment:
+      - "ENVIRONMENT=prod"
+    depends_on:
+      - mongo
+
+  gui:
+    build: ./chi100easygui
+    restart: always
+    container_name: gui
+    ports:
+      - 9000:8080
+      - 9001:80
+    volumes:
+      - ./chi100easygui/docker/update.sh:/docker-entrypoint.d/update.sh
+    environment:
+      - "NODE_ENV=production"
+    depends_on:
+      - express
+
+  nginx:
+    build: ./chi100easybot-nginx
+    restart: always
+    container_name: botnginx
+    volumes:
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/lib/letsencrypt
+      - nginx-config:/etc/nginx/conf.d
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - express
+      - gui
+      - bot
+
+# certbot -n --nginx -d agafonov.tech -d www.agafonov.tech --email daagafonov@gmail.com --agree-tos --no-eff-email --redirect
+# command: certonly --webroot --webroot-path=/var/www/html --email sammy@example.com --agree-tos --no-eff-email --force-renewal -d example.com -d www.example.com
+
