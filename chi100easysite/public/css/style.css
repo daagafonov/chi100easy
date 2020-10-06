@@ -1,0 +1,1210 @@
+/*
+	customers-feedback: display
+	.chisto-service-item: min-height
+*/
+
+@import url(https://fonts.googleapis.com/css?family=Roboto:400,100,300,500,700,900&subset=latin,cyrillic);
+
+* {
+    margin: 0;
+    padding: 0;
+    font-size: 100%;
+    vertical-align: text-bottom;
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+}
+
+.Click_button {
+    position: relative;
+    z-index: 100;
+    top: 250px;
+    max-width: 1100px;
+    margin: 0 auto;
+    text-align: center;
+    font-size: 70px;
+    font-family: sans-serif;
+}
+
+video#bgvid {
+    position: fixed;
+    top: 0%;
+    left: 0%;
+    width: 100%;
+    height: 100%;
+    z-index: -100;
+    -ms-transform: translateX(0%) translateY(0%) scale(1.5);
+    -moz-transform: translateX(0%) translateY(0%) scale(1.5);
+    -webkit-transform: translateX(0%) translateY(0%) scale(1.5);
+    transform: translateX(0%) translateY(0%) scale(1.5);
+    background: url(Logo_Original_1.jpg) no-repeat;
+    background-size: cover;
+}
+
+.front-bg {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: rgba(49, 70, 104, 0.44);
+    background-image: url(../dots-u96-fr2.png);
+    z-index: 1;
+}
+
+.navbar-default {
+    background-color: transparent;
+    border: 0;
+}
+
+.navbar-default .navbar-nav>li>a {
+    color: #fff;
+    padding: 50px 20px 0;
+}
+
+.navbar {
+    text-align: center;
+}
+
+.navbar-nav {
+    float: none;
+}
+
+.navbar-default .navbar-nav>li {
+    float: none;
+    display: inline-block;
+}
+
+.main {
+    position: relative;
+    text-align: center;
+    z-index: 1000000;
+    color: #fff;
+    vertical-align: top;
+}
+
+section {
+    width: 100%;
+    height: 100%;
+}
+
+section.stage1 {
+
+}
+
+section.stage2 {
+    display: none;
+}
+
+section.stage3 {
+
+}
+
+.cd-top {
+    display: inline-block;
+    height: 40px;
+    width: 40px;
+    position: fixed;
+    bottom: 40px;
+    right: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+    /* image replacement properties */
+    overflow: hidden;
+    text-indent: 100%;
+    white-space: nowrap;
+    background: grey url(../images/cd-top-arrow.svg) no-repeat center 50%;
+    visibility: hidden;
+    opacity: 0;
+    -webkit-transition: opacity .3s 0s, visibility 0s .3s;
+    -moz-transition: opacity .3s 0s, visibility 0s .3s;
+    transition: opacity .3s 0s, visibility 0s .3s;
+    border-radius: 50%;
+    z-index: 123;
+}
+.cd-top.cd-is-visible, .cd-top.cd-fade-out, .no-touch .cd-top:hover {
+    -webkit-transition: opacity .3s 0s, visibility 0s 0s;
+    -moz-transition: opacity .3s 0s, visibility 0s 0s;
+    transition: opacity .3s 0s, visibility 0s 0s;
+}
+.cd-top.cd-is-visible {
+    /* the button becomes visible */
+    visibility: visible;
+    opacity: 1;
+}
+.cd-top.cd-fade-out {
+    /* if the user keeps scrolling down, the button is out of focus and becomes less visible */
+    opacity: .5;
+}
+.no-touch .cd-top:hover {
+    background-color: #e86256;
+    opacity: 1;
+}
+
+#top, #bottom {
+    border-radius: 50%;
+    background: #fff;
+    position: fixed;
+    left: 48%;
+    z-index:500;
+    border: 1px solid #ccc;
+    background-color: grey;
+    z-index: 80;
+}
+
+#bottom {
+    opacity: 0;
+    bottom: 50px;
+    right: 50px;
+    left: inherit;
+    padding: 20px;
+    transition: all 1s linear;
+}
+
+#bottom.to-top-display {
+    opacity: 1;
+}
+
+#top {
+    padding: 22px 21px 18px;
+    top: 150px;
+}
+
+#top i, #bottom i {
+    font-size: 30px;
+}
+
+.person img, .shapes svg {
+    position: absolute;
+    transform: translate3d(0,0,0);
+    z-index: 100;
+}
+
+.shapes {
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0px;
+    position: fixed;
+    transform: translate3d(0,0,0);
+}
+
+
+.page {
+    position: relative;
+    z-index: 50;
+    text-align: center;
+    top: 0;
+    left: 0;
+}
+
+.chisto-prosto-head {
+    padding: 0 0 100px;
+}
+
+.header {
+    text-align: center;
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 30px 0;
+}
+
+.page-logo {
+    float: left;
+    max-width: 137px;
+}
+
+.page-logo img{
+    width: 100%;
+}
+
+.main-logo {
+    max-width: 182px;
+}
+
+.main-logo img {
+    width: 100%;
+}
+
+.make-call {
+    float: right;
+    padding: 35px 0;
+    position: relative;
+    z-index: 20;
+}
+
+.make-call a {
+    display: block;
+    width: 170px;
+    height: 45px;
+    margin: 0 auto;
+    background-color: #9dd0da;
+    padding: 8px 0;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    text-decoration: none;
+    color: #314668;
+    border: 1px solid #6d8790;
+    font-size: 16px;
+    font-weight: 300;
+}
+
+.make-call span {
+    display: inline-block;
+    margin: 0 2px;
+}
+
+.make-call span:first-child{
+    position: relative;
+    top: 2px;
+}
+
+.header-menu {
+    text-align: center;
+    padding: 50px 0;
+}
+
+.header-menu ul {
+    margin-right: 100px;
+}
+
+.header-menu-list {
+    list-style-type: none;
+}
+
+.menu-list-item {
+    display: inline-block;
+    padding: 0 15px;
+    color: #828282;
+    font-size: 16px;
+    font-weight: normal;
+    text-transform: uppercase;
+}
+
+.menu-list-item a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 300;
+}
+
+.menu-list-item a:hover {
+    text-decoration: underline;
+}
+
+#phone-menu {
+    display: none;
+}
+
+.menu-list-item a:hover {
+    text-decoration: underline;
+}
+
+.our-care-title {
+    margin: 70px 0;
+}
+
+.your-clean-stuff {
+    font-size: 70px;
+    font-weight: 700;
+    color: #fff;
+}
+
+.clean-care {
+    font-size: 70px;
+    font-weight: 100;
+    color: #fff;
+}
+
+.chisto-prosto-anchors div {
+    display: inline-block;
+    margin: 0 30px;
+}
+
+.chisto-prosto-anchors div a {
+    display: block;
+    border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    font-size: 20px;
+    color: #fff;
+    font-weight: 100;
+    min-width: 300px;
+    height: 45px;
+    padding: 10px 0;
+    border: 1px dashed #8fbdc8;
+    text-decoration: none;
+}
+
+.chisto-prosto-anchors div a:hover {
+    background-color: #8fbdc8;
+}
+
+.chisto-about {
+    background-image: url(../images/bubbles-bg.png);
+    background-size: cover;
+    padding: 60px 0;
+    background-color: #fff;
+}
+
+.about-title div {
+    display: inline-block;
+    vertical-align: middle;
+    font-size: 70px;
+    color: #314668;
+    margin: 0 25px;
+    font-weight: 100;
+}
+
+.about-us-description {
+    max-width: 1000px;
+    margin: 20px auto;
+    border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border: 1px dashed #b7dae0;
+    padding: 40px;
+}
+
+.about-us-description p{
+    font-size: 20px;
+    font-weight: 100;
+    color: #314668;
+}
+
+p.medium-weight {
+    font-weight: 500;
+}
+
+.services-block {
+    background-image: url(../images/blue-bg.png);
+    background-attachment: fixed;
+    background-size: cover;
+}
+
+.services-block-content {
+    padding: 130px 0 60px;
+}
+
+.chisto-service {
+    display: inline-block;
+    margin: 0 30px;
+}
+
+.chisto-service-item {
+    max-width: 300px;
+    min-height: 286px;
+    border: 1px dashed #fff;
+    border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    padding: 40px 15px 30px;
+}
+
+.chisto-service-item-description {
+    margin-top: 20px;
+    text-transform: uppercase;
+    font-size: 20px;
+    font-weight: 300;
+    color: #fff;
+}
+
+.order-service {
+    margin: 20px 0;
+}
+
+.order-service a{
+    text-decoration: none;
+    display: block;
+    max-width: 300px;
+    margin: 0 auto;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    padding: 40px 12px 30px;
+    background-color: #314567;
+    color: #fff;
+    font-size: 20px;
+    font-weight: 100;
+    padding: 5px 0;
+}
+
+.order-service a:hover {
+    background-color: #2a3b67;
+}
+
+.service-quality {
+    background-color: #fff;
+}
+
+.service-quality-content {
+    padding: 120px 0;
+}
+
+.service-quality-item {
+    display: inline-block;
+    margin: 0 30px;
+    max-width: 360px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    border: 1px solid #9dd0da;
+}
+
+.service-quality-item:hover {
+    background-color: #9dd0da;
+}
+
+.service-quality-item-head {
+    font-size: 110px;
+    font-weight: 500;
+    color: #9cd0da;
+    padding: 80px 0px 50px;
+    text-align: center;
+}
+
+.service-quality-item:hover .service-quality-item-head {
+    color: #fff;
+}
+
+.service-quality-item-main {
+    border-top: 1px solid #9dd0da;
+    font-size: 27px;
+    font-weight: 100;
+    color: #314668;
+    padding: 40px 30px;
+}
+
+.service-quality-item:hover .service-quality-item-main {
+    border-color: #fff;
+}
+
+.service-registration {
+    background-image: url(../images/deep-blue-bg.png);
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center;
+}
+
+.service-registration-content {
+    padding: 100px 0 80px;
+}
+
+.service-registration-title p span{
+    font-size: 70px;
+    font-weight: 700;
+    color: #fff;
+}
+
+.service-registration-title p span.light-text {
+    font-weight: 100;
+}
+
+.service-registration-form {
+    max-width: 430px;
+    margin: 30px auto;
+}
+
+.service-registration-form input, .service-registration-form button {
+    width: 100%;
+    text-align: center;
+    margin: 10px 0;
+    padding: 10px 0;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    border: 0;
+    font-size: 20px;
+    font-weight: 100;
+}
+
+.service-registration-form input::-moz-placeholder {
+    opacity: 1;
+}
+
+.service-registration-form input:focus::-moz-placeholder {
+    opacity: 1;
+}
+
+.service-registration-form input::-webkit-input-placeholder{
+    opacity: 1;
+}
+
+.service-registration-form input:focus::-webkit-input-placeholder{
+    opacity: 0;
+    transition: all .5s linear;
+}
+
+.service-registration-form button {
+    background-color: #314668;
+    color: #fff;
+}
+
+.service-registration-form button:hover {
+    background-color: #2a3b67;
+}
+
+.service-delivery {
+    background-color: #fff;
+}
+
+.service-delivery-content {
+    padding: 50px 0 0;
+    position: relative;
+}
+
+.service-delivery-man {
+    position: absolute;
+    left: 0;
+    z-index: 1;
+}
+
+.service-delivery-man img {
+    width: 100%;
+}
+
+.service-delivery-main {
+    text-align: right;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: 20px;
+    position: relative;
+    z-index: 10;
+    padding-bottom: 40px;
+}
+
+.service-delivery-main-subtitle {
+    font-size: 36px;
+    font-weight: 500;
+    color: #d25d9e;
+    max-width: 700px;
+    margin: 40px auto;
+    text-align: center;
+}
+
+.service-delivery-main-title {
+    font-size: 70px;
+    font-weight: 100;
+    color: #314668;
+}
+
+.delivery-man-do {
+    color: #314668;
+    font-size: 18px;
+    font-weight: 100;
+    text-align: center;
+    padding: 30px 0;
+}
+
+.comfortable {
+    padding: 0px 0 18px;
+    text-align: center;
+}
+
+.comfortable-time, .comfortable-place {
+    display: inline-block;
+    text-align: center;
+    padding: 20px 40px;
+}
+
+.comfortable-name {
+    max-width: 130px;
+    margin: 10px auto;
+}
+.comfortable-name span {
+    font-size: 18px;
+    font-weight: 300;
+    color: #314668;
+}
+
+.comfortable-name span:last-child {
+    font-weight: 500;
+}
+
+.comfortable-icon img {
+    width: 30px;
+}
+
+.customers-feedback {
+    display:none;
+    background-image: url(../images/blue-bg.png);
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: center;
+    padding: 100px 0;
+    position: relative;
+    z-index: 10;
+}
+
+.swiper-container {
+    width: 100%;
+    height: 100%;
+}
+
+.swiper-slide {
+    text-align: center;
+    font-size: 18px;
+
+    /* Center slide text vertically */
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+}
+
+.swiper-pagination-bullet-active {
+    background-color: #f25a2a;
+}
+
+.customer-name-age {
+    font-size: 24px;
+    font-weight: 500;
+    color: #fff;
+    margin: 30px 0;
+}
+
+.customer-quote {
+    font-size: 18px;
+    color: #fff;
+    font-weight: 300;
+    font-style: italic;
+    max-width: 860px;
+    margin: 0 auto;
+}
+
+.customer-quote p{
+    font-size: 18px;
+    color: #fff;
+    font-weight: 300;
+    margin-bottom: 20px;
+}
+
+.prices {
+    background-color: #fff;
+    padding: 50px 0;
+}
+
+.prices-content {
+    margin: 40px auto;
+    max-width: 1100px;
+}
+
+.prices-title {
+    font-size: 70px;
+    font-weight: 100;
+    color: #314668;
+}
+
+.prices-item {
+    display: inline-block;
+    text-align: center;
+    width: 175px;
+    margin: 0 20px 40px;
+}
+
+.price-item-name {
+    text-transform: uppercase;
+    font-size: 17px;
+    font-weight: 300;
+    color: #314668;
+    margin: 10px 0;
+}
+
+.full-price-list a{
+    color: #000;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.price-item-icon {
+    background: rgba(183,222,237,1);
+    background: -moz-linear-gradient(-20deg, rgba(183,222,237,1) 0%, rgba(113,206,239,1) 50%, rgba(158,209,219,1) 50%, rgba(192,211,71,1) 100%);
+    background: -webkit-gradient(left top, right bottom, color-stop(0%, rgba(183,222,237,1)), color-stop(50%, rgba(113,206,239,1)), color-stop(55%, rgba(158,209,219,1)), color-stop(100%, rgba(192,211,71,1)));
+    background: -webkit-linear-gradient(-20deg, rgba(183,222,237,1) 0%, rgba(113,206,239,1) 50%, rgba(158,209,219,1) 50%, rgba(192,211,71,1) 100%);
+    background: -o-linear-gradient(-20deg, rgba(183,222,237,1) 0%, rgba(113,206,239,1) 50%, rgba(158,209,219,1) 50%, rgba(192,211,71,1) 100%);
+    background: -ms-linear-gradient(-20deg, rgba(183,222,237,1) 0%, rgba(113,206,239,1) 50%, rgba(158,209,219,1) 50%, rgba(192,211,71,1) 100%);
+    background: linear-gradient(115deg, rgba(183,222,237,1) 0%, rgba(113,206,239,1) 50%, rgba(158,209,219,1) 50%, rgba(192,211,71,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b7deed', endColorstr='#c0d347', GradientType=1 );
+    padding: 25px 0px;
+    text-align: center;
+    margin: 0 auto;
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+}
+
+.price-item-icon img {
+    height: 58px;
+}
+
+.price-item-cost {
+    font-weight: 300;
+    font-size: 17px;
+    color: #314668;
+}
+
+.price-item-cost span {
+    font-weight: 500;
+    font-size: 30px;
+    position: relative;
+    top: 5px;
+}
+
+.partners {
+    background-color: #efefef;
+    padding: 50px 0;
+}
+
+.partners-title {
+    font-size: 70px;
+    font-weight: 100;
+    color: #314668;
+}
+
+.partners-content {
+    margin: 50px 0;
+}
+
+.partners-content img {
+    margin: 0 15px;
+    width: 130px;
+}
+
+.contacts {
+    background-color: #9ed0da;
+}
+
+.contacts-title {
+    font-size: 70px;
+    font-weight: 100;
+    color: #fff;
+    padding: 20px 0;
+}
+
+.contacts-description {
+    font-size: 20px;
+    color: #fff;
+    font-weight: bold;
+}
+
+.contacts-map img{
+    width: 100%;
+}
+
+.footer {
+    text-align: center;
+    margin: 0 auto;
+    padding: 30px 20px;
+    background-color: #e8f4f7;
+}
+
+.footer .page-logo {
+    margin-right: 80px;
+}
+
+.footer-menu {
+    padding: 30px 0;
+    position: relative;
+}
+
+.footer-menu-list {
+    list-style-type: none;
+    text-align: left;
+    margin: 10px 0;
+    position: relative;
+}
+
+.footer-menu-list li{
+    display: inline-block;
+    width: 125px;
+}
+
+.footer-menu-list li a{
+    font-size: 17px;
+    font-weight: 100;
+    color: #314668;
+    text-decoration: none;
+}
+
+.social-icon a {
+    width: auto;
+    height: auto;
+    background-color: transparent;
+    border: 0;
+    display: inline-block;
+    margin: 0 5px;
+}
+
+.footer .make-call {
+    padding: 20px 0;
+    position: relative;
+    z-index: 3;
+}
+
+.footer .make-call a {
+    border: 0;
+}
+
+#phone-menu2 {
+    position: absolute;
+    display: none;
+}
+
+.green-box, .error-box li {
+    color: #fff;
+}
+
+.error-box {
+    list-style-type: none;
+}
+
+@media screen and (max-width: 1280px) {
+    .service-quality-item {
+        margin: 20px 30px;
+    }
+}
+
+@media screen and (max-width: 1024px) {
+    .header-menu ul {
+        margin: 0;
+    }
+
+    .header-menu {
+        clear: both;
+    }
+
+    .our-care-title {
+        margin: 20px 0;
+    }
+
+    .chisto-service {
+        margin: 10px 30px;
+    }
+
+    .service-delivery-man {
+        left: -20%;
+    }
+
+    .service-delivery-main {
+        margin: 0 auto;
+    }
+}
+
+@media screen and (max-device-width: 800px) {
+    html {
+    }
+    #bgvid {
+    }
+    .header-menu a#phone-menu {
+        display: none;
+        position: relative;
+        padding-right: 40px;
+    }
+}
+
+@media screen and (max-width: 767px) {
+    section.stage2 {
+        display: none;
+    }
+
+    #phone-menu2 {
+        display: block;
+        top: 0;
+        right: 0;
+        color: #fff;
+        font-size: 14px;
+        text-decoration: none;
+    }
+
+    .header-menu {
+        text-align: right;
+        position: absolute;
+        padding: 0;
+        top: 80px;
+        left: 5px;
+        float: left;
+    }
+
+    video#bgvid {
+        -ms-transform: none;
+        -moz-transform: none;
+        -webkit-transform: none;
+        transform: none;
+        background-image: url(../images/print-scr.png);
+
+    }
+
+    .chisto-prosto-anchors div {
+        display: block;
+    }
+
+    .header-menu-list {
+        display: none;
+    }
+
+    .service-delivery-main-title {
+        text-align: center;
+    }
+
+    div.header-menu-list-fix {
+        padding: 0;
+    }
+
+    header-menu-list {
+        display: none;
+        height: auto;
+        text-align: center;
+    }
+    .header-menu a#phone-menu {
+        display: block;
+        position: relative;
+        padding-right: 40px;
+    }
+
+    .header-menu a#phone-menu img {
+        width: 30px;
+    }
+
+    .header-menu a#phone-menu:after {
+        content:"";
+        background: url('nav-icon.png') no-repeat;
+        width: 30px;
+        height: 30px;
+        position: absolute;
+        right: 15px;
+        top: 10px;
+    }
+
+    .page-logo {
+        float: none;
+    }
+
+    .make-call a {
+        width: 45px;
+    }
+
+    .make-call span:last-child {
+        display: none;
+    }
+
+    .header .make-call {
+        position: absolute;
+        top: 40px;
+        right: 5px;
+    }
+
+    .header-menu ul {
+        position: fixed;
+        z-index: 100;
+        top: 0;
+        left: 0;
+        background-color: rgba(90, 90, 90, 0.6);
+    }
+
+    .header-menu ul li{
+        width: 100%;
+        background-color: rgba(90, 90, 90, 0.6);
+        padding: 5px 10px;
+        text-align: left;
+        font-size: 0;
+        margin: 0;
+        border-bottom: 1px solid #fff;
+    }
+
+    ul li.close-btn {
+        border-bottom: 0;
+        padding: 0;
+    }
+
+    .your-clean-stuff, .clean-care, .about-title div, .service-registration-title p span, .service-delivery-main-title, .contacts-title, .prices-title, .partners-title {
+        font-size: 45px;
+    }
+
+    .chisto-prosto-anchors div a {
+        margin: 10px auto;
+    }
+
+    .service-delivery-man {
+        position: relative;
+        left: 0;
+        margin-bottom: 20px;
+    }
+
+    .service-delivery-man img {
+        width: 50%;
+    }
+
+    .service-delivery-main-subtitle {
+        font-size: 36px;
+    }
+
+    .customer-image, .customer-name-age {
+        display: inline-block;
+        vertical-align: middle;
+        margin: 0 5px;
+    }
+
+    .customer-quote {
+        margin: 10px auto;
+        padding: 0 80px;
+    }
+
+    .footer .page-logo {
+        float: left;
+    }
+
+    .footer-menu {
+        clear: both;
+    }
+
+    .footer .make-call a {
+        width: 175px;
+    }
+
+    .footer .social-icon a {
+        width: auto;
+    }
+
+    .footer .make-call span:last-child {
+        display: inline-block;
+    }
+
+    .footer-menu > * {
+        text-align: center;
+    }
+
+    .chisto-prosto-head {
+        background-image: url(../video/snapshots/clothing.jpg);
+        background-size: cover;
+    }
+
+    .page-logo {
+        margin: auto;
+    }
+
+    .navbar {
+        position: absolute;
+        left: 0px;
+        top: 70px;
+    }
+
+    .navbar-toggle {
+        float: none;
+        margin-left: 20px;
+        border: 0;
+    }
+
+    .navbar-default .navbar-toggle .icon-bar {
+        background-color: #fff;
+    }
+
+    .navbar-header {
+        text-align: left;
+    }
+
+    .container-fluid>.navbar-collapse {
+        background-color: #9ccfd9;
+    }
+
+    .navbar-default .navbar-nav>li>a {
+        padding: 20px;
+    }
+}
+
+
+
+@media screen and (max-width: 600px) {
+    .person img, .shapes svg {
+    }
+    .person, .shapes {
+        width: 90% !important;
+        left: 5% !important;
+        margin: 0 auto;
+    }
+    .top-ft .ft1, .top-ft .ft3 {
+        font-size: 14px !important;
+    }
+}
+
+
+@media screen and (max-width : 480px) {
+    .your-clean-stuff, .clean-care, .about-title div, .service-registration-title p span, .service-delivery-main-title, .contacts-title, .prices-title, .partners-title {
+        font-size: 35px;
+    }
+
+    .service-registration-form {
+        padding: 0 20px;
+    }
+    .partners-content img {
+        margin: 20px auto;
+        width: 20%;
+        display: block;
+    }
+
+    .header-menu ul li {
+        padding: 15px 10px;
+    }
+
+    #phone-menu2 {
+        width: 100%;
+        text-align: right;
+    }
+
+    .about-title div {
+        margin: 10px auto;
+        display: block;
+    }
+    .service-quality-item {
+        width: 100%;
+        margin: 20px 0;
+    }
+
+    .service-delivery-main-subtitle {
+        font-size: 26px;
+        padding: 0 10px;
+    }
+
+    .customer-quote p {
+        font-size: 12px;
+    }
+
+    .footer .page-logo {
+        margin: 0;
+    }
+
+    .footer-menu-list {
+        margin: 0;
+    }
+
+    .footer-menu-list li {
+        margin: 5px 0;
+    }
+
+    #bottom {
+        right: 20px;
+    }
+
+    .service-quality-item-head {
+        font-size: 55px;
+        padding: 20px 0 10px
+    }
+
+    .service-quality-item-main {
+        font-size: 15px;
+    }
+
+}
+
+@media screen and (max-width: 360px) {
+    .footer .page-logo {
+        float: none;
+    }
+
+    .footer .make-call {
+        float: none;
+    }
+}

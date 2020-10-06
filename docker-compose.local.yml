@@ -85,6 +85,18 @@ services:
       - gui
       - bot
 
+  site:
+    build: ./chi100easysite
+    restart: always
+    container_name: site
+    ports:
+      - 9005:8080
+      - 9006:80
+    volumes:
+      - ./chi100easysite/docker/update.sh:/docker-entrypoint.d/update.sh
+    environment:
+      - "NODE_ENV=production"
+
 # certbot -n --nginx -d agafonov.tech -d www.agafonov.tech --email daagafonov@gmail.com --agree-tos --no-eff-email --redirect
 # command: certonly --webroot --webroot-path=/var/www/html --email sammy@example.com --agree-tos --no-eff-email --force-renewal -d example.com -d www.example.com
 
