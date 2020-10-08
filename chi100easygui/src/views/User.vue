@@ -3,7 +3,7 @@
 
         <p class="error">{{ error }}</p>
         <p class="decode-result">Last result: <b>{{ result }}</b></p>
-        <div>
+        <div class="wrapper">
             <qrcode-stream @decode="onDecode" @init="onInit" v-if="showScanner"></qrcode-stream>
         </div>
         <div>
@@ -153,6 +153,12 @@ export default class UserComponent extends Vue {
 </script>
 
 <style scoped>
+.wrapper {
+    position: relative;
+    z-index: 1000;
+    width: 500px;
+    left: 200px;
+}
 .error {
     font-weight: bold;
     color: red;
