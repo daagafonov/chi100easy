@@ -1,7 +1,9 @@
 <template>
     <div class="users">
 
-        <qrcode-stream @decode="onDecode"></qrcode-stream>
+        <p class="error">{{ error }}</p>
+        <p class="decode-result">Last result: <b>{{ result }}</b></p>
+        <qrcode-stream @decode="onDecode" @init="onInit"></qrcode-stream>
 
         <div>Users, {{ greeting }}</div>
         <b-form>
@@ -65,13 +67,13 @@ export default class UserComponent extends Vue {
             file: '',
             telegramUserId: '',
             chatId: '',
+            error: '',
+            result: '',
         };
     }
 
     created() {
         this.$store.dispatch('getUsers', {});
-
-
     }
 
     beforeMount() {
@@ -112,10 +114,36 @@ export default class UserComponent extends Vue {
         });
     }
 
-    onDecode() {
-        console.log('decode');
+    onDecode (result) {
+        this.$data.filter = result;
     }
 
+    async onInit (promise) {
+        try {
+            await promise;
+        } catch (error) {
+            if (error.name === 'NotAllowedError') {
+                this.$data.error = "ERROR: you need to grant camera access permisson"
+            } else if (error.name === 'NotFoundError') {
+                this.$data.error = "ERROR: no camera on this device"
+            } else if (error.name === 'NotSupportedError') {
+                this.$data.error = "ERROR: secure context required (HTTPS, localhost)"
+            } else if (error.name === 'NotReadableError') {
+                this.$data.error = "ERROR: is the camera already in use?"
+            } else if (error.name === 'OverconstrainedError') {
+                this.$data.error = "ERROR: installed cameras are not suitable"
+            } else if (error.name === 'StreamApiNotSupportedError') {
+                this.$data.error = "ERROR: Stream API is not supported in this browser"
+            }
+        }
+    }
 
 }
 </script>
+
+<style scoped>
+.error {
+    font-weight: bold;
+    color: red;
+}
+</style>
