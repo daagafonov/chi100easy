@@ -114,7 +114,7 @@ export default class UserComponent extends Vue {
         });
     }
 
-    onDecode (result) {
+    onDecode (result: any) {
         this.$data.filter = result;
     }
 
