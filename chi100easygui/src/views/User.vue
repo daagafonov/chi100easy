@@ -122,7 +122,7 @@ export default class UserComponent extends Vue {
 
     onDecode (result: any) {
         this.$data.filter = result;
-        this.$data.showScanner = true;
+        this.$data.showScanner = false;
     }
 
     async onInit (promise: any) {
