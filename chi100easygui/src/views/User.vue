@@ -1,5 +1,8 @@
 <template>
     <div class="users">
+
+        <qrcode-stream @decode="onDecode"></qrcode-stream>
+
         <div>Users, {{ greeting }}</div>
         <b-form>
             <b-form-group>
@@ -36,11 +39,9 @@
 
 <script lang="ts">
 
-import AddUser from '@/components/AddUser.vue'
-import {Component, Vue} from 'vue-property-decorator'
-import EventService from '@/services/event.service'
-
-import axios from 'axios';
+import AddUser from '@/components/AddUser.vue';
+import { Component, Vue } from 'vue-property-decorator';
+import EventService from '@/services/event.service';
 
 @Component({
     components: {
@@ -69,6 +70,8 @@ export default class UserComponent extends Vue {
 
     created() {
         this.$store.dispatch('getUsers', {});
+
+
     }
 
     beforeMount() {
@@ -108,6 +111,11 @@ export default class UserComponent extends Vue {
             }
         });
     }
+
+    onDecode() {
+        console.log('decode');
+    }
+
 
 }
 </script>
