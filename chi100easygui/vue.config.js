@@ -15,6 +15,13 @@ module.exports = {
             title: 'Login',
             chunks: ['chunk-vendors', 'chunk-common', 'login'],
         },
+        logout: {
+            entry: 'src/main.ts',
+            template: 'public/index.html',
+            filename: 'index.html',
+            title: 'LogOut',
+            chunks: ['chunk-vendors', 'chunk-common', 'logout'],
+        },
         users: {
             entry: 'src/main.ts',
             template: 'public/index.html',

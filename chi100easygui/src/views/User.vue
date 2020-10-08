@@ -3,7 +3,12 @@
 
         <p class="error">{{ error }}</p>
         <p class="decode-result">Last result: <b>{{ result }}</b></p>
-        <qrcode-stream @decode="onDecode" @init="onInit"></qrcode-stream>
+        <div>
+            <qrcode-stream @decode="onDecode" @init="onInit" v-if="showScanner"></qrcode-stream>
+        </div>
+        <div>
+            <b-button class="btn" @click="scan()">Сканировать...</b-button>
+        </div>
 
         <div>Users, {{ greeting }}</div>
         <b-form>
@@ -69,6 +74,7 @@ export default class UserComponent extends Vue {
             chatId: '',
             error: '',
             result: '',
+            showScanner: false,
         };
     }
 
@@ -116,6 +122,7 @@ export default class UserComponent extends Vue {
 
     onDecode (result: any) {
         this.$data.filter = result;
+        this.$data.showScanner = true;
     }
 
     async onInit (promise: any) {
@@ -136,6 +143,10 @@ export default class UserComponent extends Vue {
                 this.$data.error = "ERROR: Stream API is not supported in this browser"
             }
         }
+    }
+
+    scan() {
+        this.$data.showScanner = true;
     }
 
 }
