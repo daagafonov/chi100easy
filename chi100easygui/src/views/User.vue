@@ -118,7 +118,7 @@ export default class UserComponent extends Vue {
         this.$data.filter = result;
     }
 
-    async onInit (promise) {
+    async onInit (promise: any) {
         try {
             await promise;
         } catch (error) {
