@@ -146,7 +146,7 @@ export default class UserComponent extends Vue {
     }
 
     scan() {
-        this.$data.showScanner = true;
+        this.$data.showScanner = !this.$data.showScanner;
     }
 
 }
