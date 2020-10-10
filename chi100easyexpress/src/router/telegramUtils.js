@@ -16,6 +16,16 @@ const confirmPaymentIsDone = (chatId, message, replyMarkup) => {
     return axios.post(`https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendMessage`, data);
 };
 
+const sendServiceMessageCallMe = (message) => {
+
+    const data = {
+        chat_id: process.env.CALLME_SERVICE_IDS,
+        text: message,
+    };
+
+    return axios.post(`https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendMessage`, data);
+}
+
 const sendDocument = (order, content) => {
     const form = new FormData();
     // console.log('creating data');
@@ -39,4 +49,5 @@ const sendDocument = (order, content) => {
 module.exports = {
     confirmPaymentIsDone,
     sendDocument,
+    sendServiceMessageCallMe,
 }

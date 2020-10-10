@@ -60,7 +60,7 @@ services:
     restart: always
     container_name: gui
     ports:
-      - 9000:8080
+      - 9005:8080
       - 9001:80
     volumes:
       - ./chi100easygui/docker/update.sh:/docker-entrypoint.d/update.sh
@@ -78,8 +78,8 @@ services:
       - certbot-var:/var/lib/letsencrypt
       - nginx-config:/etc/nginx/conf.d
     ports:
-      - "80:80"
-      - "443:443"
+      - "81:80"
+      - "444:443"
     depends_on:
       - express
       - gui
