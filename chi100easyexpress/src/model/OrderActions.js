@@ -11,6 +11,7 @@ const addOrderToUser = function(userId, order) {
     }, {
         $set: {
             user: userId,
+            updated_dt: new Date(),
         }
     });
     return o;
@@ -49,10 +50,11 @@ const findByInternalId = (internalId) => {
 }
 
 const updateOne = function(id, fields) {
+    fields.updated_dt = new Date();
     return Order.updateOne({
-        _id: id
+        _id: id,
     }, {
-        $set: fields
+        $set: fields,
     });
 }
 
