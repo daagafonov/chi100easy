@@ -81,7 +81,6 @@ export default class AddUserModal extends Vue {
     mounted() {
         EventService.subscribeEvent('add-product', (payload: any) => {
             this.$data.action = 'add';
-            payload.category = 'CLOSE&CLEAN';
             this.$data.form = {
                 name: payload.name,
                 price: payload.price,

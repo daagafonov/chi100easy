@@ -17,6 +17,17 @@ router.get('/', verify, async(req, res) => {
     }
 });
 
+router.post('/query', verify, async(req, res) => {
+    try {
+        const order = await db.actions.product.findByQuery(req.body);
+        res.json(order);
+    } catch (error) {
+        res.status(500).json({
+            message: error
+        });
+    }
+});
+
 router.post('/', verify, async(req, res) => {
 
     const { name, price, externalIdentifier } = req.body;

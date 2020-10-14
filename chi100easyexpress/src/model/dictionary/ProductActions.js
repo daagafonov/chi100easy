@@ -34,6 +34,10 @@ const deleteFn = (id) => {
     });
 }
 
+const findByQuery = (query) => {
+    return Product.find(query);
+}
+
 module.exports = {
     create:  createOrder,
     findById,
@@ -41,4 +45,5 @@ module.exports = {
     getOrderWithPopulate,
     updateOne2,
     delete: deleteFn,
+    findByQuery,
 }

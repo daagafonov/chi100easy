@@ -119,7 +119,7 @@ export default new Vuex.Store({
         },
 
         removeProduct(state, payload) {
-            EventService.sendEvent('reload', {});
+            EventService.sendEvent('reload', payload);
         }
     },
     actions: {
@@ -194,8 +194,8 @@ export default new Vuex.Store({
             });
         },
 
-        getProducts({dispatch, commit}) {
-            axios.get(`${sessionStorage.getItem('backendUrl')}/products/`, {
+        getProducts({dispatch, commit}, initialPayload: any) {
+            axios.post(`${sessionStorage.getItem('backendUrl')}/products/query`, initialPayload, {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': createAuthorizationHeader(),
@@ -208,6 +208,7 @@ export default new Vuex.Store({
                     commit('getProducts', {
                         action: 'products',
                         payload,
+                        initialPayload,
                     });
                 }
             }).catch(err => {
@@ -251,6 +252,7 @@ export default new Vuex.Store({
                     commit('addProduct', {
                         action: 'addProduct',
                         payload: data,
+                        category: payload.category,
                     });
                 }
             }).catch(err => {
@@ -453,8 +455,8 @@ export default new Vuex.Store({
                 });
         },
 
-        removeProduct({commit}, payload: any) {
-            axios.delete(`${sessionStorage.getItem('backendUrl')}/products/${payload.id}`, {
+        removeProduct({commit}, initialPayload: any) {
+            axios.delete(`${sessionStorage.getItem('backendUrl')}/products/${initialPayload.id}`, {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': createAuthorizationHeader(),
@@ -466,6 +468,7 @@ export default new Vuex.Store({
                     const payload = response.data;
                     commit('removeProduct', {
                         payload,
+                        category: initialPayload.category,
                     });
                 }
             }).catch(err => {
