@@ -116,6 +116,10 @@ export default new Vuex.Store({
         },
         generalError(state, payload) {
             console.log('error', payload.response.data);
+        },
+
+        removeProduct(state, payload) {
+            EventService.sendEvent('reload', {});
         }
     },
     actions: {
@@ -447,6 +451,26 @@ export default new Vuex.Store({
                 }).catch(error => {
                     commit('logoutFailed', error);
                 });
+        },
+
+        removeProduct({commit}, payload: any) {
+            axios.delete(`${sessionStorage.getItem('backendUrl')}/products/${payload.id}`, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': createAuthorizationHeader(),
+                }
+            }).then((response: any) => {
+                if (response.message) {
+                    wrapError(response.message);
+                } else {
+                    const payload = response.data;
+                    commit('removeProduct', {
+                        payload,
+                    });
+                }
+            }).catch(err => {
+                generalErrorHandler(commit, err);
+            });
         }
     },
     modules: {}

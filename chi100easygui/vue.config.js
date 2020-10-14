@@ -50,5 +50,12 @@ module.exports = {
             title: 'Payments',
             chunks: ['chunk-vendors', 'chunk-common', 'payments'],
         },
+        orders: {
+            entry: 'src/main.ts',
+            template: 'public/index.html',
+            filename: 'orders.html',
+            title: 'Orders',
+            chunks: ['chunk-vendors', 'chunk-common', 'orders'],
+        },
     },
 }

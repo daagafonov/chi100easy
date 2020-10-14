@@ -4,8 +4,9 @@ const short = require('short-uuid');
 const router = express.Router();
 
 const db = require('../model');
+const verify = require('./verifyToken');
 
-router.get('/', async(req, res) => {
+router.get('/', verify, async(req, res) => {
     try {
         const order = await db.actions.product.findAll();
         res.json(order);
@@ -16,14 +17,23 @@ router.get('/', async(req, res) => {
     }
 });
 
-router.post('/', async(req, res) => {
+router.post('/', verify, async(req, res) => {
+
+    const { name, price, externalIdentifier } = req.body;
 
     const product = {
-        name: req.body.name,
-        price: req.body.price,
-        currency: req.body.currency,
+        name,
+        price,
+        externalIdentifier,
         productIdentifier: short.generate(),
     };
+
+    if (req.body.category) {
+        product.category = req.body.category;
+    }
+    if (req.body.currency) {
+        product.currency = req.body.currency;
+    }
 
     try {
         const saved = await db.actions.product.create(product);
@@ -37,15 +47,23 @@ router.post('/', async(req, res) => {
     }
 });
 
-router.put('/:id', async(req, res) => {
+router.put('/:id', verify, async(req, res) => {
 
     console.log('product to update', req.body);
 
+    const { name, price } = req.body;
+
     const product = {
-        name: req.body.name,
-        price: req.body.price,
-        currency: req.body.currency,
+        name,
+        price,
     };
+
+    if (req.body.category) {
+        product.category = req.body.category;
+    }
+    if (req.body.currency) {
+        product.currency = req.body.currency;
+    }
 
     try {
         const saved = await db.actions.product.updateOne2(req.params.id, product);
@@ -60,5 +78,22 @@ router.put('/:id', async(req, res) => {
     }
 });
 
+router.delete('/:id', verify, async (req, res) => {
+    try {
+
+        const result = await db.actions.product.delete(req.params.id);
+
+        res.json({
+            ok: true,
+            message: result,
+        });
+
+    } catch(error) {
+        console.log(error);
+        res.json({
+            message: error
+        });
+    }
+});
 
 module.exports = router;

@@ -6,6 +6,16 @@ const productSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    externalIdentifier: {
+        type: String,
+        required: true,
+    },
+    category: {
+        type: String,
+        enum: ['CLOSE&CLEAN', 'HOME&TEXTILE', 'LEATHER&FUR', 'REPAIR'],
+        default: 'CLOSE&CLEAN',
+        required: true,
+    },
     productIdentifier: {
         type: String,
         required: false,

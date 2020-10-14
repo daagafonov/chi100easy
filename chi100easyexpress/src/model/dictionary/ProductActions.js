@@ -28,10 +28,17 @@ const updateOne2 = function(id, fields) {
     });
 }
 
+const deleteFn = (id) => {
+    return  Product.findOneAndDelete({
+        _id: id,
+    });
+}
+
 module.exports = {
     create:  createOrder,
     findById,
     findAll,
     getOrderWithPopulate,
     updateOne2,
+    delete: deleteFn,
 }

@@ -18,14 +18,14 @@
                      :fields="fields"
                      :filter="filter"
             >
-                <template v-slot:table-caption>Продукты ...</template>
+                <template v-slot:table-caption>Прайс лист</template>
 
                 <template v-slot:cell(actions)="row">
                     <b-button size="sm" v-b-modal.product-modal @click="details(row.item, row.index, $event.target)"
                               class="mr-1">
                         Details
                     </b-button>
-                    <b-button size="sm" @click="delete(row.item, row.index, $event.target)">
+                    <b-button size="sm" @click="deleteFn(row.item, row.index, $event.target)">
                         Delete
                     </b-button>
                 </template>
@@ -50,13 +50,15 @@ export default class ProductsComponent extends Vue {
     data() {
         return {
             items: [],
-            filter: null,
+            filter: '',
             fields: [{
+                key: 'category', label: 'Категория'
+            }, {
+                key: 'externalIdentifier', label: 'Код изделия'
+            }, {
                 key: 'name', label: 'Название'
             }, {
                 key: 'price', label: 'Цена'
-            }, {
-                key: 'currency', label: 'Валюта'
             }, {
                 key: 'actions',
                 label: 'Действия'
@@ -101,8 +103,10 @@ export default class ProductsComponent extends Vue {
         EventService.sendEvent('edit-product', item);
     }
 
-    delete(item: any, index: any, event: any) {
-
+    deleteFn(item: any, index: any, event: any) {
+        this.$store.dispatch('removeProduct', {
+            id: item._id,
+        });
     }
 
 }

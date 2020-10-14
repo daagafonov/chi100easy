@@ -5,6 +5,22 @@
                 Create or Edit product
             </template>
             <div class="d-block text-center">
+                <b-container>
+                <b-row>
+                    <b-col md="4">Category</b-col>
+                    <b-col md="8">
+                        <b-select name="category" v-model="form.category">
+                            <b-select-option key="CLOSE&CLEAN">Чистка Одежды</b-select-option>
+                            <b-select-option key="HOME&TEXTILE">HOME&TEXTILE</b-select-option>
+                            <b-select-option key="LEATHER&FUR">LEATHER&FUR</b-select-option>
+                            <b-select-option key="REPAIR">REPAIR</b-select-option>
+                        </b-select>
+                    </b-col>
+                </b-row>
+                <b-row>
+                    <b-col md="4">External Identifier</b-col>
+                    <b-col md="8"><b-input type="text" placeholder="Enter external identifier" name="externalIdentifier" v-model="form.externalIdentifier" /></b-col>
+                </b-row>
                 <b-row>
                     <b-col md="4">Name</b-col>
                     <b-col md="8"><b-input type="text" placeholder="Enter name" name="name" v-model="form.name" /></b-col>
@@ -13,10 +29,11 @@
                     <b-col md="4">Price</b-col>
                     <b-col md="8"><b-input type="text" placeholder="Enter price" name="price" v-model="form.price"/></b-col>
                 </b-row>
-                <b-row>
-                    <b-col md="4">Currency</b-col>
-                    <b-col md="8"><b-input type="text" placeholder="Enter currency" name="currency" v-model="form.currency"/></b-col>
-                </b-row>
+<!--                <b-row>-->
+<!--                    <b-col md="4">Currency</b-col>-->
+<!--                    <b-col md="8"><b-input type="text" placeholder="Enter currency" name="currency" v-model="form.currency"/></b-col>-->
+<!--                </b-row>-->
+                </b-container>
             </div>
             <br/>
             <b-button-group style="text-align: right; width: 100%;">
@@ -46,6 +63,8 @@ export default class AddUserModal extends Vue {
                 name: '',
                 price: '',
                 currency: '',
+                externalIdentifier: '',
+                category: '',
             }
         };
     }
@@ -57,6 +76,8 @@ export default class AddUserModal extends Vue {
                 name: payload.name,
                 price: payload.price,
                 currency: payload.currency,
+                externalIdentifier: payload.externalIdentifier,
+                category: payload.category,
             };
         });
         EventService.subscribeEvent('edit-product', (payload: any) => {
@@ -66,6 +87,8 @@ export default class AddUserModal extends Vue {
                 name: payload.name,
                 price: payload.price,
                 currency: payload.currency,
+                externalIdentifier: payload.externalIdentifier,
+                category: payload.category,
             };
         });
 
