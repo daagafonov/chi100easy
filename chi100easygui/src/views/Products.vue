@@ -44,11 +44,17 @@
                     <b-tabs card @activate-tab="tabActivated" v-model="activatedIndex">
 
                         <b-tab v-for="item in productCategories" :key="item.key" :title="item.label" lazy @click="clicked(item.key)">
-                            <b-table id="itemsTable" hover striped caption-top responsive
+                            <b-table id="itemsTable"
+                                     hover
+                                     striped
+                                     caption-top
+                                     responsive
                                      :items="items"
                                      :fields="fields"
                                      :filter="filter"
+                                     primary-key="_id"
                                      style="max-height: 555px; overflow-y: auto; "
+                                     sticky-header
                             >
 <!--                                <template v-slot:table-caption>Прайс лист</template>-->
 
@@ -57,10 +63,10 @@
 <!--                                </template>-->
 
                                 <template v-slot:cell(actions)="row">
-                                    <b-button size="sm" v-b-modal.product-modal @click="details(row.item, row.index, $event.target)"
-                                              class="mr-1">
-                                        Details
-                                    </b-button>
+<!--                                    <b-button size="sm" v-b-modal.product-modal @click="details(row.item, row.index, $event.target)"-->
+<!--                                              class="mr-1">-->
+<!--                                        Details-->
+<!--                                    </b-button>-->
                                     <b-button size="sm" @click="deleteFn(row.item, row.index, $event.target)">
                                         Delete
                                     </b-button>
@@ -120,13 +126,11 @@ export default class ProductsComponent extends Vue {
             items: [],
             filter: '',
             fields: [{
-            //     key: 'category', label: 'Категорія'
-            // }, {
-                key: 'externalIdentifier', label: 'Код виробу'
+                key: 'externalIdentifier', label: 'Код виробу', sortable: true
             }, {
-                key: 'name', label: 'Найменування'
+                key: 'name', label: 'Найменування', sortable: true
             }, {
-                key: 'price', label: 'Ціна'
+                key: 'price', label: 'Ціна', sortable: true
             }, {
                 key: 'actions',
                 label: 'Действия'
