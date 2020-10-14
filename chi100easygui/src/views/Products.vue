@@ -28,7 +28,7 @@
                                      :fields="fields"
                                      :filter="filter"
                                      primary-key="_id"
-                                     style="max-height: 555px; overflow-y: auto; "
+
                                      sticky-header
                             >
                                 <template v-slot:cell(actions)="row">
