@@ -7,27 +7,23 @@
             <div class="d-block text-center">
                 <b-container>
                 <b-row>
-                    <b-col md="4">Category</b-col>
+                    <b-col md="4">Категорія</b-col>
                     <b-col md="8">
-                        <b-select name="category" v-model="form.category">
-                            <b-select-option key="CLOSE&CLEAN">Чистка Одежды</b-select-option>
-                            <b-select-option key="HOME&TEXTILE">HOME&TEXTILE</b-select-option>
-                            <b-select-option key="LEATHER&FUR">LEATHER&FUR</b-select-option>
-                            <b-select-option key="REPAIR">REPAIR</b-select-option>
-                        </b-select>
+                        <b-form-select name="category" v-model="form.category" :options="productCategories">
+                        </b-form-select>
                     </b-col>
                 </b-row>
                 <b-row>
-                    <b-col md="4">External Identifier</b-col>
-                    <b-col md="8"><b-input type="text" placeholder="Enter external identifier" name="externalIdentifier" v-model="form.externalIdentifier" /></b-col>
+                    <b-col md="4">Код виробу</b-col>
+                    <b-col md="8"><b-input type="text" placeholder="Код виробу" name="externalIdentifier" v-model="form.externalIdentifier" /></b-col>
                 </b-row>
                 <b-row>
-                    <b-col md="4">Name</b-col>
-                    <b-col md="8"><b-input type="text" placeholder="Enter name" name="name" v-model="form.name" /></b-col>
+                    <b-col md="4">Найменування</b-col>
+                    <b-col md="8"><b-input type="text" placeholder="Найменування" name="name" v-model="form.name" /></b-col>
                 </b-row>
                 <b-row>
-                    <b-col md="4">Price</b-col>
-                    <b-col md="8"><b-input type="text" placeholder="Enter price" name="price" v-model="form.price"/></b-col>
+                    <b-col md="4">Ціна</b-col>
+                    <b-col md="8"><b-input type="text" placeholder="Ціна" name="price" v-model="form.price"/></b-col>
                 </b-row>
 <!--                <b-row>-->
 <!--                    <b-col md="4">Currency</b-col>-->
@@ -65,13 +61,27 @@ export default class AddUserModal extends Vue {
                 currency: '',
                 externalIdentifier: '',
                 category: '',
-            }
+            },
+            productCategories: [{
+                value: 'CLOSE&CLEAN',
+                text: 'Чистка одягу'
+            }, {
+                value: 'HOME&TEXTILE',
+                text: 'Домашні речі та текстіль'
+            }, {
+                value: 'LEATHER&FUR',
+                text: 'Шкіряні та хутрові вироби'
+            }, {
+                value: 'REPAIR',
+                text: 'Ремон одягу'
+            }],
         };
     }
 
     mounted() {
         EventService.subscribeEvent('add-product', (payload: any) => {
             this.$data.action = 'add';
+            payload.category = 'CLOSE&CLEAN';
             this.$data.form = {
                 name: payload.name,
                 price: payload.price,

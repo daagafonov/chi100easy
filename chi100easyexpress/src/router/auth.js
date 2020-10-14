@@ -10,19 +10,25 @@ var refreshTokens = [];
 
 router.post('/register', async (req, res) => {
 
-    const { error } = registerValidation(req.body);
-    if (error) {
-        return utils.resStatusError(400, res, error.details[0].message);
+    const aaa = registerValidation(req.body);
+    console.log('error', aaa);
+    if (aaa.error) {
+        return utils.resStatusError(400, res, aaa.error.details[0].message);
     }
 
-    const emailExists = await db.LoginUser.findOne({
-        email: req.body.email,
-    });
-    if (emailExists) {
-        return res.status(400).json({
-            ok: false,
-            message: 'Email already exists',
+    try {
+        const emailExists = await db.LoginUser.findOne({
+            email: req.body.email,
         });
+        console.log('exists', emailExists);
+        if (emailExists) {
+            return res.status(400).json({
+                ok: false,
+                message: 'Email already exists',
+            });
+        }
+    } catch(error) {
+        resError(res, error);
     }
 
     const salt = await bcrypt.genSalt(10);
