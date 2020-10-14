@@ -14,31 +14,6 @@
                 </b-form-group>
             </b-form>
 
-            {{activatedIndex}}
-
-<!--            <b-table id="itemsTable" hover striped caption-top responsive-->
-<!--                     :items="items"-->
-<!--                     :fields="fields"-->
-<!--                     :filter="filter"-->
-<!--            >-->
-<!--                <template v-slot:table-caption>Прайс лист</template>-->
-
-<!--                <template v-slot:cell(category)="row">-->
-<!--                    <div>{{getCategory(row.item)}}</div>-->
-<!--                </template>-->
-
-<!--                <template v-slot:cell(actions)="row">-->
-<!--                    <b-button size="sm" v-b-modal.product-modal @click="details(row.item, row.index, $event.target)"-->
-<!--                              class="mr-1">-->
-<!--                        Details-->
-<!--                    </b-button>-->
-<!--                    <b-button size="sm" @click="deleteFn(row.item, row.index, $event.target)">-->
-<!--                        Delete-->
-<!--                    </b-button>-->
-<!--                </template>-->
-<!--            </b-table>-->
-
-
             <div>
                 <b-card no-body>
                     <b-tabs card @activate-tab="tabActivated" v-model="activatedIndex">
@@ -56,17 +31,7 @@
                                      style="max-height: 555px; overflow-y: auto; "
                                      sticky-header
                             >
-<!--                                <template v-slot:table-caption>Прайс лист</template>-->
-
-<!--                                <template v-slot:cell(category)="row">-->
-<!--                                    <div>{{getCategory(row.item)}}</div>-->
-<!--                                </template>-->
-
                                 <template v-slot:cell(actions)="row">
-<!--                                    <b-button size="sm" v-b-modal.product-modal @click="details(row.item, row.index, $event.target)"-->
-<!--                                              class="mr-1">-->
-<!--                                        Details-->
-<!--                                    </b-button>-->
                                     <b-button size="sm" @click="deleteFn(row.item, row.index, $event.target)">
                                         Delete
                                     </b-button>
