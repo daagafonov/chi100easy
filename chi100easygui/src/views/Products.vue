@@ -1,5 +1,33 @@
 <template>
     <div>
+
+        <div
+            @contextmenu.prevent.stop="handleClick($event)"
+        >test</div>
+
+        <context-menu
+            ref="menuitem"
+            element-id="aaa"
+            :options="[{
+              name: 'Duplicate',
+              slug: 'duplicate'
+            },
+            {
+              type: 'divider'
+            },
+            {
+              name: 'Edit',
+              slug: 'edit'
+            },
+            {
+              name: 'Delete',
+              slug: 'delete'
+            }]"
+            @option-clicked="optionClicked"
+        >
+            menuItem
+        </context-menu>
+
         <div class="items">
             <b-form>
                 <b-form-group>
@@ -30,12 +58,15 @@
                                      primary-key="_id"
                                      style="max-height: 491px; overflow-y: auto; "
                                      sticky-header
+
+                                     @row-contextmenu="contextMenuFired"
                             >
-                                <template v-slot:cell(actions)="row">
-                                    <b-button size="sm" @click="deleteFn(row.item, row.index, $event.target)">
-                                        Delete
-                                    </b-button>
-                                </template>
+<!--                                <template v-slot:cell(actions)="row">-->
+<!--                                    <b-button size="sm" @click="deleteFn(row.item, row.index, $event.target)">-->
+<!--                                        Delete-->
+<!--                                    </b-button>-->
+<!--                                </template>-->
+
                             </b-table>
                         </b-tab>
 
@@ -51,10 +82,12 @@
 import {Component, Vue} from 'vue-property-decorator';
 import ProductModal from "@/components/ProductModal.vue";
 import EventService from "@/services/event.service";
+import ContextMenuComponent from "@/components/ContextMenu.vue";
 
 @Component({
     components: {
         'productModal': ProductModal,
+        'context-menu': ContextMenuComponent,
     }
 })
 export default class ProductsComponent extends Vue {
@@ -89,16 +122,44 @@ export default class ProductsComponent extends Vue {
     data() {
         return {
             items: [],
+            itemsTest: [{
+                name: 'Jim',
+                job: 'Salesman'
+            }, {
+                    name: 'Dwight',
+                    job: 'Assistant to the Regional Manager'
+            }, {
+                    name: 'Pam',
+                    job: 'Receptionist'
+            }],
+            options: [
+                {
+                    name: 'Duplicate',
+                    slug: 'duplicate'
+                },
+                {
+                    type: 'divider'
+                },
+                {
+                    name: 'Edit',
+                    slug: 'edit'
+                },
+                {
+                    name: 'Delete',
+                    slug: 'delete'
+                }
+            ],
             filter: '',
             fields: [{
                 key: 'externalIdentifier', label: 'Код виробу', sortable: true
             }, {
                 key: 'name', label: 'Найменування', sortable: true
             }, {
-                key: 'price', label: 'Ціна', sortable: true
-            }, {
-                key: 'actions',
-                label: 'Действия'
+                key: 'price', label: 'Ціна', sortable: true,
+                _showDetails: true
+            // }, {
+            //     key: 'actions',
+            //     label: 'Действия'
             }],
             activatedIndex: 0,
         };
@@ -140,25 +201,41 @@ export default class ProductsComponent extends Vue {
         });
     }
 
-    deleteProduct(userId: string) {
-        // delete by id
-    }
-
-    details(item: any, index: any, event: any) {
-        EventService.sendEvent('edit-product', item);
-    }
-
-    deleteFn(item: any, index: any, event: any) {
-        this.$store.dispatch('removeProduct', {
-            id: item._id,
-            category: this.productCategories[this.$data.activatedIndex].key,
-        });
-    }
+    // deleteFn(item: any, index: any, event: any) {
+    //     this.$store.dispatch('removeProduct', {
+    //         id: item._id,
+    //         category: this.productCategories[this.$data.activatedIndex].key,
+    //     });
+    // }
 
     getCategory(item: any) {
         return this.productCategories.filter(v => v.key === item.category)[0].label;
     }
 
+    open() {
+        console.log('open context menu')
+    }
+
+    handleClick(event) {
+        this.$refs.menuitem.showMenu(event, {
+
+        });
+    }
+
+    optionClicked(paylaod: any) {
+        const {item, option} = paylaod;
+        if (option && option.slug && option.slug === 'delete') {
+            this.$store.dispatch('removeProduct', {
+                id: item._id,
+                category: this.productCategories[this.$data.activatedIndex].key,
+            });
+        }
+    }
+
+    contextMenuFired(item, index, event) {
+        event.preventDefault();
+        this.$refs.menuitem.showMenu(event, item);
+    }
 }
 </script>
 <style>

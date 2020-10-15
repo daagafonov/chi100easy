@@ -52,6 +52,7 @@ export default class AppComponent extends Vue {
     isAuthenticated(): boolean {
         return localStorage.getItem('user-token') ? true : false;
     }
+
 }
 </script>
 <style lang="scss">
