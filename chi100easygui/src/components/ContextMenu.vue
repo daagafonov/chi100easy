@@ -18,6 +18,7 @@
     </div>
 </template>
 
+
 <script lang="ts">
 import {Component, Prop, Vue} from "vue-property-decorator";
 
@@ -33,14 +34,14 @@ export interface Option {
 export default class ContextMenuComponent extends Vue {
 
     @Prop({
-        required: true
+        required: true,
     })
-    elementId: string;
+    readonly elementId!: string;
 
     @Prop({
         required: true
     })
-    options: [];
+    readonly options!: [];
 
     data() {
         return {
@@ -66,7 +67,7 @@ export default class ContextMenuComponent extends Vue {
         });
     }
 
-    onEscKeyRelease (event) {
+    onEscKeyRelease (event: any) {
         if (event.keyCode === 27) {
             this.hideContextMenu();
         }
@@ -112,7 +113,7 @@ export default class ContextMenuComponent extends Vue {
 
     beforeCreate() {
         Vue.directive('click-outside', {
-            bind: (el: any, binding, vnode) => {
+            bind: (el: any, binding, vNode: any) => {
                 if (typeof binding.value !== "function") {
                     const compName = vNode.context.name;
                     let warn = `[Vue-click-outside:] provided expression '${binding.expression}' is not a function, but has to be`;
@@ -124,7 +125,7 @@ export default class ContextMenuComponent extends Vue {
                 }
                 // Define Handler and cache it on the element
                 const bubble = binding.modifiers.bubble;
-                const handler = e => {
+                const handler = (e: any) => {
                     if (bubble || (!el.contains(e.target) && el !== e.target)) {
                         binding.value(e);
                     }
@@ -133,13 +134,15 @@ export default class ContextMenuComponent extends Vue {
                 // add Event Listeners
                 document.addEventListener("mousedown", handler);
             },
-            unbind: (el, binding) => {
+            unbind: (el: any, binding) => {
                 // Remove Event Listeners
                 document.removeEventListener("mousedown", el.__vueClickOutside__);
+
                 el.__vueClickOutside__ = null;
             }
         });
     }
+
 }
 </script>
 

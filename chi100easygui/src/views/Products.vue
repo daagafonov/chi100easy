@@ -1,10 +1,6 @@
 <template>
     <div>
 
-        <div
-            @contextmenu.prevent.stop="handleClick($event)"
-        >test</div>
-
         <context-menu
             ref="menuitem"
             element-id="aaa"
@@ -216,10 +212,8 @@ export default class ProductsComponent extends Vue {
         console.log('open context menu')
     }
 
-    handleClick(event) {
-        this.$refs.menuitem.showMenu(event, {
-
-        });
+    clickContextMenu(event: any, menuItem: any, item: any) {
+        menuItem.showMenu(event, item);
     }
 
     optionClicked(paylaod: any) {
@@ -232,9 +226,9 @@ export default class ProductsComponent extends Vue {
         }
     }
 
-    contextMenuFired(item, index, event) {
+    contextMenuFired(item: any, index: any, event: any) {
         event.preventDefault();
-        this.$refs.menuitem.showMenu(event, item);
+        this.clickContextMenu(event, this.$refs.menuitem, item);
     }
 }
 </script>
