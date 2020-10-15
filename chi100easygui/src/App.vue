@@ -1,18 +1,45 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Домашняя</router-link>
-<!--      <router-link to="/about.html">| О Нас</router-link>-->
-      <router-link v-if="isAuthenticated()" to="/users.html"> | Пользователи</router-link>
-      <router-link v-if="isAuthenticated()" to="/products.html"> | Продукты</router-link>
-      <router-link v-if="isAuthenticated()" to="/payments.html"> | Платежи</router-link>
-      <router-link v-if="!isAuthenticated()" to="/login.html"> | Login</router-link>
-      <router-link v-if="isAuthenticated()" to="/logout.html"> | Logout</router-link>
+    <div id="app">
+
+        <b-navbar variant="faded" type="light">
+            <b-navbar-toggle target="navbar-toggle-collapse">
+                <template v-slot:default="{ expanded }">
+                    <b-icon v-if="expanded" icon="chevron-bar-up"></b-icon>
+                    <b-icon v-else icon="chevron-bar-down"></b-icon>
+                </template>
+            </b-navbar-toggle>
+            <b-navbar-brand to="/">Chystoprosto Admin</b-navbar-brand>
+
+            <b-collapse id="navbar-toggle-collapse" is-nav>
+                <b-navbar-nav>
+
+                    <b-nav-item-dropdown left v-if="isAuthenticated()">
+                        <template v-slot:button-content>
+                            <em>Menu</em>
+                        </template>
+                        <b-dropdown-item to="/users.html">Пользователи</b-dropdown-item>
+                        <b-dropdown-item to="/products.html">Продукты</b-dropdown-item>
+                        <b-dropdown-item to="/payments.html">Платежи</b-dropdown-item>
+                    </b-nav-item-dropdown>
+
+                    <b-nav-item-dropdown right v-if="isAuthenticated()">
+                        <template v-slot:button-content>
+                            <em>Account</em>
+                        </template>
+                        <b-dropdown-item to="/logout.html">Logout</b-dropdown-item>
+                    </b-nav-item-dropdown>
+
+                    <b-nav-item to="/login.html" v-if="!isAuthenticated()">Login</b-nav-item>
+
+                </b-navbar-nav>
+            </b-collapse>
+
+        </b-navbar>
+
+        <b-container ma>
+            <router-view/>
+        </b-container>
     </div>
-    <b-container ma>
-      <router-view/>
-    </b-container>
-  </div>
 </template>
 <script lang="ts">
 
@@ -29,23 +56,23 @@ export default class AppComponent extends Vue {
 </script>
 <style lang="scss">
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+    font-family: Avenir, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+    color: #2c3e50;
 }
 
 #nav {
-  padding: 30px;
+    padding: 30px;
 
-  a {
-    font-weight: bold;
-    color: #2c3e50;
+    a {
+        font-weight: bold;
+        color: #2c3e50;
 
-    &.router-link-exact-active {
-      color: #42b983;
+        &.router-link-exact-active {
+            color: #42b983;
+        }
     }
-  }
 }
 </style>
