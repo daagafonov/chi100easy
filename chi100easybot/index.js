@@ -275,6 +275,25 @@ app.on('callback_query', async (ctx) => {
     }
 });
 
+app.hears('Меню', async (ctx) => {
+
+    ctx.replyWithMarkdown("Доступные опции:", {
+        reply_markup: {
+            one_time_keyboard: true,
+            keyboard: [[{
+                text: "Связаться со мной"
+            }, {
+                text: "Акции"
+            }], [{
+                text: "Наши точки приема"
+            }, {
+                text: "Статус заказа"
+            }]],
+        },
+    });
+
+});
+
 app.launch();
 
 function starter(ctx) {
@@ -302,18 +321,24 @@ function starter(ctx) {
 
 function buildStarterButtons(ctx) {
     ctx.replyWithMarkdown(
-        'Привет! Выбери что бы ты хотел получить!',
+        '<b>Добрый день!</b> Вас приветствует Бот компании ЧистоПросто. ' +
+        'Здесь ты имеешь возможность: \n' +
+        '1. Оформлять и оплачивать заказ онлайн, \n' +
+        '2. Получать бонусы, \n' +
+        '3. Получать уведомления о новых акциях, \n' +
+        '4. Заказать обратную связь',
         {
+            parse_mode: "HTML",
             reply_markup: {
                 keyboard: [[{
-                    text: 'Твой личный идентификатор',
-                }, {
-                    text: 'Поделиться своим номером',
-                    request_contact: true,
-
-                }], [{
-                    text: 'Поделиться своим местоположением',
-                    request_location: true,
+                    text: 'Меню',
+                // }, {
+                //     text: 'Поделиться своим номером',
+                //     request_contact: true,
+                //
+                // }], [{
+                //     text: 'Поделиться своим местоположением',
+                //     request_location: true,
                 }]],
                 resize_keyboard: true,
             }

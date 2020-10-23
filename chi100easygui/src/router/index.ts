@@ -8,39 +8,44 @@ Vue.use(VueRouter)
 const routes: Array<RouteConfig> = [
     {
         path: '/',
-        name: 'Home',
+        name: 'Начальная',
         component: Home
     }, {
         path: '/login.html',
-        name: 'Login',
+        name: 'Вход',
         component: () => import('@/views/Login.vue')
     }, {
         path: '/logout.html',
-        name: 'Logout',
+        name: 'Выход',
         component: () => import('@/views/Logout.vue')
     }, {
         path: '/about.html',
-        name: 'About',
+        name: 'О нас',
         component: () => import('@/views/About.vue')
     }, {
         path: '/users.html',
-        name: 'Users',
+        name: 'Клиенты',
         component: () => import('@/views/User.vue'),
         beforeEnter: isAuthenticated,
     }, {
         path: '/products.html',
-        name: 'Products',
+        name: 'Продукты',
         component: () => import('@/views/Products.vue'),
         beforeEnter: isAuthenticated,
     }, {
         path: '/orders.html',
-        name: 'Orders',
+        name: 'Заказы',
         component: () => import('@/views/Orders.vue'),
         beforeEnter: isAuthenticated,
     }, {
         path: '/payments.html',
-        name: 'Payments',
+        name: 'Платежи',
         component: () => import('@/views/Payments.vue'),
+        beforeEnter: isAuthenticated,
+    }, {
+        path: '/offers.html',
+        name: 'Акции',
+        component: () => import('@/views/Offers.vue'),
         beforeEnter: isAuthenticated,
     }
 ]

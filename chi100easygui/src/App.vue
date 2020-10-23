@@ -20,6 +20,7 @@
                         <b-dropdown-item to="/users.html">Пользователи</b-dropdown-item>
                         <b-dropdown-item to="/products.html">Продукты</b-dropdown-item>
                         <b-dropdown-item to="/payments.html">Платежи</b-dropdown-item>
+                        <b-dropdown-item to="/offers.html">Акции</b-dropdown-item>
                     </b-nav-item-dropdown>
 
                     <b-nav-item-dropdown right v-if="isAuthenticated()">

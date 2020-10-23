@@ -62,10 +62,6 @@ services:
     ports:
       - 9005:8080
       - 9001:80
-    volumes:
-      - ./chi100easygui/docker/update.sh:/docker-entrypoint.d/update.sh
-    environment:
-      - "NODE_ENV=production"
     depends_on:
       - express
 
@@ -78,8 +74,8 @@ services:
       - certbot-var:/var/lib/letsencrypt
       - nginx-config:/etc/nginx/conf.d
     ports:
-      - "81:80"
-      - "444:443"
+      - "80:80"
+      - "443:443"
     depends_on:
       - express
       - gui

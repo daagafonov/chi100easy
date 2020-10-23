@@ -7,9 +7,11 @@ module.exports = {
     Payment: require('./Payment'),
     LoginUser: require('./LoginUser'),
     LoginRole: require('./LoginRole'),
+    Offer: require('./Offer'),
     actions: {
         user: require('./UserActions'),
         order: require('./OrderActions'),
+        offer: require('./OfferActions'),
         orderItem: require('./OrderItemsActions'),
         product: require('./dictionary/ProductActions'),
         document: require('./DocumentActions'),
