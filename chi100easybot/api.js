@@ -7,13 +7,6 @@ const router = express.Router();
 const shared = require('./shared');
 
 
-router.get('/test', (req, res) => {
-    res.status(200).json({
-        message: 'OK'
-    });
-});
-
-
 // router.post('/shareDocument', (req, res) => {
 //     console.log('req', req.files);
 //

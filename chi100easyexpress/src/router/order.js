@@ -40,8 +40,6 @@ router.get('/:id', async (req, res) => {
 router.post('/user/:userId', async (req, res) => {
     try {
 
-        console.log('files', req.files);
-
         const {name, mimetype, size, md5} = req.files.file;
 
         const saved = await db.actions.order.create({

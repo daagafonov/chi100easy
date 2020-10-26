@@ -1,14 +1,17 @@
 const axios = require('axios');
 const bodyParser = require('body-parser');
-// const path = require('path');
+
 const http = require('http');
-// const https = require('https');
+
 const express = require('express');
 const morgan = require('morgan');
 const fileUpload = require('express-fileupload');
+const FormData = require('form-data');
 
 const helmet = require("helmet");
 const cors = require("cors");
+const fs = require('fs');
+const tmp = require('./tmp');
 
 
 const botServer = express();
@@ -320,6 +323,9 @@ function starter(ctx) {
 }
 
 function buildStarterButtons(ctx) {
+
+
+
     ctx.replyWithMarkdown(
         '<b>Добрый день!</b> Вас приветствует Бот компании ЧистоПросто. ' +
         'Здесь ты имеешь возможность: \n' +
@@ -344,5 +350,47 @@ function buildStarterButtons(ctx) {
             }
         }
     );
+
+    axios.get(`${process.env.API_URI}/offers/firstAvailable`).then(response => {
+
+        const offer = response.data;
+
+        ctx.replyWithHTML('На данный момент действует такая акция:');
+
+        ctx.replyWithHTML(`http://chystoprosto.com/offers?offerid=${offer._id}`);
+
+        axios.get(`${process.env.API_URI}/offers/${offer._id}/image`, {
+            responseType: 'arraybuffer'
+        }).then(resp => {
+
+            const filename = tmp.tmpFile('offer.image', 'img');
+
+            fs.writeFileSync(filename, Buffer.from(resp.data, 'binary'));
+
+            const form = new FormData();
+                    form.append('photo', fs.createReadStream(filename));
+                    form.append('chat_id', ctx.chat.id);
+                    form.append('caption', `${offer.shortDescription}`);
+
+                    axios.post(`https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendPhoto`, form, {
+                        headers: form.getHeaders()
+                    }).then(response => {
+
+                        fs.unlinkSync(filename);
+
+                    }).catch(error => {
+                        console.log(error);
+                    });
+
+        }).catch(error => {
+            console.log(error);
+        });
+
+
+    }).catch((error) => {
+
+        console.log(error);
+
+    });
 
 }

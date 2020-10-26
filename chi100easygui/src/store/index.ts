@@ -120,7 +120,13 @@ export default new Vuex.Store({
 
         removeProduct(state, payload) {
             EventService.sendEvent('reload', payload);
-        }
+        },
+        getOffers(state, payload) {
+            EventService.sendEvent('getOffers', payload);
+        },
+        addOffer(state, payload) {
+            EventService.sendEvent('addOffer', payload);
+        },
     },
     actions: {
 
@@ -469,6 +475,57 @@ export default new Vuex.Store({
                     commit('removeProduct', {
                         payload,
                         category: initialPayload.category,
+                    });
+                }
+            }).catch(err => {
+                generalErrorHandler(commit, err);
+            });
+        },
+
+        getOffers({commit}, payload: any) {
+            axios.get(`${sessionStorage.getItem('backendUrl')}/offers`, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': createAuthorizationHeader(),
+                }
+            }).then((response: any) => {
+                if (response.message) {
+                    wrapError(response.message);
+                } else {
+                    const payload = response.data;
+                    commit('getOffers', {
+                        action: 'offers',
+                        payload,
+                    });
+                }
+            }).catch(err => {
+                generalErrorHandler(commit, err);
+            });
+        },
+
+        addOffer({commit}, payload) {
+
+            let formData = new FormData();
+            formData.append('file', payload.file, payload.file.name);
+            formData.append('shortDescription', payload.shortDescription);
+            formData.append('longDescription', payload.longDescription);
+            formData.append('validFrom', payload.validFrom);
+            formData.append('validTo', payload.validTo);
+
+
+            axios.post(`${sessionStorage.getItem('backendUrl')}/offers/`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    'Authorization': createAuthorizationHeader(),
+                }
+            }).then((response: any) => {
+                if (response.message) {
+                    wrapError(response.message);
+                } else {
+                    const {data} = response.data;
+                    commit('addOffer', {
+                        action: 'addOffer',
+                        payload: data,
                     });
                 }
             }).catch(err => {

@@ -4,6 +4,7 @@ import './registerServiceWorker';
 import router from './router';
 import store from './store';
 import axios from 'axios';
+import moment from 'moment';
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-vue/dist/bootstrap-vue.css";
@@ -16,6 +17,8 @@ Vue.config.productionTip = false;
 
 const aaa = require('./VueQrcodeReader.umd.min');
 Vue.use(aaa);
+
+moment.defaultFormat = 'YYYY-MM-DD';
 
 axios.get('/chi100easy/static/app.config.json', {
   headers: {

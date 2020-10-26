@@ -14,7 +14,7 @@ router.get('/', verify, async (req, res) => {
     }
 });
 
-router.get('/byTelegramUserId/:telegramUserId', verify, async(req, res) => {
+router.get('/byTelegramUserId/:telegramUserId', async(req, res) => {
     try {
         const user = await db.actions.user.getByTelegramUserId(req.params.telegramUserId);
         if (user) {

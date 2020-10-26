@@ -34,7 +34,7 @@ const routes: Array<RouteConfig> = [
         beforeEnter: isAuthenticated,
     }, {
         path: '/orders.html',
-        name: 'Заказы',
+        name: 'Orders',
         component: () => import('@/views/Orders.vue'),
         beforeEnter: isAuthenticated,
     }, {

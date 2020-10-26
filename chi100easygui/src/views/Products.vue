@@ -128,23 +128,6 @@ export default class ProductsComponent extends Vue {
                     name: 'Pam',
                     job: 'Receptionist'
             }],
-            options: [
-                {
-                    name: 'Duplicate',
-                    slug: 'duplicate'
-                },
-                {
-                    type: 'divider'
-                },
-                {
-                    name: 'Edit',
-                    slug: 'edit'
-                },
-                {
-                    name: 'Delete',
-                    slug: 'delete'
-                }
-            ],
             filter: '',
             fields: [{
                 key: 'externalIdentifier', label: 'Код виробу', sortable: true
@@ -153,9 +136,6 @@ export default class ProductsComponent extends Vue {
             }, {
                 key: 'price', label: 'Ціна', sortable: true,
                 _showDetails: true
-            // }, {
-            //     key: 'actions',
-            //     label: 'Действия'
             }],
             activatedIndex: 0,
         };

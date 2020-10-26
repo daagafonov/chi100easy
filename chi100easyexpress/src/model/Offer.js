@@ -23,7 +23,8 @@ const schema = new mongoose.Schema({
     },
     longDescription: {
         type: String,
-        required: true,
+        required: false,
+        default: '',
     },
     image: {
         type: mongoose.Schema.Types.ObjectId,
