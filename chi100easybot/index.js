@@ -375,7 +375,7 @@ function buildStarterButtons(ctx) {
 
                 fs.unlinkSync(filename);
 
-                ctx.replyWithHTML(`https://chystoprosto.com/offers?offerid=${offer._id})`);
+                ctx.replyWithHTML(`<a href="https://chystoprosto.com/offers?offerid=${offer._id}"><b>До сторінки</b></a>`);
 
             }).catch(error => {
                 console.log(error);
