@@ -188,6 +188,10 @@ app.on("contact", async (ctx) => {
             }
         });
 
+        ctx.reply('Очікуйте. З вамі зв`яжуться.', {
+            reply_to_message_id: ctx.message.message_id,
+        });
+
     }).catch((error) => {
         console.error(error);
     });
