@@ -43,6 +43,7 @@
 <!--                               bullist numlist outdent indent | removeformat | help'-->
 <!--                           }"-->
 <!--                        />-->
+
                     </b-col>
                 </b-row>
                 <b-row>
