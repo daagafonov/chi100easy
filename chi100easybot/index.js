@@ -172,15 +172,22 @@ app.catch((err, ctx) => {
 // })
 
 app.on("contact", async (ctx) => {
-    console.log(ctx.message.contact);
-    const userPayload = await axios.get(`${process.env.API_URI}/users/byTelegramUserId/${ctx.message.from.id}`);
 
-    console.log('incoming user', userPayload.data);
+    const user = await axios.get(`${process.env.API_URI}/users/byTelegramUserId/${ctx.message.from.id}`);
 
-    axios.put(`${process.env.API_URI}/users/${userPayload.data._id}/phoneNumber`, {
+    axios.put(`${process.env.API_URI}/users/${user.data._id}/phoneNumber`, {
         phoneNumber: ctx.message.contact.phone_number,
-    }).then((response) => {
-        console.log(response.data);
+    }).then(async (response) => {
+
+        const result = await axios.post(`${process.env.API_URI}/service/callme`, {
+            name: userCaption(user.data),
+            phone: user.data.phoneNumber,
+        }, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
     }).catch((error) => {
         console.error(error);
     });
@@ -277,19 +284,28 @@ app.on('callback_query', async (ctx) => {
     }
 });
 
+const userCaption = (user) => {
+    if (!user.firstName) {
+        return user.username;
+    } else {
+        return `${user.firstName} ${user.lastName}`;
+    }
+};
+
 app.hears('Меню', async (ctx) => {
 
     ctx.replyWithMarkdown("Доступные опции:", {
         reply_markup: {
             one_time_keyboard: true,
             keyboard: [[{
-                text: "Связаться со мной"
+                text: "Зв`язатися зі мною",
+                request_contact: true,
             }, {
-                text: "Акции"
+                text: "Акції"
             }], [{
-                text: "Наши точки приема"
+                text: "Наші точки приймання"
             }, {
-                text: "Статус заказа"
+                text: "Статус замовлення"
             }]],
         },
     });
@@ -354,37 +370,36 @@ function buildStarterButtons(ctx) {
 
         const offer = response.data;
 
-        ctx.replyWithHTML('Зараз діє така Акція:');
+        ctx.replyWithHTML('Зараз діє така Акція:').then(response => {
+            axios.get(`${process.env.API_URI}/offers/${offer._id}/image`, {
+                responseType: 'arraybuffer'
+            }).then(resp => {
 
-        axios.get(`${process.env.API_URI}/offers/${offer._id}/image`, {
-            responseType: 'arraybuffer'
-        }).then(resp => {
+                const filename = tmp.tmpFile('offer.image', 'img');
 
-            const filename = tmp.tmpFile('offer.image', 'img');
+                fs.writeFileSync(filename, Buffer.from(resp.data, 'binary'));
 
-            fs.writeFileSync(filename, Buffer.from(resp.data, 'binary'));
+                const form = new FormData();
+                form.append('photo', fs.createReadStream(filename));
+                form.append('chat_id', ctx.chat.id);
+                form.append('caption', `${offer.longDescription}`);
 
-            const form = new FormData();
-            form.append('photo', fs.createReadStream(filename));
-            form.append('chat_id', ctx.chat.id);
-            form.append('caption', `${offer.longDescription}`);
+                axios.post(`https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendPhoto`, form, {
+                    headers: form.getHeaders()
+                }).then(response => {
 
-            axios.post(`https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendPhoto`, form, {
-                headers: form.getHeaders()
-            }).then(response => {
+                    fs.unlinkSync(filename);
 
-                fs.unlinkSync(filename);
+                    ctx.replyWithHTML(`<a href="${process.env.SITE_URI}/offers?offerid=${offer._id}"><b>До сторінки</b></a>`);
 
-                ctx.replyWithHTML(`<a href="https://chystoprosto.com/offers?offerid=${offer._id}"><b>До сторінки</b></a>`);
+                }).catch(error => {
+                    console.log(error);
+                });
 
             }).catch(error => {
                 console.log(error);
             });
-
-        }).catch(error => {
-            console.log(error);
         });
-
 
     }).catch((error) => {
 

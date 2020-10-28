@@ -20,6 +20,9 @@
                     <b-col md="3">longDescription</b-col>
                     <b-col md="9">
                         <b-textarea
+
+                            rows="5"
+
                             placeholder="longDescription"
                             name="longDescription"
                             v-model="form.longDescription"
