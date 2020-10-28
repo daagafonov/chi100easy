@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import Vuex, {mapActions} from 'vuex';
+import Vuex from 'vuex';
 import axios from 'axios';
 import EventService from "@/services/event.service";
 
@@ -126,6 +126,13 @@ export default new Vuex.Store({
         },
         addOffer(state, payload) {
             EventService.sendEvent('addOffer', payload);
+        },
+        editOffer(state, payload) {
+            EventService.sendEvent('editOffer', payload);
+        },
+
+        deleteOffer(state, payload) {
+            EventService.sendEvent('deleteOffer', payload);
         },
     },
     actions: {
@@ -506,12 +513,13 @@ export default new Vuex.Store({
         addOffer({commit}, payload) {
 
             let formData = new FormData();
-            formData.append('file', payload.file, payload.file.name);
+            if (payload.file) {
+                formData.append('file', payload.file, payload.file.name);
+            }
             formData.append('shortDescription', payload.shortDescription);
             formData.append('longDescription', payload.longDescription);
             formData.append('validFrom', payload.validFrom);
             formData.append('validTo', payload.validTo);
-
 
             axios.post(`${sessionStorage.getItem('backendUrl')}/offers/`, formData, {
                 headers: {
@@ -525,6 +533,55 @@ export default new Vuex.Store({
                     const {data} = response.data;
                     commit('addOffer', {
                         action: 'addOffer',
+                        payload: data,
+                    });
+                }
+            }).catch(err => {
+                generalErrorHandler(commit, err);
+            });
+        },
+
+        editOffer({commit}, payload: any) {
+
+            console.log(payload);
+
+            let formData = new FormData();
+            if (payload.file) {
+                formData.append('file', payload.file, payload.file.name);
+            }
+            formData.append('shortDescription', payload.shortDescription);
+            formData.append('longDescription', payload.longDescription);
+            formData.append('validFrom', payload.validFrom);
+            formData.append('validTo', payload.validTo);
+
+            axios.put(`${sessionStorage.getItem('backendUrl')}/offers/${payload._id}`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    'Authorization': createAuthorizationHeader(),
+                }
+            }).then((response: any) => {
+                if (response.message) {
+                    wrapError(response.message);
+                } else {
+                    const {data} = response.data;
+                    commit('editOffer', {
+                        action: 'editOffer',
+                        payload: data,
+                    });
+                }
+            }).catch(err => {
+                generalErrorHandler(commit, err);
+            });
+        },
+
+        deleteOffer({commit}, payload: any) {
+            axios.delete(`${sessionStorage.getItem('backendUrl')}/offers/${payload.offer._id}`).then((response: any) => {
+                if (response.message) {
+                    wrapError(response.message);
+                } else {
+                    const {data} = response.data;
+                    commit('deleteOffer', {
+                        action: 'deleteOffer',
                         payload: data,
                     });
                 }

@@ -43,6 +43,12 @@
                     <template v-slot:cell(validTo)="row">
                         {{format(row.value)}}
                     </template>
+
+                    <template v-slot:cell(picture)="row">
+                        <a :href="getPictureUri(row.item)" target="_blank">
+                            <img width="100" :src="getPictureUri(row.item)" />
+                        </a>
+                    </template>
                 </b-table>
             </b-form>
         </div>
@@ -77,6 +83,9 @@ export default class OffersComponent extends Vue {
             }, {
                 key: 'validTo',
                 label: 'Годен до',
+            }, {
+                key: 'picture',
+                label: 'Рисунок'
             }]
         };
     }
@@ -106,6 +115,10 @@ export default class OffersComponent extends Vue {
             this.$bvModal.hide('offer-modal');
             EventService.sendEvent('reloadOffers', {});
         });
+
+        EventService.subscribeEvent('deleteOffer', (payload: any) => {
+            EventService.sendEvent('reloadOffers', {});
+        });
     }
 
     format(value: any) {
@@ -117,23 +130,41 @@ export default class OffersComponent extends Vue {
     }
 
     addOffer(event: any) {
-
+        EventService.sendEvent('add-offer', {
+            action: 'add',
+            offer: {},
+        });
     }
 
     optionClicked(paylaod: any) {
         const {item, option} = paylaod;
+
         if (option && option.slug && option.slug === 'edit') {
 
+            EventService.sendEvent('edit-offer', {
+                action: 'edit',
+                offer: item
+            });
+
+            // this.$store.dispatch('editOffer', {
+            //     offer: item
+            // });
         }
 
         if (option && option.slug && option.slug === 'delete') {
-
+            this.$store.dispatch('deleteOffer', {
+                offer: item
+            });
         }
     }
 
     contextMenuFired(item: any, index: any, event: any) {
         event.preventDefault();
         this.clickContextMenu(event, this.$refs.menuitem, item);
+    }
+
+    getPictureUri(item: any): string {
+        return `/api/offers/${item._id}/image`;
     }
 
 }

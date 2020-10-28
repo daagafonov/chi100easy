@@ -58,10 +58,12 @@ router.get('/:id/image', async (req, res) => {
                 utils.resError(res, error);
             })
             .on('finish', () => {
-                res.download(`/tmp/${offer._id}`, offer.image.name, {
+                res.sendFile(`/tmp/${offer._id}`, {
                     headers: {
                         'Content-Type': offer.image.type
                     }
+                }, (err) => {
+
                 });
             });
     } catch (error) {
@@ -136,6 +138,22 @@ router.put('/:id', async (req, res) => {
         res.json(saved);
     } catch (error) {
         utils.resError(res, error);
+    }
+});
+
+router.delete('/:id', async (req, res) => {
+    try {
+        const result = await db.actions.offer.delete(req.params.id);
+        res.json({
+            ok: true,
+            message: result,
+        });
+
+    } catch(error) {
+        console.log(error);
+        res.json({
+            message: error
+        });
     }
 });
 

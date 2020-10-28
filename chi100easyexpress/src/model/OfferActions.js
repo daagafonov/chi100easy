@@ -31,10 +31,17 @@ const findAll = () => {
     return Offer.find();
 };
 
+const deleteFn = (id) => {
+    return  Offer.findOneAndDelete({
+        _id: id,
+    });
+}
+
 module.exports = {
     create:  createOffer,
     updateOne,
     getOfferWithPopulateImage,
+    delete: deleteFn,
     findAll,
     findFirstAvailable,
 }

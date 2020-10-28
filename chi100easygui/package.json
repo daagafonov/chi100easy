@@ -9,6 +9,10 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@ckeditor/ckeditor5-build-classic": "^23.0.0",
+    "@ckeditor/ckeditor5-vue": "^1.0.3",
+    "@tinymce/tinymce-vue": "^3.2.4",
+    "@toast-ui/vue-editor": "^2.5.0",
     "@types/gapi": "0.0.39",
     "axios": "^0.20.0",
     "bootstrap-icons": "^1.0.0",
@@ -21,12 +25,16 @@
     "vue": "^2.6.11",
     "vue-class-component": "^7.2.3",
     "vue-context": "^6.0.0",
+    "vue-froala-wysiwyg": "^3.2.2",
     "vue-google-oauth2": "^1.5.5",
+    "vue-mce": "^1.5.3",
     "vue-property-decorator": "^8.4.2",
     "vue-qr-reader": "^1.6.2",
     "vue-qrcode-reader": "^2.3.13",
     "vue-router": "^3.2.0",
     "vue-simple-context-menu": "^3.3.0",
+    "vue-simplemde": "^1.1.2",
+    "vueditor": "^0.3.1",
     "vuex": "^3.5.1"
   },
   "devDependencies": {
@@ -52,6 +60,7 @@
     "node-sass": "^4.12.0",
     "sass-loader": "^8.0.2",
     "typescript": "~3.9.3",
+    "vue-html5-editor": "^1.1.1",
     "vue-template-compiler": "^2.6.11"
   }
 }

@@ -5,17 +5,6 @@
             ref="menuitem"
             element-id="aaa"
             :options="[{
-            //   name: 'Duplicate',
-            //   slug: 'duplicate'
-            // },
-            // {
-            //   type: 'divider'
-            // },
-            // {
-            //   name: 'Edit',
-            //   slug: 'edit'
-            // },
-            // {
               name: 'Delete',
               slug: 'delete'
             }]"
