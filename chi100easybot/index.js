@@ -394,7 +394,7 @@ function buildStarterButtons(ctx) {
 
                     fs.unlinkSync(filename);
 
-                    ctx.replyWithHTML(`<a href="${process.env.SITE_URI}/offers?offerid=${offer._id}"><b>До сторінки</b></a>`);
+                    ctx.replyWithHTML(`<a href="${process.env.SITE_URI}/offers?offerid=${offer._id}"><b>Детальніше тут</b></a>`);
 
                 }).catch(error => {
                     console.log(error);
