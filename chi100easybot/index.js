@@ -367,7 +367,7 @@ function buildStarterButtons(ctx) {
             const form = new FormData();
             form.append('photo', fs.createReadStream(filename));
             form.append('chat_id', ctx.chat.id);
-            form.append('caption', `${offer.shortDescription}`);
+            form.append('caption', `${offer.longDescription}`);
 
             axios.post(`https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendPhoto`, form, {
                 headers: form.getHeaders()
