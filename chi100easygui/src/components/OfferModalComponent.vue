@@ -19,30 +19,30 @@
                 <b-row>
                     <b-col md="3">longDescription</b-col>
                     <b-col md="9">
-<!--                        <b-textarea-->
-<!--                            placeholder="longDescription"-->
-<!--                            name="longDescription"-->
-<!--                            v-model="form.longDescription"-->
-<!--                        />-->
-
-                        <editor
+                        <b-textarea
+                            placeholder="longDescription"
+                            name="longDescription"
                             v-model="form.longDescription"
-                            api-key="lot26ggblj571e1m04bbzp5pcaok5k161qp8du9slsuo20eb"
-                            :init="{
-                             height: 400,
-                             menubar: true,
-                             inlineEditor: true,
-                             plugins: [
-                               'advlist autolink lists link image charmap print preview anchor',
-                               'searchreplace visualblocks code fullscreen',
-                               'insertdatetime media table paste code help wordcount'
-                             ],
-                             toolbar:
-                               'undo redo | formatselect | bold italic backcolor | \
-                               alignleft aligncenter alignright alignjustify | \
-                               bullist numlist outdent indent | removeformat | help'
-                           }"
                         />
+
+<!--                        <editor-->
+<!--                            v-model="form.longDescription"-->
+<!--                            api-key="lot26ggblj571e1m04bbzp5pcaok5k161qp8du9slsuo20eb"-->
+<!--                            :init="{-->
+<!--                             height: 400,-->
+<!--                             menubar: true,-->
+<!--                             inlineEditor: true,-->
+<!--                             plugins: [-->
+<!--                               'advlist autolink lists link image charmap print preview anchor',-->
+<!--                               'searchreplace visualblocks code fullscreen',-->
+<!--                               'insertdatetime media table paste code help wordcount'-->
+<!--                             ],-->
+<!--                             toolbar:-->
+<!--                               'undo redo | formatselect | bold italic backcolor | \-->
+<!--                               alignleft aligncenter alignright alignjustify | \-->
+<!--                               bullist numlist outdent indent | removeformat | help'-->
+<!--                           }"-->
+<!--                        />-->
                     </b-col>
                 </b-row>
                 <b-row>
