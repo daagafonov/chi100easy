@@ -188,7 +188,7 @@ app.on("contact", async (ctx) => {
             }
         });
 
-        ctx.reply('Очікуйте. З вамі зв`яжуться.', {
+        ctx.reply('Очікуйте. З вами зв`яжуться.', {
             reply_to_message_id: ctx.message.message_id,
         });
 
