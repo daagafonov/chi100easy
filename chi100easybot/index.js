@@ -75,7 +75,6 @@ app = new Telegraf(process.env.BOT_TOKEN);
 // });
 
 
-
 http.createServer(botServer).listen(8080, () => {
     console.log('Example app listening on port 8080!')
 });
@@ -242,7 +241,7 @@ app.on('callback_query', async (ctx) => {
 
                 console.log('confirm 1', response);
 
-                if(response.data.ok) {
+                if (response.data.ok) {
                     await ctx.reply(response.data.invoiceUrl, {
                         reply_markup: {
                             inline_keyboard: [],
@@ -325,7 +324,6 @@ function starter(ctx) {
 function buildStarterButtons(ctx) {
 
 
-
     ctx.replyWithMarkdown(
         'Доброго дня! 😊\n' +
         'Вас вітає Бот компанії «Чисто Просто». Тут ви можете скористатися такими послугами:\n' +
@@ -339,13 +337,13 @@ function buildStarterButtons(ctx) {
             reply_markup: {
                 keyboard: [[{
                     text: 'Меню',
-                // }, {
-                //     text: 'Поделиться своим номером',
-                //     request_contact: true,
-                //
-                // }], [{
-                //     text: 'Поделиться своим местоположением',
-                //     request_location: true,
+                    // }, {
+                    //     text: 'Поделиться своим номером',
+                    //     request_contact: true,
+                    //
+                    // }], [{
+                    //     text: 'Поделиться своим местоположением',
+                    //     request_location: true,
                 }]],
                 resize_keyboard: true,
             }
@@ -356,9 +354,7 @@ function buildStarterButtons(ctx) {
 
         const offer = response.data;
 
-        ctx.replyWithHTML('На данный момент действует такая акция:');
-
-        ctx.replyWithHTML(`http://chystoprosto.com/offers?offerid=${offer._id}`);
+        ctx.replyWithHTML('Зараз діє така Акція:');
 
         axios.get(`${process.env.API_URI}/offers/${offer._id}/image`, {
             responseType: 'arraybuffer'
@@ -369,19 +365,21 @@ function buildStarterButtons(ctx) {
             fs.writeFileSync(filename, Buffer.from(resp.data, 'binary'));
 
             const form = new FormData();
-                    form.append('photo', fs.createReadStream(filename));
-                    form.append('chat_id', ctx.chat.id);
-                    form.append('caption', `${offer.shortDescription}`);
+            form.append('photo', fs.createReadStream(filename));
+            form.append('chat_id', ctx.chat.id);
+            form.append('caption', `${offer.shortDescription}`);
 
-                    axios.post(`https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendPhoto`, form, {
-                        headers: form.getHeaders()
-                    }).then(response => {
+            axios.post(`https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendPhoto`, form, {
+                headers: form.getHeaders()
+            }).then(response => {
 
-                        fs.unlinkSync(filename);
+                fs.unlinkSync(filename);
 
-                    }).catch(error => {
-                        console.log(error);
-                    });
+                ctx.replyWithHTML(`https://chystoprosto.com/offers?offerid=${offer._id}`);
+
+            }).catch(error => {
+                console.log(error);
+            });
 
         }).catch(error => {
             console.log(error);
