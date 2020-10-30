@@ -316,6 +316,42 @@ app.hears('Меню', async (ctx) => {
 
 });
 
+app.hears('Наші точки приймання', ctx => {
+
+    const map = [{
+        title: 'Київ, вул. Васильківська, 3',
+        latitude: 50.396033,
+        longitude: 30.5061647,
+        tel: '+380673202777',
+        plusCode: '9GW4+F9 Киев',
+    }, {
+        title: 'Київ, вул. Уляни Громової, 5',
+        latitude: 50.4191024,
+        longitude: 30.4732924,
+        tel: '+380962050007',
+        plusCode: 'CF9F+H8 Киев',
+    }];
+
+    const lines = [];
+
+    lines.push('*Наші точки приймання:*');
+    lines.push('');
+
+
+    map.forEach((address, index) => {
+        lines.push(`*${index + 1}. ${address.title}*`);
+        lines.push(`тел. ${address.tel}`);
+        lines.push(`[На карті](https://www.google.com/maps/place/${encodeURIComponent(address.plusCode)}/@${address.latitude},${address.longitude},16z)`);
+        lines.push(' ');
+    });
+
+    ctx.replyWithMarkdown(lines.join('\n'), {
+        parse_mode: "Markdown",
+        disable_web_page_preview: false,
+    });
+
+});
+
 app.hears('Акції', async (ctx) => {
     axios.get(`${process.env.API_URI}/offers/allAvailable`).then(response => {
 
@@ -334,7 +370,6 @@ app.hears('Акції', async (ctx) => {
             lines.push(`[Детальніше](${process.env.SITE_URI}/offers?offerid=${offer._id})`);
             lines.push(' ');
         });
-
 
         ctx.replyWithMarkdown(lines.join('\n'), {
             parse_mode: "Markdown"
