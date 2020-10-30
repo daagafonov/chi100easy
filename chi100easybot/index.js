@@ -316,6 +316,35 @@ app.hears('Меню', async (ctx) => {
 
 });
 
+app.hears('Акції', async (ctx) => {
+    axios.get(`${process.env.API_URI}/offers/allAvailable`).then(response => {
+
+        const offers = response.data;
+
+        console.log(offers);
+
+        const lines = [];
+
+        lines.push('Діючі акції:');
+        lines.push(' ');
+
+        offers.forEach((offer, index) => {
+            lines.push(`*${index + 1} ${offer.shortDescription}*`);
+            lines.push(`${offer.longDescription}`);
+            lines.push(`[Детальніше](${process.env.SITE_URI}/offers?offerid=${offer._id})`);
+            lines.push(' ');
+        });
+
+
+        ctx.replyWithMarkdown(lines.join('\n'), {
+            parse_mode: "Markdown"
+        });
+
+    }).catch(error => {
+
+    });
+});
+
 app.launch();
 
 function starter(ctx) {
@@ -407,7 +436,7 @@ function buildStarterButtons(ctx) {
 
     }).catch((error) => {
 
-        console.log(error);
+        console.log(error.response.data);
 
     });
 

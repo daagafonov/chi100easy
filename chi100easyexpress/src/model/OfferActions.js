@@ -11,8 +11,18 @@ const findFirstAvailable = () => {
     return Offer.findOne({
         validFrom: { $lt: now },
         validTo: { $gt: now },
+        $or: [ { permanent: false }, { permanent: { $exists: false } } ]
     });
 };
+
+const findAllAvailable = () => {
+    const now = new Date();
+
+    return Offer.find({
+        validFrom: { $lt: now },
+        validTo: { $gt: now }
+    });
+}
 
 const updateOne = function(id, fields) {
     fields.updated_dt = new Date();
@@ -44,4 +54,5 @@ module.exports = {
     delete: deleteFn,
     findAll,
     findFirstAvailable,
+    findAllAvailable,
 }

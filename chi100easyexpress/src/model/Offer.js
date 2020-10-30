@@ -26,6 +26,11 @@ const schema = new mongoose.Schema({
         required: false,
         default: '',
     },
+    permanent: {
+        type: Boolean,
+        required: false,
+        default: false,
+    },
     image: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Document'

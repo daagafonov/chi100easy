@@ -10,7 +10,15 @@ router.get('/', async (req, res) => {
         const offers = await db.actions.offer.findAll(req.params.userId);
         res.json(offers);
     } catch (error) {
-        console.error(error);
+        utils.resError(res, error);
+    }
+});
+
+router.get('/allAvailable', async (req, res) => {
+    try {
+        const offers = await db.actions.offer.findAllAvailable();
+        res.json(offers);
+    } catch (error) {
         utils.resError(res, error);
     }
 });
@@ -18,7 +26,11 @@ router.get('/', async (req, res) => {
 router.get('/firstAvailable', async (req, res) => {
     try {
         const offer = await db.actions.offer.findFirstAvailable();
-        res.json(offer);
+        if (offer) {
+            res.json(offer);
+        } else {
+            utils.resNotFound(res, 'not found');
+        }
     } catch (error) {
         console.error(error);
         utils.resError(res, error);
@@ -78,6 +90,7 @@ router.post('/', async (req, res) => {
         longDescription: req.body.longDescription,
         validFrom: req.body.validFrom,
         validTo: req.body.validTo,
+        permanent: req.body.permanent ? true : false,
     };
 
     try {
