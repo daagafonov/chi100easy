@@ -376,7 +376,7 @@ app.hears('Акції', async (ctx) => {
         });
 
     }).catch(error => {
-
+        console.error(err);
     });
 });
 
