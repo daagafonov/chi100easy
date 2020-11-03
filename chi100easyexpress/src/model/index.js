@@ -8,6 +8,7 @@ module.exports = {
     LoginUser: require('./LoginUser'),
     LoginRole: require('./LoginRole'),
     Offer: require('./Offer'),
+    UserAddress: require('./UserAddress'),
     actions: {
         user: require('./UserActions'),
         order: require('./OrderActions'),
@@ -17,5 +18,6 @@ module.exports = {
         document: require('./DocumentActions'),
         payment: require('./PaymentActions'),
         loginUser: require('./LoginUserActions'),
+        userAddress: require('./UserAddressActions'),
     }
 }

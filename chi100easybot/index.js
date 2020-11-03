@@ -1,5 +1,4 @@
 const axios = require('axios');
-const bodyParser = require('body-parser');
 
 const http = require('http');
 
@@ -19,6 +18,10 @@ const botServer = express();
 const session = require("telegraf/session");
 const Stage = require('telegraf/stage');
 const Scene = require('telegraf/scenes/base');
+const WizardScene = require('telegraf/scenes/wizard');
+const composer = require('telegraf/composer');
+
+const util = require('./utils');
 
 const shared = require('./shared');
 
@@ -27,10 +30,8 @@ console.log("node env ", process.env.NODE_ENV);
 
 const api = require('./api');
 
-const {leave} = Stage;
-const stage = new Stage();
-
 const Telegraf = require('telegraf');
+const {Markup} = require('telegraf');
 
 botServer.use(morgan('tiny'));
 botServer.use(fileUpload({
@@ -42,10 +43,6 @@ botServer.use(fileUpload({
 botServer.use(helmet());
 botServer.use(cors());
 botServer.use(express.json());
-// botServer.use(bodyParser.json());
-// botServer.use(bodyParser.raw());
-// botServer.use(bodyParser.text());
-// botServer.use(bodyParser.urlencoded({ extended: false }));
 
 botServer.use('/bot', api);
 
@@ -78,16 +75,217 @@ app = new Telegraf(process.env.BOT_TOKEN);
 http.createServer(botServer).listen(8080, () => {
     console.log('Example app listening on port 8080!')
 });
+//
+// const scanQR = new Scene('scanQR');
+// stage.register(scanQR);
+// const generate = new Scene('generate');
+// stage.register(generate);
+// const scanBarcode = new Scene('scanBarcode');
+// stage.register(scanBarcode);
 
-const scanQR = new Scene('scanQR');
-stage.register(scanQR);
-const generate = new Scene('generate');
-stage.register(generate);
-const scanBarcode = new Scene('scanBarcode');
-stage.register(scanBarcode);
+const {enter, leave} = Stage;
+
+
+// // Greeter scene
+// const greeterScene = new Scene('greeter')
+// greeterScene.enter((ctx) => ctx.reply('Hi'))
+// greeterScene.leave((ctx) => ctx.reply('Bye'))
+// greeterScene.hears('hi', enter('greeter'))
+// greeterScene.command('back', leave());
+// greeterScene.on('message', (ctx) => ctx.replyWithMarkdown('Send `hi`'))
+//
+// // Echo scene
+// const echoScene = new Scene('echo')
+// echoScene.enter((ctx) => ctx.reply('echo scene'))
+// echoScene.leave((ctx) => ctx.reply('exiting echo scene'))
+// echoScene.command('back', leave())
+// echoScene.on('text', (ctx) => ctx.reply(ctx.message.text))
+// echoScene.on('message', (ctx) => ctx.reply('Only text messages please'))
+
+
+// const stepHandler = new Composer();
+// const create = new WizardScene('create',
+//     (ctx) => {
+//         ctx.reply('Этап 1: выбор типа матча.',
+//             {reply_markup: {remove_keyboard: true}});
+//
+//         ctx.session.type = ctx.message.text;
+//
+//         return ctx.wizard.next(); // Переходим к следующему обработчику.
+//     },
+//     (ctx) => {
+//         ctx.reply('Этап 2: выбор времени проведения матча.');
+//         return ctx.wizard.next(); // Переходим к следующему обработчику.
+//     },
+//     (ctx) => {
+//         if (ctx.message.text === "Назад") {
+//             ctx.wizard.back(); // Вернуться к предыдущиму обработчику
+//         }
+//         ctx.reply('Этап 3: выбор места проведения матча.');
+//         return ctx.wizard.next(); // Переходим к следующему обработчику.
+//     },
+//     (ctx) => {
+//         ctx.reply('Финальный этап: создание матча.');
+//         return ctx.scene.leave();
+//     }
+// );
+
+
+// const menu = () => {
+//     return [[{ // first line
+//         text: "Зв`язатися зі мною",
+//         request_contact: true,
+//     }, {
+//         text: "Акції",
+//     }], [{ // second line
+//         text: "Наші точки приймання"
+//     }, {
+//         text: "Статус замовлення"
+//     }], [{ // third line
+//         text: "Викликати кур`єра",
+//     }, {
+//         text: "пусто"
+//     }]];
+// };
+
+
+// const addressScene = new WizardScene('address',
+//     ctx => {
+//         ctx.replyWithMarkdown('Пожалуйста укажите город',
+//             {
+//                 parse_mode: "Markdown",
+//                 reply_markup: {
+//                     one_time_keyboard: true,
+//                     keyboard: [[{
+//                         text: "",
+//                     }]],
+//                 }
+//             }
+//         );
+//         return ctx.wizard.next();
+//     },
+//     ctx => {
+//         ctx.reply('теперь улицу');
+//     },
+//     ctx => {
+//         ctx.reply('а сейчас номер дома');
+//     },
+//     ctx => {
+//         ctx.reply('квартиру');
+//     },
+//     ctx => {
+//         return ctx.wizard.leave();
+//     }
+// );
+
+const { phoneNumberScene } = require('./courier-phonenumber');
+const { clientNameScene } = require('./courier-clientname');
+const { addressScene } = require('./courier-address');
+const { timeScene } = require('./courier-time');
+const { finishScene } = require('./courier-finished');
+
+
+// const callCourierGuy = new Scene('courier');
+// callCourierGuy.enter(async ctx => {
+//     await ctx.replyWithMarkdown('Форма вызова курьера. Введите улицу, номер дома и квартиру...',
+//         {
+//             parse_mode: "Markdown",
+//             reply_markup: {
+//                 one_time_keyboard: true,
+//                 keyboard: [[{
+//                     text: "⬅️ Выйти",
+//                 }]],
+//             }
+//         }
+//     );
+//
+// });
+// callCourierGuy.leave((ctx) => ctx.reply('До свидания!'));
+//
+// callCourierGuy.hears('⬅️ Выйти', ctx => {
+//     ctx.reply('hears back work', {
+//         reply_markup: {
+//             keyboard: menu(),
+//         }
+//     }).then(resp => {
+//        ctx.scene.leave('courier');
+//     });
+// });
+//
+// callCourierGuy.on('text', ctx => {
+//     ctx.reply(`Вы запросили курьера по адресу г. Киев, ${ctx.message.text}. Все верно?`, {
+//         // reply_to_message_id: ctx.message.message_id,
+//         reply_markup: {
+//             inline_keyboard: [[{
+//                 text: 'Да',
+//                 callback_data: JSON.stringify({
+//                     state: "confirmed",
+//                     address: `г. Киев, ${ctx.message.text}`
+//                 })
+//             }, {
+//                 text: 'Нет',
+//                 callback_data: JSON.stringify({
+//                     state: "declined",
+//                     address: `г. Киев, ${ctx.message.text}`
+//                 })
+//             }]],
+//         }
+//     });
+// });
+//
+// callCourierGuy.on('callback_query', ctx => {
+//     const callbackQuery = ctx.update.callback_query;
+//     const callbackData = JSON.parse(callbackQuery.data);
+//     console.log(callbackData);
+//
+//     switch (callbackData.state) {
+//         case 'confirmed':
+//
+//             ctx.reply(`Вы подтвердили вызов курьера по адресу ${callbackData.address}`);
+//
+//             break;
+//         case 'declined':
+//
+//             ctx.reply('Отменяется заказ курьра...');
+//
+//             ctx.scene.leave('courier');
+//
+//             break;
+//     }
+// });
+
+
+const stage = new Stage();
+
+stage.register(
+    phoneNumberScene,
+    clientNameScene,
+    addressScene,
+    timeScene,
+    finishScene,
+);
+
+stage.command('cancel', (ctx) => {
+    return ctx.scene.leave();
+});
 
 app.use(session());
 app.use(stage.middleware());
+
+app.command('courier', ctx => {
+    //ctx.scene.enter('courier');
+    ctx.scene.enter(util.CLIENT_NAME_SCENE);
+});
+app.hears('Викликати кур`єра', ctx => {
+
+    ctx.session.data = {};
+
+    ctx.scene.enter(util.PHONENUMBER_SCENE_NAME);
+});
+
+
+// app.command("create", (ctx) => ctx.scene.enter("create"));
+
 
 app.start((ctx) => {
     starter(ctx);
@@ -165,7 +363,7 @@ app.catch((err, ctx) => {
 //     starter(ctx)
 //     ctx.scene.leave('generate')
 // })
-
+//
 // generate.on('text', async (ctx) => {
 //
 //
@@ -181,7 +379,7 @@ app.on("contact", async (ctx) => {
 
         const result = await axios.post(`${process.env.API_URI}/service/callme`, {
             name: userCaption(user.data),
-            phone: user.data.phoneNumber,
+            phone: ctx.message.contact.phone_number,
         }, {
             headers: {
                 'Content-Type': 'application/json'
@@ -199,8 +397,6 @@ app.on("contact", async (ctx) => {
 
 app.on("location", async (ctx) => {
 
-    console.log(ctx.message.location);
-
     const userPayload = await axios.get(`${process.env.API_URI}/users/byTelegramUserId/${ctx.message.from.id}`);
     axios.put(`${process.env.API_URI}/users/${userPayload.data._id}/location`, {
         longitude: ctx.message.location.longitude,
@@ -211,34 +407,6 @@ app.on("location", async (ctx) => {
         console.error(error);
     });
 });
-
-// app.hears('Подтвердить', async (ctx) => {
-//
-//     // call express back to update order status
-//
-//     // axios.post(`${process.env.API_URI}/order/${}`, {}).then(response => {
-//     //
-//     // }).catch(error => {
-//     //
-//     // });
-//
-//     await ctx.replyWithMarkdown('GOOD guy', {
-//         reply_markup: {
-//             remove_keyboard: true,
-//         },
-//         disable_notification: true,
-//     });
-// });
-//
-// app.hears('Отменить', async (ctx) => {
-//
-//     await ctx.reply('BAD guy', {
-//         reply_markup: {
-//             remove_keyboard: true,
-//         },
-//         disable_notification: true,
-//     });
-// });
 
 app.on('callback_query', async (ctx) => {
 
@@ -298,23 +466,15 @@ const userCaption = (user) => {
 
 app.hears('Меню', async (ctx) => {
 
-    ctx.replyWithMarkdown("Доступные опции:", {
+    await ctx.replyWithMarkdown("Доступні опції:", {
         reply_markup: {
-            one_time_keyboard: true,
-            keyboard: [[{
-                text: "Зв`язатися зі мною",
-                request_contact: true,
-            }, {
-                text: "Акції"
-            }], [{
-                text: "Наші точки приймання"
-            }, {
-                text: "Статус замовлення"
-            }]],
+            //one_time_keyboard: true,
+            keyboard: util.menuButtons(),
         },
     });
 
 });
+
 
 app.hears('Наші точки приймання', ctx => {
 
@@ -380,6 +540,11 @@ app.hears('Акції', async (ctx) => {
     });
 });
 
+app.hears('Викликати кур`єра', ctx => {
+    ctx.inlineQuery
+});
+
+
 app.launch();
 
 function starter(ctx) {
@@ -406,7 +571,6 @@ function starter(ctx) {
 }
 
 function buildStarterButtons(ctx) {
-
 
     ctx.replyWithMarkdown(
         'Доброго дня! 😊\n' +
