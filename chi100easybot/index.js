@@ -283,10 +283,6 @@ app.hears('Викликати кур`єра', ctx => {
     ctx.scene.enter(util.PHONENUMBER_SCENE_NAME);
 });
 
-
-// app.command("create", (ctx) => ctx.scene.enter("create"));
-
-
 app.start((ctx) => {
     starter(ctx);
 });
@@ -303,6 +299,10 @@ app.command('health', async (ctx) => {
     }).catch((error) => {
         console.log(error);
     });
+
+});
+
+app.hears('Мої адреси', async ctx => {
 
 });
 
@@ -466,12 +466,7 @@ const userCaption = (user) => {
 
 app.hears('Меню', async (ctx) => {
 
-    await ctx.replyWithMarkdown("Доступні опції:", {
-        reply_markup: {
-            //one_time_keyboard: true,
-            keyboard: util.menuButtons(),
-        },
-    });
+    await ctx.replyWithMarkdown("Доступні опції:", util.markupMenu());
 
 });
 

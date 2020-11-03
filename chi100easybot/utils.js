@@ -6,23 +6,6 @@ const TIME_SCENE_NAME = 'time';
 const PHONENUMBER_SCENE_NAME = 'phonenumber';
 const FINISH_SCENE_NAME = 'finish';
 
-const menu = () => {
-    return [[{ // first line
-        text: "Зв`язатися зі мною",
-        request_contact: true,
-    }, {
-        text: "Акції",
-    }], [{ // second line
-        text: "Наші точки приймання"
-    }, {
-        text: "Статус замовлення"
-    }], [{ // third line
-        text: "Викликати кур`єра",
-    }, {
-        text: "пусто"
-    }]];
-};
-
 const markupMenu = () => {
     return Markup.resize(true).keyboard([[
         Markup.contactRequestButton('Зв`язатися зі мною'),
@@ -32,7 +15,7 @@ const markupMenu = () => {
         Markup.button('Статус замовлення'),
     ], [
         Markup.button('Викликати кур`єра'),
-        Markup.button('пусто'),
+        Markup.button('Мої адреси'),
     ]]).extra();
 };
 
@@ -44,6 +27,4 @@ module.exports = {
     FINISH_SCENE_NAME,
 
     markupMenu,
-
-    menuButtons: menu
 };

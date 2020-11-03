@@ -24,8 +24,6 @@ router.post('/callme', (req, res) => {
 
 router.post('/sendCourier', async (req, res) => {
 
-    console.log('send courier', req.body);
-
     const data = req.body;
 
     let address = '';
@@ -41,7 +39,6 @@ router.post('/sendCourier', async (req, res) => {
     } else {
 
         const addressObj = await db.actions.userAddress.findById(data.addressId);
-
         address = addressObj.address;
 
     }
