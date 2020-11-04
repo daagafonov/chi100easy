@@ -48,6 +48,7 @@ router.post('/', async(req, res) => {
         username: req.body.username,
         telegramUserId: req.body.telegramUserId,
         chatId: req.body.chatId,
+        alias: req.body.alias,
     };
 
     try {
@@ -95,10 +96,12 @@ router.put('/:id', async(req, res, next) => {
             lastName: req.body.lastName,
             username: req.body.username,
             telegramUserId: req.body.telegramUserId,
+            alias: req.body.alias,
         });
-        console.log("updated location", updated);
-        res.json(updated);
-
+        res.json({
+            ok: true,
+            user: updated,
+        });
     } catch (error) {
         utils.resError(res, error);
     }

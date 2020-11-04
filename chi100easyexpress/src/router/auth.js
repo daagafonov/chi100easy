@@ -113,7 +113,7 @@ router.post('/token', (req, res) => {
             return res.sendStatus(403);
         }
 
-        const accessToken = jwt.sign({ _id: user._id}, process.env.TOKEN_SECRET, { expiresIn: '2m' });
+        const accessToken = jwt.sign({ _id: user._id}, process.env.TOKEN_SECRET);
 
         res.json({
             ok: true,

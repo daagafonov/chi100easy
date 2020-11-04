@@ -15,6 +15,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: false,
     },
+    alias: {
+        type: String,
+        required: false,
+    },
     phoneNumber: {
         type: String,
         required: false,

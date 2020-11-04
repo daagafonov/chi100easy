@@ -12,7 +12,6 @@ const cors = require("cors");
 const fs = require('fs');
 const tmp = require('./tmp');
 
-
 const botServer = express();
 
 const session = require("telegraf/session");
@@ -22,8 +21,9 @@ const WizardScene = require('telegraf/scenes/wizard');
 const composer = require('telegraf/composer');
 
 const util = require('./utils');
+const services = require('./services');
 
-const shared = require('./shared');
+const {authStorage} = require('./shared');
 
 require('custom-env').env(true);
 console.log("node env ", process.env.NODE_ENV);
@@ -302,10 +302,6 @@ app.command('health', async (ctx) => {
 
 });
 
-app.hears('Мої адреси', async ctx => {
-
-});
-
 app.hears('Твой личный идентификатор', async (ctx) => {
     // ctx.scene.enter('generate');
 
@@ -508,11 +504,9 @@ app.hears('Наші точки приймання', ctx => {
 });
 
 app.hears('Акції', async (ctx) => {
-    axios.get(`${process.env.API_URI}/offers/allAvailable`).then(response => {
+    services.getAllAvailable().then(response => {
 
         const offers = response.data;
-
-        console.log(offers);
 
         const lines = [];
 
@@ -539,15 +533,31 @@ app.hears('Викликати кур`єра', ctx => {
     ctx.inlineQuery
 });
 
+app.hears('Мої адреси', async ctx => {
 
-app.launch();
+});
+
+app.launch().then(response => {
+
+    axios.post(`${process.env.API_URI}/auth/login`, {
+        email: process.env.API_ADMIN_USER,
+        password: process.env.API_ADMIN_PASSWORD,
+    }).then(response => {
+        if (response.data.ok) {
+            authStorage.auth = response.data.accessToken;
+        }
+    }).catch(error => {
+        console.log(error.response);
+    });
+
+});
 
 function starter(ctx) {
 
-    axios.get(`${process.env.API_URI}/users/byTelegramUserId/${ctx.message.from.id}`).then((response) => {
+    services.getUserByTelegramID(ctx).then((response) => {
         buildStarterButtons(ctx);
     }).catch((err) => {
-        axios.post(`${process.env.API_URI}/users`, {
+        services.createUser({
             firstName: ctx.message.from.first_name,
             lastName: ctx.message.from.last_name,
             username: ctx.message.from.username,
@@ -593,7 +603,7 @@ function buildStarterButtons(ctx) {
         }
     );
 
-    axios.get(`${process.env.API_URI}/offers/firstAvailable`).then(response => {
+    services.findFirstAvailable().then(response => {
 
         const offer = response.data;
 
