@@ -286,21 +286,21 @@ app.hears('Викликати кур`єра', ctx => {
 app.start((ctx) => {
     starter(ctx);
 });
-app.help((ctx) => ctx.reply('Send me a sticker'));
+// app.help((ctx) => ctx.reply('Send me a sticker'));
 
-app.command('health', async (ctx) => {
-
-    axios.get(`${process.env.API_URI}/actuator/health`).then((response) => {
-
-        console.log('%o', response.data);
-
-        ctx.reply(JSON.stringify(response.data));
-
-    }).catch((error) => {
-        console.log(error);
-    });
-
-});
+// app.command('health', async (ctx) => {
+//
+//     axios.get(`${process.env.API_URI}/actuator/health`).then((response) => {
+//
+//         console.log('%o', response.data);
+//
+//         ctx.reply(JSON.stringify(response.data));
+//
+//     }).catch((error) => {
+//         console.log(error);
+//     });
+//
+// });
 
 app.hears('Твой личный идентификатор', async (ctx) => {
     // ctx.scene.enter('generate');
@@ -391,66 +391,66 @@ app.on("contact", async (ctx) => {
     });
 });
 
-app.on("location", async (ctx) => {
+// app.on("location", async (ctx) => {
+//
+//     const userPayload = await axios.get(`${process.env.API_URI}/users/byTelegramUserId/${ctx.message.from.id}`);
+//     axios.put(`${process.env.API_URI}/users/${userPayload.data._id}/location`, {
+//         longitude: ctx.message.location.longitude,
+//         latitude: ctx.message.location.latitude,
+//     }).then((response) => {
+//         console.log(response.data);
+//     }).catch((error) => {
+//         console.error(error);
+//     });
+// });
 
-    const userPayload = await axios.get(`${process.env.API_URI}/users/byTelegramUserId/${ctx.message.from.id}`);
-    axios.put(`${process.env.API_URI}/users/${userPayload.data._id}/location`, {
-        longitude: ctx.message.location.longitude,
-        latitude: ctx.message.location.latitude,
-    }).then((response) => {
-        console.log(response.data);
-    }).catch((error) => {
-        console.error(error);
-    });
-});
-
-app.on('callback_query', async (ctx) => {
-
-    const callbackQuery = ctx.update.callback_query;
-    const callbackData = JSON.parse(callbackQuery.data);
-    console.log(callbackData);
-
-    switch (callbackData.action) {
-        case "confirm":
-            axios.post(`${process.env.API_URI}/orders/${callbackData.order_id}/confirm`, {}).then(async response => {
-
-                console.log('confirm 1', response);
-
-                if (response.data.ok) {
-                    await ctx.reply(response.data.invoiceUrl, {
-                        reply_markup: {
-                            inline_keyboard: [],
-                            remove_keyboard: true,
-                        },
-                        disable_notification: true,
-                    });
-                } else {
-                    await ctx.reply(response.data.message, {
-                        reply_markup: {
-                            inline_keyboard: [],
-                            remove_keyboard: true,
-                        },
-                        disable_notification: true,
-                    });
-                }
-            }).catch(async (error) => {
-                await ctx.reply('Order was already confirmed');
-            });
-            break;
-        case "decline":
-            axios.post(`${process.env.API_URI}/orders/${callbackData.order_id}/decline`, {}).then(async response => {
-                await ctx.reply('GOOD guy', {
-                    reply_markup: {
-                        remove_keyboard: true,
-                    },
-                    disable_notification: true,
-                });
-            }).catch(async (error) => {
-                await ctx.reply('Order was already declined');
-            });
-            break;
-    }
-});
+// app.on('callback_query', async (ctx) => {
+//
+//     const callbackQuery = ctx.update.callback_query;
+//     const callbackData = JSON.parse(callbackQuery.data);
+//     console.log(callbackData);
+//
+//     switch (callbackData.action) {
+//         case "confirm":
+//             axios.post(`${process.env.API_URI}/orders/${callbackData.order_id}/confirm`, {}).then(async response => {
+//
+//                 console.log('confirm 1', response);
+//
+//                 if (response.data.ok) {
+//                     await ctx.reply(response.data.invoiceUrl, {
+//                         reply_markup: {
+//                             inline_keyboard: [],
+//                             remove_keyboard: true,
+//                         },
+//                         disable_notification: true,
+//                     });
+//                 } else {
+//                     await ctx.reply(response.data.message, {
+//                         reply_markup: {
+//                             inline_keyboard: [],
+//                             remove_keyboard: true,
+//                         },
+//                         disable_notification: true,
+//                     });
+//                 }
+//             }).catch(async (error) => {
+//                 await ctx.reply('Order was already confirmed');
+//             });
+//             break;
+//         case "decline":
+//             axios.post(`${process.env.API_URI}/orders/${callbackData.order_id}/decline`, {}).then(async response => {
+//                 await ctx.reply('GOOD guy', {
+//                     reply_markup: {
+//                         remove_keyboard: true,
+//                     },
+//                     disable_notification: true,
+//                 });
+//             }).catch(async (error) => {
+//                 await ctx.reply('Order was already declined');
+//             });
+//             break;
+//     }
+// });
 
 const userCaption = (user) => {
     if (!user.firstName) {

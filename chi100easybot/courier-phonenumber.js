@@ -38,7 +38,7 @@ scene.enter(async ctx => {
             ]]).extra()
         );
     } else {
-        ctx.session.data.phoneNumber = user.data.phoneNumber;
+        // ctx.session.data.phoneNumber = user.data.phoneNumber;
         await next(ctx);
     }
 

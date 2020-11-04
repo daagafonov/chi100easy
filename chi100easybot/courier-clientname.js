@@ -4,25 +4,41 @@ const Scene = require('telegraf/scenes/base');
 const WizardScene = require('telegraf/scenes/wizard');
 const composer = require('telegraf/composer');
 const util = require('./utils');
+const { getUserByTelegramID } = require('./services');
 
 const {enter, leave} = Stage;
 
 const sceneName = util.CLIENT_NAME_SCENE;
 
+const next = async ctx => {
+    await ctx.scene.leave(sceneName);
+    ctx.scene.enter(util.ADDRESS_SCENE_NAME);
+}
+
 const scene = new Scene(sceneName);
-scene.enter(ctx => {
-    ctx.replyWithMarkdown(`Пожалуйста введите ФИО`,
-        {
-            parse_mode: "Markdown",
-            reply_markup: {
-                one_time_keyboard: true,
-                resize_keyboard: true,
-                keyboard: [[{
-                    text: "Отмена",
-                }]],
+scene.enter(async ctx => {
+
+    const user = await getUserByTelegramID(ctx);
+
+    if (!user.data.alias) {
+        ctx.replyWithMarkdown(`Пожалуйста введите ФИО`,
+            {
+                parse_mode: "Markdown",
+                reply_markup: {
+                    one_time_keyboard: true,
+                    resize_keyboard: true,
+                    keyboard: [[{
+                        text: "Отмена",
+                    }]],
+                }
             }
-        }
-    );
+        );
+    } else {
+
+        ctx.session.data.alias = user.data.alias;
+        await next(ctx);
+    }
+
 });
 
 // scene.leave((ctx) => ctx.reply(JSON.stringify(ctx.session.data)));
@@ -32,11 +48,11 @@ scene.hears('Отмена', async ctx => {
     ctx.reply('Вы отменили заказ курьера!', util.markupMenu());
 });
 
-scene.on('text', ctx => {
+scene.on('text', async ctx => {
 
-    ctx.session.data.name = ctx.message.text;
+    ctx.session.data.alias = ctx.message.text;
 
-    ctx.scene.leave(sceneName).then(res => ctx.scene.enter(util.ADDRESS_SCENE_NAME));
+    await next(ctx);
 
 });
 
