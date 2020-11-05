@@ -11,8 +11,8 @@ const sceneName = util.MY_ADDRESSES_SCENE_NAME;
 const scene = new Scene(sceneName);
 scene.enter(async ctx => {
 
-    await ctx.reply('Адреса: ...');
     await ctx.scene.leave(sceneName);
+    await ctx.reply('Адреса: ...', util.markupMenu());
 
 });
 
