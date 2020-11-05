@@ -14,6 +14,14 @@ const get = (uri) => {
     });
 };
 
+const del = (uri) => {
+    return axios.delete(uri, {
+        headers: {
+            'Authorization': createAuthorizationHeader(),
+        }
+    });
+};
+
 const getWithConfig = (uri, config) => {
 
     config.headers.Authorization = createAuthorizationHeader();
@@ -67,6 +75,10 @@ const getAllAvailable = () => {
     return get(`${process.env.API_URI}/offers/allAvailable`);
 };
 
+const removeAddress = (addressId) => {
+    return del(`${process.env.API_URI}/addresses/${addressId}`);
+};
+
 module.exports = {
     getUserByTelegramID,
     updateUserPhone,
@@ -75,4 +87,5 @@ module.exports = {
     createUser,
     findFirstAvailable,
     getAllAvailable,
+    removeAddress,
 }

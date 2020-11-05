@@ -28,6 +28,18 @@ router.get('/:id', async (req, res) => {
     }
 });
 
+router.delete('/:id', async (req, res) => {
+    try {
+        const result = await db.actions.userAddress.delete(req.params.id);
+        res.json({
+            ok: true,
+            message: result
+        });
+    } catch (error) {
+        utils.resError(res, error);
+    }
+});
+
 router.post('/user/:userId', async (req, res) => {
     try {
 

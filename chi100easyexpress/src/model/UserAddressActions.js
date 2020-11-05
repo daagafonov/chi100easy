@@ -48,6 +48,12 @@ const updateOne = function(id, fields) {
     });
 }
 
+const deleteFn = (id) => {
+    return  UserAddress.findOneAndDelete({
+        _id: id,
+    });
+}
+
 module.exports = {
     create:  createAddress,
     findById,
@@ -57,4 +63,5 @@ module.exports = {
     findByUserId,
     updateOne,
     findBy,
+    delete: deleteFn,
 }
