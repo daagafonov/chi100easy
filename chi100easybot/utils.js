@@ -5,6 +5,8 @@ const ADDRESS_SCENE_NAME = 'address';
 const TIME_SCENE_NAME = 'time';
 const PHONENUMBER_SCENE_NAME = 'phonenumber';
 const FINISH_SCENE_NAME = 'finish';
+const MY_ADDRESSES_SCENE_NAME = 'myaddresses';
+
 
 const markupMenu = () => {
     return Markup.resize(true).keyboard([[
@@ -25,6 +27,7 @@ module.exports = {
     TIME_SCENE_NAME,
     PHONENUMBER_SCENE_NAME,
     FINISH_SCENE_NAME,
+    MY_ADDRESSES_SCENE_NAME,
 
     markupMenu,
 };

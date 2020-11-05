@@ -183,6 +183,7 @@ const { clientNameScene } = require('./courier-clientname');
 const { addressScene } = require('./courier-address');
 const { timeScene } = require('./courier-time');
 const { finishScene } = require('./courier-finished');
+const { myAddressesScene } = require('./myaddresses-list');
 
 
 // const callCourierGuy = new Scene('courier');
@@ -263,6 +264,7 @@ stage.register(
     addressScene,
     timeScene,
     finishScene,
+    myAddressesScene,
 );
 
 stage.command('cancel', (ctx) => {
@@ -281,6 +283,10 @@ app.hears('Викликати кур`єра', ctx => {
     ctx.session.data = {};
 
     ctx.scene.enter(util.PHONENUMBER_SCENE_NAME);
+});
+
+app.hears('Мої адреси', async ctx => {
+    ctx.scene.enter(util.MY_ADDRESSES_SCENE_NAME);
 });
 
 app.start((ctx) => {
@@ -527,14 +533,6 @@ app.hears('Акції', async (ctx) => {
     }).catch(error => {
         console.error(err);
     });
-});
-
-app.hears('Викликати кур`єра', ctx => {
-    ctx.inlineQuery
-});
-
-app.hears('Мої адреси', async ctx => {
-
 });
 
 app.launch().then(response => {
