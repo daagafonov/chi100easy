@@ -11,7 +11,7 @@ const sceneName = util.TIME_SCENE_NAME;
 
 const scene = new Scene(sceneName);
 scene.enter(ctx => {
-    ctx.replyWithMarkdown('Укажите завтра в какой половине дня Вам будет удобно передать вещи?',
+    ctx.replyWithMarkdown('Вкажіть в якій половині дня Вам буде зручно передати речі?',
         {
             parse_mode: "Markdown",
             reply_markup: {
@@ -41,10 +41,10 @@ scene.enter(ctx => {
 
 // scene.leave((ctx) => ctx.reply(JSON.stringify(ctx.session.data)));
 
-scene.hears('Отмена', async ctx => {
-    await ctx.scene.leave(sceneName);
-    ctx.reply('Вы отменили заказ курьера!', util.markupMenu());
-});
+// scene.hears('Відміна', async ctx => {
+//     await ctx.scene.leave(sceneName);
+//     ctx.reply('Ви скасували замовлення кур\'єра!', util.markupMenu());
+// });
 
 scene.on('callback_query', async ctx => {
     const callbackQuery = ctx.update.callback_query;

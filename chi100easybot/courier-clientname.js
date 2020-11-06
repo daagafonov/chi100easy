@@ -21,14 +21,14 @@ scene.enter(async ctx => {
     const user = await getUserByTelegramID(ctx);
 
     if (!user.data.alias) {
-        ctx.replyWithMarkdown(`Пожалуйста введите ФИО`,
+        ctx.replyWithMarkdown(`Будь-ласка вкажіть ПІБ`,
             {
                 parse_mode: "Markdown",
                 reply_markup: {
                     one_time_keyboard: true,
                     resize_keyboard: true,
                     keyboard: [[{
-                        text: "Отмена",
+                        text: "Відміна",
                     }]],
                 }
             }
@@ -43,9 +43,9 @@ scene.enter(async ctx => {
 
 // scene.leave((ctx) => ctx.reply(JSON.stringify(ctx.session.data)));
 
-scene.hears('Отмена', async ctx => {
+scene.hears('Відміна', async ctx => {
     await ctx.scene.leave(sceneName);
-    ctx.reply('Вы отменили заказ курьера!', util.markupMenu());
+    ctx.reply('Ви скасували замовлення кур\'єра!', util.markupMenu());
 });
 
 scene.on('text', async ctx => {

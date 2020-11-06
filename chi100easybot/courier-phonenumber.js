@@ -30,11 +30,11 @@ scene.enter(async ctx => {
     });
 
     if (!user.data.hasOwnProperty('phoneNumber')) {
-        ctx.replyWithMarkdown('Укажите пожалуйста номер телефона для связи с Вами или выберите кнопку `Поделиться номером`',
+        ctx.replyWithMarkdown('Будь-ласка вкажіть Ваш номер телефону  або натисніть кнопку *Поділитися номером*',
             Markup.resize(true).oneTime(true).keyboard([[
                 Markup.contactRequestButton('Поделиться номером')
             ], [
-                Markup.button('Отмена')
+                Markup.button('Відміна')
             ]]).extra()
         );
     } else {
@@ -57,9 +57,9 @@ scene.on('contact', async ctx => {
 
 // scene.leave((ctx) => ctx.reply(JSON.stringify(ctx.session.data)));
 
-scene.hears('Отмена', async ctx => {
+scene.hears('Відміна', async ctx => {
     await ctx.scene.leave(sceneName);
-    ctx.reply('Вы отменили заказ курьера!', util.markupMenu());
+    ctx.reply('Ви скасували замовлення кур\'єра!', util.markupMenu());
 });
 
 scene.on('text', async ctx => {

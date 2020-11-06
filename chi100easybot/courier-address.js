@@ -22,14 +22,14 @@ scene.enter(async ctx => {
     const addresses = await getUserAddresses(ctx.session.data.userId);
 
     if (addresses.data.length === 0) {
-        ctx.replyWithMarkdown('Теперь я попрошу указать город, улицу, номер дома и квартиру где Вы встретите курьера',
+        ctx.replyWithMarkdown('Тепер я прошу вказати місто, вулицю, номер будинку та квартиру де Ви зустрінете кур\'єра ',
             {
                 parse_mode: "Markdown",
                 reply_markup: {
                     one_time_keyboard: true,
                     resize_keyboard: true,
                     keyboard: [[{
-                        text: "Отмена",
+                        text: "Відміна",
                     }]],
                 }
             }
@@ -45,7 +45,7 @@ scene.enter(async ctx => {
             })));
         });
         const buttons = Markup.inlineKeyboard(bts).extra();
-        ctx.replyWithMarkdown('Пожалуйста выберите на какой адрес будет ехать курьер или введите новый адрес',
+        ctx.replyWithMarkdown('Будь-ласка виберіть адресу на яку буде їхати кур\'єр , або вкажіть нову адресу ',
             buttons
         );
     }
@@ -54,9 +54,9 @@ scene.enter(async ctx => {
 
 // scene.leave((ctx) => ctx.reply(JSON.stringify(ctx.session.data)));
 
-scene.hears('Отмена', async ctx => {
+scene.hears('Відміна', async ctx => {
     await ctx.scene.leave(sceneName);
-    ctx.reply('Вы отменили заказ курьера!', util.markupMenu());
+    ctx.reply('Ви скасували замовлення кур\'єра!', util.markupMenu());
 });
 
 scene.on('text', async ctx => {
