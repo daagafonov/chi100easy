@@ -410,53 +410,53 @@ app.on("contact", async (ctx) => {
 //     });
 // });
 
-// app.on('callback_query', async (ctx) => {
-//
-//     const callbackQuery = ctx.update.callback_query;
-//     const callbackData = JSON.parse(callbackQuery.data);
-//     console.log(callbackData);
-//
-//     switch (callbackData.action) {
-//         case "confirm":
-//             axios.post(`${process.env.API_URI}/orders/${callbackData.order_id}/confirm`, {}).then(async response => {
-//
-//                 console.log('confirm 1', response);
-//
-//                 if (response.data.ok) {
-//                     await ctx.reply(response.data.invoiceUrl, {
-//                         reply_markup: {
-//                             inline_keyboard: [],
-//                             remove_keyboard: true,
-//                         },
-//                         disable_notification: true,
-//                     });
-//                 } else {
-//                     await ctx.reply(response.data.message, {
-//                         reply_markup: {
-//                             inline_keyboard: [],
-//                             remove_keyboard: true,
-//                         },
-//                         disable_notification: true,
-//                     });
-//                 }
-//             }).catch(async (error) => {
-//                 await ctx.reply('Order was already confirmed');
-//             });
-//             break;
-//         case "decline":
-//             axios.post(`${process.env.API_URI}/orders/${callbackData.order_id}/decline`, {}).then(async response => {
-//                 await ctx.reply('GOOD guy', {
-//                     reply_markup: {
-//                         remove_keyboard: true,
-//                     },
-//                     disable_notification: true,
-//                 });
-//             }).catch(async (error) => {
-//                 await ctx.reply('Order was already declined');
-//             });
-//             break;
-//     }
-// });
+app.on('callback_query', async (ctx) => {
+
+    const callbackQuery = ctx.update.callback_query;
+    const callbackData = JSON.parse(callbackQuery.data);
+    console.log(callbackData);
+
+    switch (callbackData.action) {
+        case "confirm":
+            axios.post(`${process.env.API_URI}/orders/${callbackData.order_id}/confirm`, {}).then(async response => {
+
+                console.log('confirm 1', response);
+
+                if (response.data.ok) {
+                    await ctx.reply(response.data.invoiceUrl, {
+                        reply_markup: {
+                            inline_keyboard: [],
+                            remove_keyboard: true,
+                        },
+                        disable_notification: true,
+                    });
+                } else {
+                    await ctx.reply(response.data.message, {
+                        reply_markup: {
+                            inline_keyboard: [],
+                            remove_keyboard: true,
+                        },
+                        disable_notification: true,
+                    });
+                }
+            }).catch(async (error) => {
+                await ctx.reply('Order was already confirmed');
+            });
+            break;
+        case "decline":
+            axios.post(`${process.env.API_URI}/orders/${callbackData.order_id}/decline`, {}).then(async response => {
+                await ctx.reply('GOOD guy', {
+                    reply_markup: {
+                        remove_keyboard: true,
+                    },
+                    disable_notification: true,
+                });
+            }).catch(async (error) => {
+                await ctx.reply('Order was already declined');
+            });
+            break;
+    }
+});
 
 const userCaption = (user) => {
     if (!user.firstName) {

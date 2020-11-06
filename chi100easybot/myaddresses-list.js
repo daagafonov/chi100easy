@@ -26,7 +26,7 @@ scene.enter(async ctx => {
             removeAddress(addr._id).then(response => {
                 ctx.replyWithMarkdown(`Успешно удален адрес *${addr.address}*.`);
             }).catch(error => {
-                ctx.reply('Something went wrong');
+                ctx.reply('Щось пішло не так...');
             });
         });
 
@@ -37,19 +37,6 @@ scene.enter(async ctx => {
     ctx.replyWithMarkdown(lines.join('\n'));
 
 });
-
-// scene.on('callback_query', async ctx => {
-//     const data = JSON.parse(ctx.update.callback_query.data);
-//
-//     removeAddress(data.addressId).then(response => {
-//
-//         ctx.reply(`Успешно удален адрес ${data.addressId}.`);
-//
-//     }).catch(error => {
-//         ctx.reply('Something went wrong');
-//     });
-//
-// });
 
 scene.hears('Завершить', async ctx => {
     await ctx.scene.leave(sceneName);
