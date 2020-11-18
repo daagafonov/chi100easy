@@ -42,6 +42,11 @@ const userSchema = new mongoose.Schema({
     chatId: {
         type: String,
         required: true,
+    },
+    bonus: {
+        type: Number,
+        required: true,
+        default: 0.0,
     }
 });
 
