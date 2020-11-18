@@ -6,6 +6,7 @@ const TIME_SCENE_NAME = 'time';
 const PHONENUMBER_SCENE_NAME = 'phonenumber';
 const FINISH_SCENE_NAME = 'finish';
 const MY_ADDRESSES_SCENE_NAME = 'myaddresses';
+const FEEDBACK_SCENE_NAME = 'feedback';
 
 
 const markupMenu = () => {
@@ -14,10 +15,29 @@ const markupMenu = () => {
         Markup.button('Акції'),
     ], [
         Markup.button('Наші точки приймання'),
-        Markup.button('Статус замовлення'),
+        Markup.button('Зворотній зв\'язок'),
     ], [
         Markup.button('Викликати кур`єра'),
         Markup.button('Мої адреси'),
+    ], [
+        Markup.button('Бонусний рахунок')
+    ]]).extra();
+};
+
+const mainMenu = () => {
+    return Markup.resize(true).keyboard([[
+        Markup.button('Чисто Просто'),
+        Markup.button('Мій профіль'),
+    ]]).extra();
+};
+
+const myProfileMenu = () => {
+    return Markup.resize(true).keyboard([[
+        Markup.button('Мої адреси'),
+        Markup.button('Бонусний рахунок'),
+    ],[
+        Markup.button('Мій ЧистоПросто ID'),
+        Markup.button('Головне меню'),
     ]]).extra();
 };
 
@@ -28,6 +48,9 @@ module.exports = {
     PHONENUMBER_SCENE_NAME,
     FINISH_SCENE_NAME,
     MY_ADDRESSES_SCENE_NAME,
+    FEEDBACK_SCENE_NAME,
 
     markupMenu,
+    mainMenu,
+    myProfileMenu,
 };

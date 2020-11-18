@@ -12,38 +12,40 @@ const sceneName = util.MY_ADDRESSES_SCENE_NAME;
 const scene = new Scene(sceneName);
 scene.enter(async ctx => {
 
-    await ctx.reply('Мои адреса:', Markup.keyboard([{
-        text: 'Завершить',
-    }]).extra());
-
     const user = await getUserByTelegramID(ctx);
     const addresses = await getUserAddresses(user.data._id);
 
     const lines = [];
 
+    lines.push('Мої адреси:');
+
     addresses.data.forEach((addr, indx) => {
         scene.command(`address_${addr._id}`, ctx => {
             removeAddress(addr._id).then(response => {
-                ctx.replyWithMarkdown(`Успешно удален адрес *${addr.address}*.`);
+                ctx.replyWithMarkdown(`Успішно видалена адреса *${addr.address}*.`);
             }).catch(error => {
                 ctx.reply('Щось пішло не так...');
             });
         });
 
-        lines.push(`${indx + 1}: *${addr.address}*. Удалить? - [/address_${addr._id}]`);
+        lines.push(`${indx + 1}: *${addr.address}*. Видалити? - [/address_${addr._id}]`);
         lines.push('');
     });
 
-    ctx.replyWithMarkdown(lines.join('\n'));
+    if (lines.length === 1) {
+        lines.push('Не має жодкого зареєстрованого адресу.');
+    }
+
+    ctx.replyWithMarkdown(lines.join('\n'), Markup.resize(true).keyboard(['Завершити']).extra());
 
 });
 
-scene.hears('Завершить', async ctx => {
+scene.hears('Завершити', async ctx => {
     await ctx.scene.leave(sceneName);
 });
 
 scene.leave(ctx => {
-    ctx.reply('Выход из адресов', util.markupMenu());
+    ctx.reply('Выход из адресов', util.myProfileMenu());
 });
 
 module.exports = {

@@ -185,77 +185,6 @@ const { timeScene } = require('./courier-time');
 const { finishScene } = require('./courier-finished');
 const { myAddressesScene } = require('./myaddresses-list');
 
-
-// const callCourierGuy = new Scene('courier');
-// callCourierGuy.enter(async ctx => {
-//     await ctx.replyWithMarkdown('Форма вызова курьера. Введите улицу, номер дома и квартиру...',
-//         {
-//             parse_mode: "Markdown",
-//             reply_markup: {
-//                 one_time_keyboard: true,
-//                 keyboard: [[{
-//                     text: "⬅️ Выйти",
-//                 }]],
-//             }
-//         }
-//     );
-//
-// });
-// callCourierGuy.leave((ctx) => ctx.reply('До свидания!'));
-//
-// callCourierGuy.hears('⬅️ Выйти', ctx => {
-//     ctx.reply('hears back work', {
-//         reply_markup: {
-//             keyboard: menu(),
-//         }
-//     }).then(resp => {
-//        ctx.scene.leave('courier');
-//     });
-// });
-//
-// callCourierGuy.on('text', ctx => {
-//     ctx.reply(`Вы запросили курьера по адресу г. Киев, ${ctx.message.text}. Все верно?`, {
-//         // reply_to_message_id: ctx.message.message_id,
-//         reply_markup: {
-//             inline_keyboard: [[{
-//                 text: 'Да',
-//                 callback_data: JSON.stringify({
-//                     state: "confirmed",
-//                     address: `г. Киев, ${ctx.message.text}`
-//                 })
-//             }, {
-//                 text: 'Нет',
-//                 callback_data: JSON.stringify({
-//                     state: "declined",
-//                     address: `г. Киев, ${ctx.message.text}`
-//                 })
-//             }]],
-//         }
-//     });
-// });
-//
-// callCourierGuy.on('callback_query', ctx => {
-//     const callbackQuery = ctx.update.callback_query;
-//     const callbackData = JSON.parse(callbackQuery.data);
-//     console.log(callbackData);
-//
-//     switch (callbackData.state) {
-//         case 'confirmed':
-//
-//             ctx.reply(`Вы подтвердили вызов курьера по адресу ${callbackData.address}`);
-//
-//             break;
-//         case 'declined':
-//
-//             ctx.reply('Отменяется заказ курьра...');
-//
-//             ctx.scene.leave('courier');
-//
-//             break;
-//     }
-// });
-
-
 const stage = new Stage();
 
 stage.register(
@@ -264,6 +193,7 @@ stage.register(
     addressScene,
     timeScene,
     finishScene,
+
     myAddressesScene,
 );
 
@@ -279,15 +209,32 @@ app.command('courier', ctx => {
     ctx.scene.enter(util.CLIENT_NAME_SCENE);
 });
 app.hears('Викликати кур`єра', ctx => {
-
     ctx.session.data = {};
-
     ctx.scene.enter(util.PHONENUMBER_SCENE_NAME);
+});
+
+app.hears('Мій профіль', ctx => {
+
+    const lines = [];
+
+    lines.push('Мій профіль:');
+    lines.push('1. *Мої адреси* - тут ви можете переглянути всі свої зареєстровані адреси');
+    lines.push('2. *Бонусний рахунок* - показує скільки ви накопичили балів на данний час');
+    lines.push('3. *Мій ЧистоПросто ID* - генерує QR вашого ID');
+
+    ctx.replyWithMarkdown(lines.join('\n'), util.myProfileMenu());
 });
 
 app.hears('Мої адреси', async ctx => {
     ctx.scene.enter(util.MY_ADDRESSES_SCENE_NAME);
 });
+app.command('myaddresses', (ctx) => {
+    ctx.scene.enter(util.MY_ADDRESSES_SCENE_NAME);
+});
+
+// app.on('poll', ctx => {
+//     console.log(JSON.stringify(ctx.update.poll));
+// });
 
 app.start((ctx) => {
     starter(ctx);
@@ -308,68 +255,25 @@ app.start((ctx) => {
 //
 // });
 
-app.hears('Твой личный идентификатор', async (ctx) => {
-    // ctx.scene.enter('generate');
+const myid = async (ctx) => {
+    await axios.get(`http://api.qrserver.com/v1/create-qr-code/?data=${encodeURI(ctx.message.from.id)}&size=300x300`)
+    await ctx.replyWithPhoto(`http://api.qrserver.com/v1/create-qr-code/?data=${encodeURI(ctx.message.from.id)}&size=300x300`, {
+        caption: 'Generated via @chi100easybot',
+    });
+    ctx.reply('Мій ЧистоПросто ID', util.myProfileMenu());
+};
 
-    //ctx.replyWithChatAction('upload_photo');
+app.hears('Мій ЧистоПросто ID', async (ctx) => {
+    myid(ctx);
+});
 
-    axios.get(`http://api.qrserver.com/v1/create-qr-code/?data=${encodeURI(ctx.message.from.id)}&size=300x300`)
-        .then(async (response) => {
-            await ctx.replyWithPhoto(`http://api.qrserver.com/v1/create-qr-code/?data=${encodeURI(ctx.message.from.id)}&size=300x300`, {caption: 'Generated via @chi100easybot'});
-            //ctx.reply('You can send me another text or tap "⬅️ Back"');
-
-            // updateStat('generating')
-            // updateUser(ctx, true)
-        })
-        .catch(async (err) => {
-            console.log(err);
-            await ctx.reply('Data you sent isn`t valid. Please check that and try again.');
-            // ctx.reply('You can send me another text or tap "⬅️ Back"')
-
-            // sendError(`Generating error by message ${ctx.message.text}: \n\n ${err.toString()}`, ctx)
-        });
-
+app.command('myid', async (ctx) => {
+    myid(ctx);
 });
 
 app.catch((err, ctx) => {
     console.log(`Ooops, encountered an error for ${ctx.updateType}`, err);
 });
-
-// botServer().use(bodyParser.json());
-
-// botServer.listen(process.env.PORT);
-
-// botServer.post('/' + process.env.BOT_TOKEN, (req, res) => {
-//
-//     console.log(req);
-//
-//     app.processUpdate(req.body);
-//     res.sendStatus(200);
-// });
-//
-// https.createServer({
-//     key: fs.readFileSync('./ssl/my-key.pem'),
-//     cert: fs.readFileSync('./ssl/my-cert.pem'),
-// }, botServer).listen(8443, () => {
-//     console.log(`Example app listening on port 8443!`);
-// })
-
-// generate.enter((ctx) => {
-//     ctx.reply(
-//         'I`m ready. Send me text!',
-//         { reply_markup: { keyboard: [['⬅️ Back']], resize_keyboard: true } }
-//     )
-// })
-//
-// generate.hears('⬅️ Back', (ctx) => {
-//     starter(ctx)
-//     ctx.scene.leave('generate')
-// })
-//
-// generate.on('text', async (ctx) => {
-//
-//
-// })
 
 app.on("contact", async (ctx) => {
 
@@ -467,9 +371,7 @@ const userCaption = (user) => {
 };
 
 app.hears('Меню', async (ctx) => {
-
-    await ctx.replyWithMarkdown("Доступні опції:", util.markupMenu());
-
+    await ctx.replyWithMarkdown("Доступні опції:", util.mainMenu());
 });
 
 
@@ -533,6 +435,23 @@ app.hears('Акції', async (ctx) => {
     }).catch(error => {
         console.error(err);
     });
+});
+
+const bonus = async (ctx) => {
+    const user = await axios.get(`${process.env.API_URI}/users/byTelegramUserId/${ctx.message.from.id}`)
+    ctx.reply(`На вашому бонусному рахунку ${user.data.bonus} грн.`, util.myProfileMenu());
+};
+
+app.hears('Бонусний рахунок', (ctx) => {
+    bonus(ctx);
+});
+
+app.command('bonus', (ctx) => {
+    bonus(ctx);
+});
+
+app.hears('Головне меню', async (ctx) => {
+    ctx.reply('Головне меню', util.mainMenu());
 });
 
 app.launch().then(response => {
