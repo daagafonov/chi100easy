@@ -213,6 +213,13 @@ app.hears('Викликати кур`єра', ctx => {
     ctx.scene.enter(util.PHONENUMBER_SCENE_NAME);
 });
 
+app.hears('Чисто Просто', async (ctx) => {
+    const lines = [];
+    lines.push('1. *Наші точки приймання* - переглянути список всіх локацій де вас приймуть та обігріють ;-) ');
+    lines.push('2. *Акції* - переглянути всі дійсні акції');
+    ctx.replyWithMarkdown(lines.join('\n'), util.chi100EasyMenu());
+});
+
 app.hears('Мій профіль', ctx => {
 
     const lines = [];
@@ -239,21 +246,8 @@ app.command('myaddresses', (ctx) => {
 app.start((ctx) => {
     starter(ctx);
 });
-// app.help((ctx) => ctx.reply('Send me a sticker'));
 
-// app.command('health', async (ctx) => {
-//
-//     axios.get(`${process.env.API_URI}/actuator/health`).then((response) => {
-//
-//         console.log('%o', response.data);
-//
-//         ctx.reply(JSON.stringify(response.data));
-//
-//     }).catch((error) => {
-//         console.log(error);
-//     });
-//
-// });
+app.help((ctx) => ctx.reply('Send me a sticker'));
 
 const myid = async (ctx) => {
     await axios.get(`http://api.qrserver.com/v1/create-qr-code/?data=${encodeURI(ctx.message.from.id)}&size=300x300`)

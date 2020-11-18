@@ -45,7 +45,7 @@ scene.enter(async ctx => {
 
 scene.hears('Відміна', async ctx => {
     await ctx.scene.leave(sceneName);
-    ctx.reply('Ви скасували замовлення кур\'єра!', util.markupMenu());
+    ctx.reply('Ви скасували замовлення кур\'єра!', util.mainMenu());
 });
 
 scene.on('text', async ctx => {

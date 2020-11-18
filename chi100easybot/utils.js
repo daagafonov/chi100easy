@@ -9,20 +9,20 @@ const MY_ADDRESSES_SCENE_NAME = 'myaddresses';
 const FEEDBACK_SCENE_NAME = 'feedback';
 
 
-const markupMenu = () => {
-    return Markup.resize(true).keyboard([[
-        Markup.contactRequestButton('Зв`язатися зі мною'),
-        Markup.button('Акції'),
-    ], [
-        Markup.button('Наші точки приймання'),
-        Markup.button('Зворотній зв\'язок'),
-    ], [
-        Markup.button('Викликати кур`єра'),
-        Markup.button('Мої адреси'),
-    ], [
-        Markup.button('Бонусний рахунок')
-    ]]).extra();
-};
+// const markupMenu = () => {
+//     return Markup.resize(true).keyboard([[
+//         Markup.contactRequestButton('Зв`язатися зі мною'),
+//         Markup.button('Акції'),
+//     ], [
+//         Markup.button('Наші точки приймання'),
+//         Markup.button('Зворотній зв\'язок'),
+//     ], [
+//         Markup.button('Викликати кур`єра'),
+//         Markup.button('Мої адреси'),
+//     ], [
+//         Markup.button('Бонусний рахунок')
+//     ]]).extra();
+// };
 
 const mainMenu = () => {
     return Markup.resize(true).keyboard([[
@@ -41,6 +41,15 @@ const myProfileMenu = () => {
     ]]).extra();
 };
 
+const chi100EasyMenu = () => {
+    return Markup.resize(true).keyboard([[
+        Markup.button('Наші точки приймання'),
+        Markup.button('Акції'),
+    ],[
+        Markup.button('Головне меню'),
+    ]]).extra();
+};
+
 module.exports = {
     CLIENT_NAME_SCENE,
     ADDRESS_SCENE_NAME,
@@ -50,7 +59,8 @@ module.exports = {
     MY_ADDRESSES_SCENE_NAME,
     FEEDBACK_SCENE_NAME,
 
-    markupMenu,
+    // markupMenu,
     mainMenu,
     myProfileMenu,
+    chi100EasyMenu,
 };
