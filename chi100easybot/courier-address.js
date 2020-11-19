@@ -45,10 +45,10 @@ scene.enter(async ctx => {
             })));
         });
         const buttons = Markup.inlineKeyboard(bts).extra();
-        ctx.replyWithMarkdown('Будь-ласка виберіть адресу на яку буде їхати кур\'єр , або вкажіть нову адресу ',
+        await ctx.replyWithMarkdown('Будь-ласка виберіть адресу на яку буде їхати кур\'єр , або вкажіть нову адресу ',
             buttons
         );
-        ctx.replyWithMarkdown('Нажміть `Відміна` щоб скасувати виклик кур\'ра', Markup.resize(true).keyboard([[
+        await ctx.replyWithMarkdown('Нажміть `Відміна` щоб скасувати виклик кур\'ра', Markup.resize(true).keyboard([[
             Markup.button('Відміна')
         ]]).extra());
     }

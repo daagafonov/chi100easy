@@ -10,8 +10,8 @@ const util = require('./utils');
 const sceneName = util.TIME_SCENE_NAME;
 
 const scene = new Scene(sceneName);
-scene.enter(ctx => {
-    ctx.replyWithMarkdown('Вкажіть в якій частині дня Вам буде зручно передати речі?',
+scene.enter(async ctx => {
+    await ctx.replyWithMarkdown('Вкажіть в якій частині дня Вам буде зручно передати речі?',
         {
             parse_mode: "Markdown",
             reply_markup: {
@@ -37,12 +37,10 @@ scene.enter(ctx => {
             }
         }
     );
-    ctx.replyWithMarkdown('Нажміть `Відміна` щоб скасувати виклик кур\'ра', Markup.resize(true).keyboard([[
+    await ctx.replyWithMarkdown('Нажміть `Відміна` щоб скасувати виклик кур\'ра', Markup.resize(true).keyboard([[
         Markup.button('Відміна')
     ]]).extra());
 });
-
-// scene.leave((ctx) => ctx.reply(JSON.stringify(ctx.session.data)));
 
 scene.hears('Відміна', async ctx => {
     await ctx.scene.leave(sceneName);

@@ -1,14 +1,14 @@
-const session = require("telegraf/session");
-const Stage = require('telegraf/stage');
+// const session = require("telegraf/session");
+// const Stage = require('telegraf/stage');
 const Scene = require('telegraf/scenes/base');
-const WizardScene = require('telegraf/scenes/wizard');
-const composer = require('telegraf/composer');
+// const WizardScene = require('telegraf/scenes/wizard');
+// const composer = require('telegraf/composer');
 const util = require('./utils');
 const {Markup} = require('telegraf');
-const axios = require('axios');
+// const axios = require('axios');
 const { getUserByTelegramID, updateUserPhone } = require('./services');
 
-const {enter, leave} = Stage;
+// const {enter, leave} = Stage;
 
 const sceneName = util.PHONENUMBER_SCENE_NAME;
 
@@ -59,7 +59,7 @@ scene.on('contact', async ctx => {
 
 scene.hears('Відміна', async ctx => {
     await ctx.scene.leave(sceneName);
-    ctx.reply('Ви скасували замовлення кур\'єра!', util.mainMenu());
+    ctx.reply('Ви скасували замовлення кур\'єра!', util.myActions());
 });
 
 scene.on('text', async ctx => {
