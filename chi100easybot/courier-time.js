@@ -1,17 +1,17 @@
-const session = require("telegraf/session");
-const Stage = require('telegraf/stage');
+// const session = require("telegraf/session");
+// const Stage = require('telegraf/stage');
 const Scene = require('telegraf/scenes/base');
-const WizardScene = require('telegraf/scenes/wizard');
-const composer = require('telegraf/composer');
+// const WizardScene = require('telegraf/scenes/wizard');
+// const composer = require('telegraf/composer');
 const util = require('./utils');
 
-const {enter, leave} = Stage;
+// const {enter, leave} = Stage;
 
 const sceneName = util.TIME_SCENE_NAME;
 
 const scene = new Scene(sceneName);
 scene.enter(ctx => {
-    ctx.replyWithMarkdown('Вкажіть в якій половині дня Вам буде зручно передати речі?',
+    ctx.replyWithMarkdown('Вкажіть в якій частині дня Вам буде зручно передати речі?',
         {
             parse_mode: "Markdown",
             reply_markup: {
