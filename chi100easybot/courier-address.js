@@ -1,13 +1,13 @@
-const session = require("telegraf/session");
-const Stage = require('telegraf/stage');
+// const session = require("telegraf/session");
+// const Stage = require('telegraf/stage');
 const Scene = require('telegraf/scenes/base');
-const WizardScene = require('telegraf/scenes/wizard');
-const composer = require('telegraf/composer');
+// const WizardScene = require('telegraf/scenes/wizard');
+// const composer = require('telegraf/composer');
 const util = require('./utils');
 const {Markup} = require('telegraf');
 const {getUserAddresses} = require('./services');
 
-const {enter, leave} = Stage;
+// const {enter, leave} = Stage;
 
 const sceneName = util.ADDRESS_SCENE_NAME;
 
@@ -48,6 +48,9 @@ scene.enter(async ctx => {
         ctx.replyWithMarkdown('Будь-ласка виберіть адресу на яку буде їхати кур\'єр , або вкажіть нову адресу ',
             buttons
         );
+        ctx.replyWithMarkdown('Нажміть `Відміна` щоб скасувати виклик кур\'ра', Markup.resize(true).keyboard([[
+            Markup.button('Відміна')
+        ]]).extra());
     }
 
 });
@@ -56,7 +59,7 @@ scene.enter(async ctx => {
 
 scene.hears('Відміна', async ctx => {
     await ctx.scene.leave(sceneName);
-    ctx.reply('Ви скасували замовлення кур\'єра!', util.mainMenu());
+    ctx.reply('Ви скасували замовлення кур\'єра!', util.myActions());
 });
 
 scene.on('text', async ctx => {
