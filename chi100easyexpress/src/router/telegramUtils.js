@@ -17,13 +17,16 @@ const confirmPaymentIsDone = (chatId, message, replyMarkup) => {
 };
 
 const sendServiceMessageCallMe = (message) => {
-
-    const data = {
-        chat_id: process.env.CALLME_SERVICE_IDS,
-        text: message,
-    };
-
-    return axios.post(`https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendMessage`, data);
+    return new Promise( resolve => {
+        process.env.CALLME_SERVICE_IDS.split(',').forEach(async val => {
+            const data = {
+                chat_id: val,
+                text: message,
+            };
+            await axios.post(`https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendMessage`, data);
+        });
+        resolve();
+    });
 }
 
 const sendDocument = (order, content) => {
