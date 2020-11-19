@@ -35,8 +35,6 @@ scene.enter(async ctx => {
 
 });
 
-// scene.leave((ctx) => ctx.reply(JSON.stringify(ctx.session.data)));
-
 scene.hears('Відміна', async ctx => {
     await ctx.scene.leave(sceneName);
     ctx.reply('Ви скасували замовлення кур\'єра!', util.myActions());
