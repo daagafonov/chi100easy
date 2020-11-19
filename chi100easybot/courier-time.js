@@ -1,11 +1,6 @@
-// const session = require("telegraf/session");
-// const Stage = require('telegraf/stage');
 const Scene = require('telegraf/scenes/base');
-// const WizardScene = require('telegraf/scenes/wizard');
-// const composer = require('telegraf/composer');
 const util = require('./utils');
-
-// const {enter, leave} = Stage;
+const {Markup} = require('telegraf');
 
 const sceneName = util.TIME_SCENE_NAME;
 
