@@ -37,14 +37,17 @@ scene.enter(ctx => {
             }
         }
     );
+    ctx.reply('Нажміть Відміна щоб видмінити виклик кур\'ра', Markup.resize(true).keyboard([[
+        Markup.button('Відміна')
+    ]]).extra());
 });
 
 // scene.leave((ctx) => ctx.reply(JSON.stringify(ctx.session.data)));
 
-// scene.hears('Відміна', async ctx => {
-//     await ctx.scene.leave(sceneName);
-//     ctx.reply('Ви скасували замовлення кур\'єра!', util.markupMenu());
-// });
+scene.hears('Відміна', async ctx => {
+    await ctx.scene.leave(sceneName);
+    ctx.reply('Ви скасували замовлення кур\'єра!', util.myActions());
+});
 
 scene.on('callback_query', async ctx => {
     const callbackQuery = ctx.update.callback_query;
