@@ -37,7 +37,7 @@ scene.enter(ctx => {
             }
         }
     );
-    ctx.reply('Нажміть Відміна щоб видмінити виклик кур\'ра', Markup.resize(true).keyboard([[
+    ctx.replyWithMarkdown('Нажміть `Відміна` щоб скасувати виклик кур\'ра', Markup.resize(true).keyboard([[
         Markup.button('Відміна')
     ]]).extra());
 });
