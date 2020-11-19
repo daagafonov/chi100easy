@@ -41,8 +41,6 @@ export default class Payments extends Vue {
                 key: 'transactionStatus', label: 'Статус транзакции'
             },{
                 key: 'fee', label: 'Комиссия'
-            },{
-                key: 'bonus', label: 'Бонус'
             }]
         };
     }

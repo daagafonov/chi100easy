@@ -66,7 +66,8 @@ export default class UserComponent extends Vue {
                 {key: 'lastName', label: 'Фамилия'},
                 {key: 'username', label: 'Имя пользователя'},
                 {key: 'telegramUserId', label: 'Телеграм ID'},
-                {key: 'actions', label: 'Действия'}
+                {key: 'bonus', label: 'Бонус'},
+                {key: 'actions', label: 'Действия'},
             ],
             filter: null,
             file: '',
