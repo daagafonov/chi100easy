@@ -59,10 +59,11 @@ router.post('/wayforpayservice', urlencodedParser, async (req, res) => {
                 status: 'PAID',
             });
 
-            confirmPaymentIsDone(order.user.telegramUserId, `Заказ №${order.externalOrderId} оплачен.`).then(response => {
-                console.log(response.data);
-            }).catch(error => {
-                console.error(error);
+            const response = await confirmPaymentIsDone(order.user.telegramUserId, `Заказ №${order.externalOrderId} оплачен.`);
+            console.log(response.data);
+
+            await db.actions.user.updateOne2(order.user._id, {
+                bonus: (order.user.bonus + body.amount * 0.01),
             });
 
         } else if (body.transactionStatus === 'Refunded') {
