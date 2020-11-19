@@ -28,6 +28,8 @@ const mainMenu = () => {
     return Markup.resize(true).keyboard([[
         Markup.button('Чисто Просто'),
         Markup.button('Мій профіль'),
+    ], [
+        Markup.button('Мої дії')
     ]]).extra();
 };
 
@@ -50,6 +52,15 @@ const chi100EasyMenu = () => {
     ]]).extra();
 };
 
+const myActions = () => {
+    return Markup.resize(true).keyboard([[
+        Markup.button('Викликати кур`єра'),
+        Markup.contactRequestButton('Зв`язатися зі мною'),
+    ],[
+        Markup.button('Головне меню'),
+    ]]).extra();
+};
+
 module.exports = {
     CLIENT_NAME_SCENE,
     ADDRESS_SCENE_NAME,
@@ -63,4 +74,5 @@ module.exports = {
     mainMenu,
     myProfileMenu,
     chi100EasyMenu,
+    myActions,
 };

@@ -129,6 +129,24 @@ app.hears('Мій профіль', ctx => {
     ctx.replyWithMarkdown(lines.join('\n'), util.myProfileMenu());
 });
 
+const myActions = (ctx) => {
+    const lines = [];
+
+    lines.push('Мої дії:');
+    lines.push('1. *Викликати кур\'єра* - запропоную декілька запитань і ти зможешь зустрітися з нашим кур\'єром та передати йому свої речі');
+    lines.push('2. *Зв\'язатися зі мною* - я запитаю тебе про твій номер телефону та надишлю цю інфу до менеджера, що б він тебе передзвонив');
+
+    ctx.replyWithMarkdown(lines.join('\n'), util.myActions());
+};
+
+app.hears('Мої дії', (ctx) => {
+    myActions(ctx);
+});
+
+app.command('myactions', (ctx) => {
+    myActions(ctx);
+});
+
 app.hears('Мої адреси', async ctx => {
     ctx.scene.enter(util.MY_ADDRESSES_SCENE_NAME);
 });
