@@ -37,6 +37,10 @@ const getOfferWithPopulateImage = (id) => {
     return Offer.findById(id).populate("image", "-__v");
 };
 
+const getOfferById = (id) => {
+    return Offer.findById(id);
+};
+
 const findAll = () => {
     return Offer.find();
 };
@@ -52,6 +56,7 @@ module.exports = {
     updateOne,
     getOfferWithPopulateImage,
     delete: deleteFn,
+    getOfferById,
     findAll,
     findFirstAvailable,
     findAllAvailable,

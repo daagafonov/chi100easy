@@ -8,6 +8,9 @@
                 name: 'Редактировать',
                 slug: 'edit',
             },{
+              name: 'Опубликовать',
+              slug: 'publish'
+            },{
               name: 'Удалить',
               slug: 'delete'
             }]"
@@ -119,6 +122,10 @@ export default class OffersComponent extends Vue {
         EventService.subscribeEvent('deleteOffer', (payload: any) => {
             EventService.sendEvent('reloadOffers', {});
         });
+
+        EventService.subscribeEvent('publishOffer', (payload: any) => {
+            EventService.sendEvent('reloadOffers', {});
+        });
     }
 
     format(value: any) {
@@ -149,6 +156,12 @@ export default class OffersComponent extends Vue {
             // this.$store.dispatch('editOffer', {
             //     offer: item
             // });
+        }
+
+        if (option && option.slug && option.slug === 'publish') {
+            this.$store.dispatch('publishOffer', {
+                offer: item
+            });
         }
 
         if (option && option.slug && option.slug === 'delete') {

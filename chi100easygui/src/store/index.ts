@@ -134,6 +134,10 @@ export default new Vuex.Store({
         deleteOffer(state, payload) {
             EventService.sendEvent('deleteOffer', payload);
         },
+
+        publishOffer(state, payload) {
+            EventService.sendEvent('publishOffer', payload);
+        }
     },
     actions: {
 
@@ -582,6 +586,21 @@ export default new Vuex.Store({
                     const {data} = response.data;
                     commit('deleteOffer', {
                         action: 'deleteOffer',
+                        payload: data,
+                    });
+                }
+            }).catch(err => {
+                generalErrorHandler(commit, err);
+            });
+        },
+        publishOffer({commit}, payload: any) {
+            axios.post(`${sessionStorage.getItem('backendUrl')}/offers/${payload.offer._id}/publish`).then((response: any) => {
+                if (response.message) {
+                    wrapError(response.message);
+                } else {
+                    const {data} = response.data;
+                    commit('publishOffer', {
+                        action: 'publishOffer',
                         payload: data,
                     });
                 }

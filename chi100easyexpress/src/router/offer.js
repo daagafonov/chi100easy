@@ -4,6 +4,9 @@ const fs = require('fs');
 const mongoose = require('mongoose');
 const db = require('../model');
 const utils = require('./utils');
+const axios = require('axios');
+const tmp = require('./tmp');
+const FormData = require('form-data');
 
 router.get('/', async (req, res) => {
     try {
@@ -161,6 +164,68 @@ router.delete('/:id', async (req, res) => {
             ok: true,
             message: result,
         });
+
+    } catch(error) {
+        console.log(error);
+        res.json({
+            message: error
+        });
+    }
+});
+
+router.post('/:id/publish', async (req, res) => {
+    try {
+
+        const offer = await db.actions.offer.getOfferWithPopulateImage(req.params.id);
+
+        if (!offer) {
+            return utils.resNotFound(res, 'not found');
+        }
+
+        const users = await db.actions.user.find();
+
+        const filename = tmp.tmpFile('offer.image', 'img');
+
+        const gridfs = new mongoose.mongo.GridFSBucket(mongoose.connection.db, {
+            chunkSizeBytes: 1024,
+            bucketName: 'offerpicture'
+        });
+        await gridfs.openDownloadStreamByName(offer._id)
+            .pipe(fs.createWriteStream(filename))
+            .on('error', function (error) {
+                utils.resError(res, error);
+            })
+            .on('finish', () => {
+
+                users.forEach(async (user) => {
+
+                    const form = new FormData();
+
+                    form.append('caption', `${offer.longDescription}\n\n<a href="${process.env.SITE_URI}/offers?offerid=${offer._id}"><b>Детальніше тут</b></a>`);
+                    form.append('photo', fs.createReadStream(filename));
+                    form.append('chat_id', user.telegramUserId);
+                    form.append('parse_mode', 'HTML');
+
+                    await axios.post(`https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendPhoto`, form, {
+                        headers: form.getHeaders()
+                    });
+
+                    // const data = {
+                    //     chat_id: user.telegramUserId,
+                    //     text: `<a href="${process.env.SITE_URI}/offers?offerid=${offer._id}"><b>Детальніше тут</b></a>`,
+                    //     parse_mode: 'HTML'
+                    // };
+                    // await axios.post(`https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendMessage`, data);
+
+                });
+
+
+                //fs.unlinkSync(filename);
+                res.json({
+                    ok: true,
+                });
+
+            });
 
     } catch(error) {
         console.log(error);

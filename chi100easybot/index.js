@@ -16,9 +16,6 @@ const botServer = express();
 
 const session = require("telegraf/session");
 const Stage = require('telegraf/stage');
-// const Scene = require('telegraf/scenes/base');
-// const WizardScene = require('telegraf/scenes/wizard');
-// const composer = require('telegraf/composer');
 
 const util = require('./utils');
 const services = require('./services');
@@ -438,7 +435,8 @@ function buildStarterButtons(ctx) {
                 const form = new FormData();
                 form.append('photo', fs.createReadStream(filename));
                 form.append('chat_id', ctx.chat.id);
-                form.append('caption', `${offer.longDescription}`);
+                form.append('caption', `${offer.longDescription}\n\n<a href="${process.env.SITE_URI}/offers?offerid=${offer._id}"><b>Детальніше тут</b></a>`);
+                form.append('parse_mode', 'HTML');
 
                 axios.post(`https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendPhoto`, form, {
                     headers: form.getHeaders()
@@ -446,7 +444,7 @@ function buildStarterButtons(ctx) {
 
                     fs.unlinkSync(filename);
 
-                    ctx.replyWithHTML(`<a href="${process.env.SITE_URI}/offers?offerid=${offer._id}"><b>Детальніше тут</b></a>`);
+                    // ctx.replyWithHTML(`<a href="${process.env.SITE_URI}/offers?offerid=${offer._id}"><b>Детальніше тут</b></a>`);
 
                 }).catch(error => {
                     console.log(error);
