@@ -360,6 +360,12 @@ app.hears('Головне меню', async (ctx) => {
     ctx.reply('Головне меню', util.mainMenu());
 });
 
+app.hears('Прайси', ctx => {
+    ctx.replyWithMarkdown('<a href="https://chystoprosto.com/prices.xls">Прайси</a>', {
+        parse_mode: "HTML",
+    });
+});
+
 app.launch().then(() => {
 
     axios.post(`${process.env.API_URI}/auth/login`, {

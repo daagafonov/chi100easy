@@ -8,22 +8,6 @@ const FINISH_SCENE_NAME = 'finish';
 const MY_ADDRESSES_SCENE_NAME = 'myaddresses';
 const FEEDBACK_SCENE_NAME = 'feedback';
 
-
-// const markupMenu = () => {
-//     return Markup.resize(true).keyboard([[
-//         Markup.contactRequestButton('Зв`язатися зі мною'),
-//         Markup.button('Акції'),
-//     ], [
-//         Markup.button('Наші точки приймання'),
-//         Markup.button('Зворотній зв\'язок'),
-//     ], [
-//         Markup.button('Викликати кур`єра'),
-//         Markup.button('Мої адреси'),
-//     ], [
-//         Markup.button('Бонусний рахунок')
-//     ]]).extra();
-// };
-
 const mainMenu = () => {
     return Markup.resize(true).keyboard([[
         Markup.button('Чисто Просто'),
@@ -48,6 +32,7 @@ const chi100EasyMenu = () => {
         Markup.button('Наші точки приймання'),
         Markup.button('Акції'),
     ],[
+        Markup.button('Прайси'),
         Markup.button('Головне меню'),
     ]]).extra();
 };
