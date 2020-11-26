@@ -361,8 +361,9 @@ app.hears('Головне меню', async (ctx) => {
 });
 
 app.hears('Прайси', ctx => {
-    ctx.replyWithMarkdown('<a href="https://chystoprosto.com/prices.xls">Прайси</a>', {
+    ctx.replyWithMarkdown('<a href="https://drive.google.com/file/d/1hXfIqIdHUk1HVjY5yGUAdnG76EHANBh0/view?usp=sharing">Прайси</a>', {
         parse_mode: "HTML",
+        disable_web_page_preview: true,
     });
 });
 
