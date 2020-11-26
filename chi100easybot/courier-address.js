@@ -34,9 +34,14 @@ scene.enter(async ctx => {
 
         const bts = [];
         addresses.data.forEach(addr => {
-            bts.push(Markup.callbackButton(addr.address, JSON.stringify({
+
+            const tmp = [];
+
+            tmp.push(Markup.callbackButton(addr.address, JSON.stringify({
                 _id: addr._id
             })));
+
+            bts.push(tmp);
         });
         const buttons = Markup.inlineKeyboard(bts).extra();
         await ctx.replyWithMarkdown('Будь-ласка виберіть адресу на яку буде їхати кур\'єр , або вкажіть нову адресу ',

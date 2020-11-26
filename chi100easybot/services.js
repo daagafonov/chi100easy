@@ -59,6 +59,12 @@ const getUserAddresses = (userId) => {
     return get(`${process.env.API_URI}/addresses/user/${userId}`);
 };
 
+const addUserAddress = (userId, newAddress) => {
+    return post(`${process.env.API_URI}/addresses/user/${userId}`, {
+        address: newAddress
+    });
+};
+
 const sendCourier = (data) => {
     return post(`${process.env.API_URI}/service/sendCourier`, data);
 };
@@ -88,4 +94,5 @@ module.exports = {
     findFirstAvailable,
     getAllAvailable,
     removeAddress,
+    addUserAddress,
 }

@@ -78,6 +78,7 @@ const { addressScene } = require('./courier-address');
 const { timeScene } = require('./courier-time');
 const { finishScene } = require('./courier-finished');
 const { myAddressesScene } = require('./myaddresses-list');
+const { addAddressScene } = require('./addAddress');
 
 const stage = new Stage();
 
@@ -89,6 +90,7 @@ stage.register(
     finishScene,
 
     myAddressesScene,
+    addAddressScene,
 );
 
 stage.command('cancel', (ctx) => {

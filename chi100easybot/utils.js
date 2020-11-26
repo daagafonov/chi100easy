@@ -7,6 +7,7 @@ const PHONENUMBER_SCENE_NAME = 'phonenumber';
 const FINISH_SCENE_NAME = 'finish';
 const MY_ADDRESSES_SCENE_NAME = 'myaddresses';
 const FEEDBACK_SCENE_NAME = 'feedback';
+const ADD_ADDRESS_SCENE_NAME = 'addAddress';
 
 const mainMenu = () => {
     return Markup.resize(true).keyboard([[
@@ -54,6 +55,7 @@ module.exports = {
     FINISH_SCENE_NAME,
     MY_ADDRESSES_SCENE_NAME,
     FEEDBACK_SCENE_NAME,
+    ADD_ADDRESS_SCENE_NAME,
 
     // markupMenu,
     mainMenu,
