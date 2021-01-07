@@ -2,12 +2,12 @@
     <div>
         <b-modal id="product-modal" hide-footer>
             <template v-slot:modal-title>
-                Create or Edit product
+                Диалог создания или редактирования продукта
             </template>
             <div class="d-block text-center">
                 <b-container>
                 <b-row>
-                    <b-col md="4">Категорія</b-col>
+                    <b-col md="4">Категгория</b-col>
                     <b-col md="8">
                         <b-form-select name="category" v-model="form.category" :options="productCategories">
                         </b-form-select>
@@ -34,10 +34,10 @@
             <br/>
             <b-button-group style="text-align: right; width: 100%;">
                 <b-button variant="success" @click="onSave()">
-                    Save
+                    Сохранить
                 </b-button>
                 <b-button variant="danger">
-                    Cancel
+                    Отменить
                 </b-button>
             </b-button-group>
         </b-modal>

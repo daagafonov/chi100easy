@@ -2,11 +2,11 @@
     <div>
         <b-modal id="offer-modal" hide-footer>
             <template v-slot:modal-title>
-                Create or edit offer dialog
+                Создание или редактирование предложения
             </template>
             <div class="d-block text-center">
                 <b-row>
-                    <b-col md="3">shortDescription</b-col>
+                    <b-col md="3">короткое описание</b-col>
                     <b-col md="9"><b-textarea
 
                         rows="5"
@@ -17,7 +17,7 @@
                     ></b-textarea></b-col>
                 </b-row>
                 <b-row>
-                    <b-col md="3">longDescription</b-col>
+                    <b-col md="3">длинное описание</b-col>
                     <b-col md="9">
                         <b-textarea
 
@@ -50,7 +50,7 @@
                     </b-col>
                 </b-row>
                 <b-row>
-                    <b-col md="3">Picturee</b-col>
+                    <b-col md="3">Рисунок</b-col>
                     <b-col md="9"><b-file type="file"
                                           placeholder="picture"
                                           name="picture"
@@ -59,7 +59,7 @@
                     /></b-col>
                 </b-row>
                 <b-row>
-                    <b-col md="3">validFrom</b-col>
+                    <b-col md="3">действителен с</b-col>
                     <b-col md="9"><b-form-datepicker
                         placeholder="YYYY-MM-DD"
                         name="validFrom"
@@ -67,7 +67,7 @@
                     /></b-col>
                 </b-row>
                 <b-row>
-                    <b-col md="3">validTo</b-col>
+                    <b-col md="3">действителен до</b-col>
                     <b-col md="9"><b-form-datepicker
                         placeholder="YYYY-MM-DD"
                         name="validTo"
@@ -78,10 +78,10 @@
             <br/>
             <b-button-group style="text-align: right; width: 100%;">
                 <b-button variant="success" @click="onSave()">
-                    Save
+                    Сохранить
                 </b-button>
                 <b-button variant="danger">
-                    Cancel
+                    Отменить
                 </b-button>
             </b-button-group>
         </b-modal>

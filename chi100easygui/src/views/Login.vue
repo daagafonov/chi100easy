@@ -17,7 +17,7 @@
             <b-form-group>
                 <b-row>
                     <b-col md="6" class="bold">
-                        <label for="password">Password</label>
+                        <label for="password">Пароль</label>
                     </b-col>
                     <b-col md="6">
                         <b-input type="password" id="password" name="password" v-model="password" />
@@ -26,7 +26,7 @@
             </b-form-group>
             <b-row>
                 <b-col md="12">
-                    <b-button @click="login()">Login</b-button>
+                    <b-button @click="login()">Войти</b-button>
                 </b-col>
             </b-row>
         </b-form>

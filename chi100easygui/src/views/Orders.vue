@@ -8,7 +8,7 @@
                             <b-form-input v-model="filter"></b-form-input>
                         </b-col>
                         <b-col md="2">
-                            <b-button v-b-modal:order-modal @click="addOrder($event)" variant="success">Add Order</b-button>
+                            <b-button v-b-modal:order-modal @click="addOrder($event)" variant="success">Создать заказ</b-button>
                         </b-col>
                     </b-row>
                 </b-form-group>

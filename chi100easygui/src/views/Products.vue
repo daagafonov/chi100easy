@@ -21,7 +21,7 @@
                             <b-form-input v-model="filter"></b-form-input>
                         </b-col>
                         <b-col md="2">
-                            <b-button v-b-modal.product-modal @click="addProduct($event)" variant="success">Add Product</b-button>
+                            <b-button v-b-modal.product-modal @click="addProduct($event)" variant="success">Добавить продукт</b-button>
                         </b-col>
                     </b-row>
                 </b-form-group>

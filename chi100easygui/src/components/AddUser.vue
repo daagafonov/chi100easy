@@ -2,23 +2,23 @@
     <div>
         <b-modal id="my-modal" hide-footer>
             <template v-slot:modal-title>
-                Create a user dialog
+                Диалог создания пользователя
             </template>
             <div class="d-block text-center">
                 <b-row>
-                    <b-col md="4">First name</b-col>
+                    <b-col md="4">Имя</b-col>
                     <b-col md="8"><b-input type="text" placeholder="Enter first name" name="firstName" v-model="form.firstName" /></b-col>
                 </b-row>
                 <b-row>
-                    <b-col md="4">Last name</b-col>
+                    <b-col md="4">Фамилия</b-col>
                     <b-col md="8"><b-input type="text" placeholder="Enter last name" name="lastName" v-model="form.lastName"/></b-col>
                 </b-row>
                 <b-row>
-                    <b-col md="4">User name</b-col>
+                    <b-col md="4">Ник</b-col>
                     <b-col md="8"><b-input type="text" placeholder="Enter user name" name="username" v-model="form.username"/></b-col>
                 </b-row>
                 <b-row>
-                    <b-col md="4">Telegram User ID</b-col>
+                    <b-col md="4">Telegram ID</b-col>
                     <b-col md="8"><b-input type="text" name="telegramUserId" :disabled="tuidDisbaled()" disabled v-model="form.telegramUserId"/></b-col>
                 </b-row>
             </div>

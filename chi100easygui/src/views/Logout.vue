@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        Logged out
+        Вышли... До новых встреч!
     </div>
 </template>
 
