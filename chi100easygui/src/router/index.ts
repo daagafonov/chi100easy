@@ -11,39 +11,39 @@ const routes: Array<RouteConfig> = [
         name: 'Начальная',
         component: Home
     }, {
-        path: '/login.html',
+        path: '/login',
         name: 'Вход',
         component: () => import('@/views/Login.vue')
     }, {
-        path: '/logout.html',
+        path: '/logout',
         name: 'Выход',
         component: () => import('@/views/Logout.vue')
     }, {
-        path: '/about.html',
+        path: '/about',
         name: 'О нас',
         component: () => import('@/views/About.vue')
     }, {
-        path: '/users.html',
+        path: '/users',
         name: 'Клиенты',
         component: () => import('@/views/User.vue'),
         beforeEnter: isAuthenticated,
     }, {
-        path: '/products.html',
+        path: '/products',
         name: 'Продукты',
         component: () => import('@/views/Products.vue'),
         beforeEnter: isAuthenticated,
     }, {
-        path: '/orders.html',
+        path: '/orders',
         name: 'Orders',
         component: () => import('@/views/Orders.vue'),
         beforeEnter: isAuthenticated,
     }, {
-        path: '/payments.html',
+        path: '/payments',
         name: 'Платежи',
         component: () => import('@/views/Payments.vue'),
         beforeEnter: isAuthenticated,
     }, {
-        path: '/offers.html',
+        path: '/offers',
         name: 'Акции',
         component: () => import('@/views/Offers.vue'),
         beforeEnter: isAuthenticated,
