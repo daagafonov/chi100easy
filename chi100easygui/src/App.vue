@@ -17,20 +17,20 @@
                         <template v-slot:button-content>
                             <em>Menu</em>
                         </template>
-                        <b-dropdown-item to="/users.html">Пользователи</b-dropdown-item>
-                        <b-dropdown-item to="/products.html">Продукты</b-dropdown-item>
-                        <b-dropdown-item to="/payments.html">Платежи</b-dropdown-item>
-                        <b-dropdown-item to="/offers.html">Акции</b-dropdown-item>
+                        <b-dropdown-item to="/users">Пользователи</b-dropdown-item>
+                        <b-dropdown-item to="/products">Продукты</b-dropdown-item>
+                        <b-dropdown-item to="/payments">Платежи</b-dropdown-item>
+                        <b-dropdown-item to="/offers">Акции</b-dropdown-item>
                     </b-nav-item-dropdown>
 
                     <b-nav-item-dropdown right v-if="isAuthenticated()">
                         <template v-slot:button-content>
                             <em>Account</em>
                         </template>
-                        <b-dropdown-item to="/logout.html">Logout</b-dropdown-item>
+                        <b-dropdown-item to="/logout">Logout</b-dropdown-item>
                     </b-nav-item-dropdown>
 
-                    <b-nav-item to="/login.html" v-if="!isAuthenticated()">Login</b-nav-item>
+                    <b-nav-item to="/login" v-if="!isAuthenticated()">Login</b-nav-item>
 
                 </b-navbar-nav>
             </b-collapse>
