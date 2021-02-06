@@ -19,18 +19,15 @@
                 >
                     <template v-slot:table-caption>Заказы ...</template>
 
+                    <template v-slot:cell(status)="row">
+                        <span>{{OrderStatus[row.item.status]}}</span>
+                    </template>
+
                     <template v-slot:cell(actions)="row">
                         <b-button size="sm" @click="sendDocument(row.item, row.index, $event.target)"
                                   class="mr-1">
                             Отправить документ
                         </b-button>
-<!--                        <b-button v-if="row.item._id" size="sm" @click="details(row.item, row.index, $event.target)"-->
-<!--                                  class="mr-1">-->
-<!--                            Детали-->
-<!--                        </b-button>-->
-<!--                        <b-button v-if="row.item._id" variant="danger" size="sm" @click="delete(row.item, row.index, $event.target)">-->
-<!--                            Удалить-->
-<!--                        </b-button>-->
                     </template>
                 </b-table>
             </b-form>
@@ -43,6 +40,17 @@ import {Component, Vue} from 'vue-property-decorator';
 import ProductModal from "@/components/ProductModal.vue";
 import EventService from "@/services/event.service";
 import OrderModal from "@/components/OrderModal.vue";
+
+export enum OrderStatus {
+    CREATED = 'Создан',
+    SENT = 'Отправлен',
+    CONFIRMED = 'Подтвержден',
+    DECLINED = 'Отменен',
+    PAID = 'Оплачен',
+    REFUNDED = 'Вернули',
+    IN_PROGRESS = 'В процессе',
+    FINISHED = 'Завершен',
+}
 
 @Component({
     components: {
@@ -57,13 +65,16 @@ export default class OrdersComponent extends Vue {
             filter: null,
             fields: [{
                 key: 'externalOrderId',
+                label: 'ID документа'
             }, {
                 key: 'finalCost',
+                label: 'Конечная сумма'
             }, {
-                key: 'status'
+                key: 'status',
+                label: 'Статус'
             }, {
                 key: 'actions',
-                label: 'Actions'
+                label: 'Действия'
             }]
         };
     }
