@@ -20,11 +20,11 @@
                     <template v-slot:table-caption>Заказы ...</template>
 
                     <template v-slot:cell(status)="row">
-                        <span>{{OrderStatus[row.item.status]}}</span>
+                        <span>{{translations[row.item.status]}}</span>
                     </template>
 
                     <template v-slot:cell(actions)="row">
-                        <b-button size="sm" @click="sendDocument(row.item, row.index, $event.target)"
+                        <b-button v-if="row.item.status === 'CREATED'" size="sm" @click="sendDocument(row.item, row.index, $event.target)"
                                   class="mr-1">
                             Отправить документ
                         </b-button>
@@ -41,16 +41,16 @@ import ProductModal from "@/components/ProductModal.vue";
 import EventService from "@/services/event.service";
 import OrderModal from "@/components/OrderModal.vue";
 
-export enum OrderStatus {
-    CREATED = 'Создан',
-    SENT = 'Отправлен',
-    CONFIRMED = 'Подтвержден',
-    DECLINED = 'Отменен',
-    PAID = 'Оплачен',
-    REFUNDED = 'Вернули',
-    IN_PROGRESS = 'В процессе',
-    FINISHED = 'Завершен',
-}
+export const translations = {
+    CREATED : 'Создан',
+    SENT : 'Отправлен',
+    CONFIRMED : 'Подтвержден',
+    DECLINED : 'Отменен',
+    PAID : 'Оплачен',
+    REFUNDED : 'Вернули',
+    IN_PROGRESS : 'В процессе',
+    FINISHED : 'Завершен',
+};
 
 @Component({
     components: {
@@ -61,6 +61,7 @@ export default class OrdersComponent extends Vue {
 
     data() {
         return {
+            translations,
             items: [],
             filter: null,
             fields: [{
@@ -128,7 +129,7 @@ export default class OrdersComponent extends Vue {
     }
 
     sendDocumentResult(payload: any) {
-        console.log(payload);
+        EventService.sendEvent('reloadOrders', {});
     }
 
 }
