@@ -11,7 +11,7 @@
 
                         rows="5"
 
-                        placeholder="shortDescription"
+                        placeholder="Короткое описание"
                         name="shortDescription"
                         v-model="form.shortDescription"
                     ></b-textarea></b-col>
@@ -23,36 +23,17 @@
 
                             rows="5"
 
-                            placeholder="longDescription"
+                            placeholder="Длинное описание"
                             name="longDescription"
                             v-model="form.longDescription"
                         />
-
-<!--                        <editor-->
-<!--                            v-model="form.longDescription"-->
-<!--                            api-key="lot26ggblj571e1m04bbzp5pcaok5k161qp8du9slsuo20eb"-->
-<!--                            :init="{-->
-<!--                             height: 400,-->
-<!--                             menubar: true,-->
-<!--                             inlineEditor: true,-->
-<!--                             plugins: [-->
-<!--                               'advlist autolink lists link image charmap print preview anchor',-->
-<!--                               'searchreplace visualblocks code fullscreen',-->
-<!--                               'insertdatetime media table paste code help wordcount'-->
-<!--                             ],-->
-<!--                             toolbar:-->
-<!--                               'undo redo | formatselect | bold italic backcolor | \-->
-<!--                               alignleft aligncenter alignright alignjustify | \-->
-<!--                               bullist numlist outdent indent | removeformat | help'-->
-<!--                           }"-->
-<!--                        />-->
 
                     </b-col>
                 </b-row>
                 <b-row>
                     <b-col md="3">Рисунок</b-col>
                     <b-col md="9"><b-file type="file"
-                                          placeholder="picture"
+                                          placeholder="Рисунок"
                                           name="picture"
                                           accept="image/png,image/jpg,image/jpeg"
                                           @change="storeDocument($event.target.files)"
@@ -80,7 +61,7 @@
                 <b-button variant="success" @click="onSave()">
                     Сохранить
                 </b-button>
-                <b-button variant="danger">
+                <b-button variant="danger" @click="close()">
                     Отменить
                 </b-button>
             </b-button-group>
@@ -150,6 +131,9 @@ export default class OfferModalComponent extends Vue {
         this.$data.form.file = files[0];
     }
 
+    close() {
+        this.$bvModal.hide('offer-modal');
+    }
 }
 </script>
 

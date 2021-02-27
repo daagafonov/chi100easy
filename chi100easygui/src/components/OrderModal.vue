@@ -2,7 +2,7 @@
     <div>
         <b-modal id="order-modal" hide-footer>
             <template v-slot:modal-title>
-                Create or edit order dialog
+                Диалог создания и редактирования заказа
             </template>
             <div class="d-block text-center">
                 <input
@@ -12,34 +12,35 @@
                     :value="form.userId"
                 ></input>
                 <b-row>
-                    <b-col md="3">Document</b-col>
-                    <b-col md="9"><b-file type="file"
-                                          placeholder="document"
+                    <b-col :md="headerTitle" class="nowrap">Документ :</b-col>
+                    <b-col :md="headerValue"><b-file type="file"
+                                          placeholder="Документ"
                                           name="document"
                                           accept="application/pdf"
                                           @change="storeDocument($event.target.files)"
                     /></b-col>
                 </b-row>
                 <b-row>
-                    <b-col md="3">OrderID</b-col>
-                    <b-col md="9"><b-textarea
-                        placeholder="externalOrderId"
+                    <b-col :md="headerTitle" class="nowrap">Номер заказа: </b-col>
+                    <b-col :md="headerValue"><b-textarea
+                        placeholder="Номер заказа"
                         name="externalOrderId"
                         v-model="form.externalOrderId"
                     /></b-col>
                 </b-row>
                 <b-row>
-                    <b-col md="3">Comment</b-col>
-                    <b-col md="9"><b-textarea
-                                          placeholder="comment"
+                    <b-col :md="headerTitle" class="nowrap">Коментарий: </b-col>
+                    <b-col :md="headerValue"><b-textarea
+                                          placeholder="Коментарий"
                                           name="comment"
                                           v-model="form.comment"
+                                          rows="5"
                     /></b-col>
                 </b-row>
                 <b-row>
-                    <b-col md="3">Final cost</b-col>
-                    <b-col md="9"><b-input
-                        placeholder="final cost"
+                    <b-col :md="headerTitle" class="nowrap">Финальная сумма: </b-col>
+                    <b-col :md="headerValue"><b-input
+                        placeholder="Финальная сумма"
                         name="finalCost"
                         v-model="form.finalCost"
                     /></b-col>
@@ -48,10 +49,10 @@
             <br/>
             <b-button-group style="text-align: right; width: 100%;">
                 <b-button variant="success" @click="onSave()">
-                    Save
+                    Сохранить
                 </b-button>
-                <b-button variant="danger">
-                    Cancel
+                <b-button variant="danger" @click="close()">
+                    Отменить
                 </b-button>
             </b-button-group>
         </b-modal>
@@ -67,6 +68,10 @@ import {Component, Vue} from "vue-property-decorator";
     name: 'order-modal'
 })
 export default class OrderModal extends Vue {
+
+    headerTitle: number = 4;
+    headerValue: number = 8;
+
     data() {
         return {
             action: 'add',
@@ -141,9 +146,18 @@ export default class OrderModal extends Vue {
     storeDocument(files: any) {
         this.$data.form.file = files[0];
     }
+
+    close() {
+        this.$bvModal.hide('order-modal');
+    }
 }
 </script>
 
-<style>
-
+<style lang="scss">
+.nowrap {
+    white-space: nowrap;
+}
+.modal-md {
+    // max-width: 700px;
+}
 </style>

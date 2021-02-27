@@ -17,7 +17,10 @@
                          :fields="fields"
                          :filter="filter"
                 >
-                    <template v-slot:table-caption>Заказы ...</template>
+                    <template v-slot:table-caption>
+                        <span>Заказы ...</span>
+                        <b-button @click="updateList()" class="btn btn-success">Обновить список</b-button>
+                    </template>
 
                     <template v-slot:cell(status)="row">
                         <span>{{translations[row.item.status]}}</span>
@@ -130,6 +133,12 @@ export default class OrdersComponent extends Vue {
 
     sendDocumentResult(payload: any) {
         EventService.sendEvent('reloadOrders', {});
+    }
+
+    updateList() {
+        this.$store.dispatch('getOrders', {
+            userId: this.$route.query.userId,
+        });
     }
 
 }

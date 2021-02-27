@@ -25,10 +25,10 @@
             <br/>
             <b-button-group style="text-align: right; width: 100%;">
                 <b-button variant="success" @click="onSave()">
-                    Save
+                    Сохранить
                 </b-button>
-                <b-button variant="danger">
-                    Cancel
+                <b-button variant="danger" @click="close()">
+                    Отменить
                 </b-button>
             </b-button-group>
         </b-modal>
@@ -98,6 +98,10 @@ export default class AddUserModal extends Vue {
 
     onSave() {
         this.$store.dispatch(this.$data.action === 'add' ? 'addUser' : 'editUser', this.$data.form);
+    }
+
+    close() {
+        this.$bvModal.hide('my-modal');
     }
 }
 </script>

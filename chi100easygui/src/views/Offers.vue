@@ -28,7 +28,7 @@
                             <b-form-input v-model="filter"></b-form-input>
                         </b-col>
                         <b-col md="2">
-                            <b-button v-b-modal:offer-modal @click="addOffer($event)" variant="success">Add Offer</b-button>
+                            <b-button v-b-modal:offer-modal @click="addOffer($event)" variant="success">Добавить акцию</b-button>
                         </b-col>
                     </b-row>
                 </b-form-group>

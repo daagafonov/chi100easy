@@ -25,16 +25,19 @@
                  :fields="fields"
                  :filter="filter"
         >
-            <template v-slot:table-caption>Список зарегистрированных пользователей</template>
+            <template v-slot:table-caption>
+                <span>Список зарегистрированных пользователей</span>
+                <b-button @click="updateList()" class="btn btn-success">Обновить список</b-button>
+            </template>
 
             <template v-slot:cell(actions)="row">
                 <b-button size="sm" variant="warning" @click="orders(row.item, row.index, $event.target)">
-                    Orders
+                    Заказы
                 </b-button>
                 <b-button size="sm" variant="warning" v-b-modal.my-modal
                           @click="details(row.item, row.index, $event.target)"
                           class="mr-1">
-                    Details
+                    Детали
                 </b-button>
             </template>
         </b-table>
@@ -148,6 +151,10 @@ export default class UserComponent extends Vue {
 
     scan() {
         this.$data.showScanner = !this.$data.showScanner;
+    }
+
+    updateList() {
+        this.$store.dispatch('getUsers', {});
     }
 
 }
